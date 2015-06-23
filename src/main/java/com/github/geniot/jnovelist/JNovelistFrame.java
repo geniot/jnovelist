@@ -118,7 +118,9 @@ public class JNovelistFrame extends JFrame {
 
         scrollPane = new JScrollPane(editorPane);
 
-        getContentPane().add(scrollPane, BorderLayout.CENTER);
+        DnDTabbedPane dnDTabbedPane = new DnDTabbedPane(DnDTabbedPane.DECIMAL_TO_ROMAN);
+
+        getContentPane().add(dnDTabbedPane, BorderLayout.CENTER);
         getContentPane().add(toolBar, BorderLayout.PAGE_START);
 
         updateState(null);
