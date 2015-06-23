@@ -26,6 +26,8 @@ public class JNovelistFrame extends JFrame {
 
     protected JButton loadNovel;
     protected JButton unloadNovel;
+    protected JScrollPane scrollPane;
+    protected LinePainter linePainter;
 
     protected DB openDB;
 
@@ -46,8 +48,8 @@ public class JNovelistFrame extends JFrame {
         JToolBar toolBar = new JToolBar("Still draggable");
         toolBar.setFloatable(false);
 
-        loadNovel = makeNavigationButton("Load", LOAD_NOVEL, "Load", "Load");
-        unloadNovel = makeNavigationButton("Eject", UNLOAD_NOVEL, "Unload", "Unload");
+        loadNovel = makeNavigationButton("Load", Constants.LOAD_NOVEL_ACTION_COMMAND, "Load", "Load");
+        unloadNovel = makeNavigationButton("Eject", Constants.UNLOAD_NOVEL_ACTION_COMMAND, "Unload", "Unload");
 
         loadNovel.addActionListener(new LoadNovelActionListener(this));
         unloadNovel.addActionListener(new UnloadActionListener(this));
@@ -65,8 +67,9 @@ public class JNovelistFrame extends JFrame {
         styleSheet.addRule("h2 {color: #008000;}");
         Document doc = cssKit.createDefaultDocument();
         editorPane.setDocument(doc);
+        linePainter = new LinePainter(editorPane);
 
-        JScrollPane scrollPane = new JScrollPane(editorPane);
+        scrollPane = new JScrollPane(editorPane);
 
         getContentPane().add(scrollPane, BorderLayout.CENTER);
         getContentPane().add(toolBar, BorderLayout.PAGE_START);
@@ -79,6 +82,7 @@ public class JNovelistFrame extends JFrame {
 
     protected void updateState(String fileName) {
         if (openDB == null) {
+            editorPane.setText("");
             editorPane.setVisible(false);
             unloadNovel.setEnabled(false);
         } else {
@@ -86,7 +90,21 @@ public class JNovelistFrame extends JFrame {
             unloadNovel.setEnabled(true);
         }
         setTitle(getDynTitle(fileName));
-        editorPane.requestFocus();
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                editorPane.requestFocus();
+
+                if (openDB != null) {
+                    Object vp = openDB.treeMap(Constants.COLLECTION_PROPS).get(Constants.PROP_VIEW_POS);
+                    if (vp != null) {
+                        scrollPane.getVerticalScrollBar().setValue((Integer) vp);
+                    }
+                }
+
+            }
+        });
     }
 
     private String getDynTitle(String fileName) {

@@ -17,7 +17,9 @@ public class UnloadActionListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        frame.openDB.treeMap("novel").put(1, frame.editorPane.getText());
+        frame.openDB.treeMap(Constants.COLLECTION_NOVEL).put(1, frame.editorPane.getText());
+        frame.openDB.treeMap(Constants.COLLECTION_PROPS).put(Constants.PROP_CARET_POS, frame.editorPane.getCaretPosition());
+        frame.openDB.treeMap(Constants.COLLECTION_PROPS).put(Constants.PROP_VIEW_POS, frame.scrollPane.getVerticalScrollBar().getValue());
         frame.openDB.close();
         frame.openDB = null;
         frame.updateState(null);
