@@ -39,6 +39,8 @@ public class ChapterEditor extends JEditorPane {
         if (ch != null) {
             setText(ch.getText());
             setCaretPosition(ch.getCaretPosition());
+        }else{
+            setText("<html><head></head><body><p></p></body></html>");
         }
 
         final UndoManager undo = new UndoManager();

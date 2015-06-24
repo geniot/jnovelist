@@ -148,16 +148,17 @@ public class DnDTabbedPane extends JTabbedPane {
                 final ChapterEditor chapterEditor = new ChapterEditor(chapter);
                 c = new JScrollPane(chapterEditor);
 
-                if (chapter != null) {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            chapterEditor.requestFocus();
+
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        chapterEditor.requestFocus();
+                        if (chapter != null) {
                             ((JScrollPane) c).getVerticalScrollBar().setValue(chapter.getViewPosition());
                         }
-                    });
+                    }
+                });
 
-                }
             }
 
             insertTab(getLabelByIndex(count - 1), null, c, null, count - 1);
@@ -172,7 +173,8 @@ public class DnDTabbedPane extends JTabbedPane {
     public void updateLabels() {
         for (int i = 0; i < getTabCount() - 1; i++) {
             setTitleAt(i, getLabelByIndex(i));
-            getTabComponentAt(i).revalidate();
+            getTabComponentAt(i).validate();
+            getTabComponentAt(i).repaint();
         }
     }
 

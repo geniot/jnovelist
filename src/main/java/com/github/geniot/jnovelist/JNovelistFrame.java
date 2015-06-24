@@ -7,6 +7,9 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.net.URL;
 
 /**
@@ -25,17 +28,36 @@ public class JNovelistFrame extends JFrame {
 
 
     protected DB openDB;
+    protected String openFileName;
 
     public JNovelistFrame() {
         super("JNovelist");
+
+        try {
+            Constants.PROPS.load(new FileInputStream(System.getProperty("user.home") + File.separator + Constants.PROPS_FILE_NAME));
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
 
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 if (openDB != null) {
+                    Constants.PROPS.setProperty(Constants.PROP_LAST_OPEN_FILE, openFileName);
+                    Constants.PROPS.setProperty(Constants.PROP_WIDTH, String.valueOf(getWidth()));
+                    Constants.PROPS.setProperty(Constants.PROP_HEIGHT, String.valueOf(getHeight()));
+                    Constants.PROPS.setProperty(Constants.PROP_POS_X, String.valueOf((int) getLocation().getX()));
+                    Constants.PROPS.setProperty(Constants.PROP_POS_Y, String.valueOf((int) getLocation().getY()));
                     unloadNovel.doClick();
                 }
+                try {
+                    FileOutputStream fos = new FileOutputStream(System.getProperty("user.home") + File.separator + Constants.PROPS_FILE_NAME);
+                    Constants.PROPS.store(fos, "");
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+
                 e.getWindow().dispose();
             }
         });
@@ -46,25 +68,42 @@ public class JNovelistFrame extends JFrame {
         loadNovel = makeNavigationButton("Load", Constants.LOAD_NOVEL_ACTION_COMMAND, "Load", "Load");
         unloadNovel = makeNavigationButton("Eject", Constants.UNLOAD_NOVEL_ACTION_COMMAND, "Unload", "Unload");
 
-        loadNovel.addActionListener(new LoadNovelActionListener(this));
-        unloadNovel.addActionListener(new UnloadActionListener(this));
+        loadNovel.addActionListener(new LoadNovelAction(this));
+        unloadNovel.addActionListener(new UnloadAction(this));
 
         toolBar.add(loadNovel);
         toolBar.add(unloadNovel);
-
 
         getContentPane().add(toolBar, BorderLayout.PAGE_START);
 
 
         //Display the window.
-        setPreferredSize(new Dimension(600, 800));
+        try{
+            int width = Constants.PROPS.containsKey(Constants.PROP_WIDTH) ? Integer.parseInt(Constants.PROPS.getProperty(Constants.PROP_WIDTH)) : 600;
+            int height = Constants.PROPS.containsKey(Constants.PROP_HEIGHT) ? Integer.parseInt(Constants.PROPS.getProperty(Constants.PROP_HEIGHT)) : 800;
+            setPreferredSize(new Dimension(width, height));
+        }catch (Exception ex){
+            setPreferredSize(new Dimension(600, 800));
+        }
+
+        try {
+            int posX = Constants.PROPS.containsKey(Constants.PROP_POS_X) ? Integer.parseInt(Constants.PROPS.getProperty(Constants.PROP_POS_X)) : 0;
+            int posY = Constants.PROPS.containsKey(Constants.PROP_POS_Y) ? Integer.parseInt(Constants.PROPS.getProperty(Constants.PROP_POS_Y)) : 0;
+            setLocation(posX, posY);
+        } catch (Exception ex) {
+            setLocation(0, 0);
+        }
+
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
                 .addKeyEventDispatcher(new KeyEventDispatcher() {
+                    private boolean isEnabled;
+
                     @Override
                     public boolean dispatchKeyEvent(KeyEvent e) {
-                        if (dnDTabbedPane != null) {
-                            boolean enableRemoval = (e.getModifiers() & KeyEvent.ALT_MASK) != 0;
+                        boolean enableRemoval = (e.getModifiers() & KeyEvent.ALT_MASK) != 0;
+                        if (enableRemoval != isEnabled && dnDTabbedPane != null) {
+                            isEnabled = enableRemoval;
                             for (int i = 0; i < dnDTabbedPane.getTabCount(); i++) {
                                 Component c = dnDTabbedPane.getTabComponentAt(i);
                                 if (c instanceof ButtonTabComponent) {
@@ -89,16 +128,24 @@ public class JNovelistFrame extends JFrame {
                 });
 
 
-        updateState(null);
+        updateState();
+
+        if (Constants.PROPS.containsKey(Constants.PROP_LAST_OPEN_FILE)) {
+            String lastOpenFile = Constants.PROPS.getProperty(Constants.PROP_LAST_OPEN_FILE);
+            File f = new File(lastOpenFile);
+            if (f.exists()) {
+                LoadNovelAction.loadNovel(this, f);
+            }
+        }
     }
 
 
-    private String getDynTitle(String fileName) {
-        return "JNovelist" + (openDB == null ? "" : " - " + fileName);
+    private String getDynTitle() {
+        return "JNovelist" + (openDB == null ? "" : " - " + openFileName.substring(openFileName.lastIndexOf(File.separator) + 1, openFileName.length()));
     }
 
 
-    protected void updateState(String fileName) {
+    protected void updateState() {
         if (openDB == null) {
             if (dnDTabbedPane != null) {
                 getContentPane().remove(dnDTabbedPane);
@@ -111,7 +158,7 @@ public class JNovelistFrame extends JFrame {
         } else {
             unloadNovel.setEnabled(true);
         }
-        setTitle(getDynTitle(fileName));
+        setTitle(getDynTitle());
 
 //        SwingUtilities.invokeLater(new Runnable() {
 //            @Override

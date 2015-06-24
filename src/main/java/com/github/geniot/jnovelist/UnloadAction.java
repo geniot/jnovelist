@@ -12,10 +12,10 @@ import java.awt.event.ActionListener;
  * Email: vitaly.sazanovich@gmail.com
  * Date: 23/06/15
  */
-public class UnloadActionListener implements ActionListener {
+public class UnloadAction implements ActionListener {
     private JNovelistFrame frame;
 
-    public UnloadActionListener(JNovelistFrame f) {
+    public UnloadAction(JNovelistFrame f) {
         this.frame = f;
     }
 
@@ -49,6 +49,7 @@ public class UnloadActionListener implements ActionListener {
 
         frame.openDB.close();
         frame.openDB = null;
-        frame.updateState(null);
+        frame.openFileName = null;
+        frame.updateState();
     }
 }
