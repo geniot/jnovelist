@@ -4,10 +4,7 @@ package com.github.geniot.jnovelist;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 /**
  * Component to be used as tabComponent;
@@ -16,6 +13,7 @@ import java.awt.event.MouseEvent;
  */
 public class ButtonTabComponent extends JPanel {
     private final DnDTabbedPane pane;
+    private final JButton removeButton;
 
     public ButtonTabComponent(final DnDTabbedPane pane) {
         //unset default FlowLayout' gaps
@@ -42,11 +40,19 @@ public class ButtonTabComponent extends JPanel {
         //add more space between the label and the button
         label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
         //tab button
-        JButton button = new TabButton();
+        removeButton = new TabButton();
+        add(removeButton, BorderLayout.EAST);
 
-        add(button, BorderLayout.EAST);
         //add more space to the top of the component
         setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
+
+        enableRemoval(false);
+
+    }
+
+    public void enableRemoval(boolean enable) {
+        removeButton.setEnabled(enable);
+        removeButton.setVisible(enable);
     }
 
     private class TabButton extends JButton implements ActionListener {
@@ -60,14 +66,16 @@ public class ButtonTabComponent extends JPanel {
             setContentAreaFilled(false);
             //No need to be focusable
             setFocusable(false);
+
             setBorder(BorderFactory.createEtchedBorder());
             setBorderPainted(false);
             //Making nice rollover effect
             //we use the same listener for all buttons
             addMouseListener(new MouseAdapter() {
+
                 public void mouseEntered(MouseEvent e) {
                     Component component = e.getComponent();
-                    if (component instanceof AbstractButton) {
+                    if (component instanceof AbstractButton && isEnabled()) {
                         AbstractButton button = (AbstractButton) component;
                         button.setBorderPainted(true);
                     }
@@ -80,7 +88,9 @@ public class ButtonTabComponent extends JPanel {
                         button.setBorderPainted(false);
                     }
                 }
+
             });
+
             setRolloverEnabled(true);
             //Close the proper tab by clicking the button
             addActionListener(this);
@@ -111,7 +121,7 @@ public class ButtonTabComponent extends JPanel {
                 g2.translate(1, 1);
             }
             g2.setStroke(new BasicStroke(2));
-            g2.setColor(Color.BLACK);
+            g2.setColor(isEnabled() ? Color.BLACK : Color.GRAY);
             if (getModel().isRollover()) {
                 g2.setColor(Color.BLUE);
             }

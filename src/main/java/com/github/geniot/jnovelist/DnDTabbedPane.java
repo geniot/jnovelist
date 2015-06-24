@@ -1,5 +1,7 @@
 package com.github.geniot.jnovelist;
 
+import com.github.geniot.jnovelist.model.Chapter;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -125,22 +127,43 @@ public class DnDTabbedPane extends JTabbedPane {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (getSelectedComponent() != null && getSelectedComponent().equals(plusPanel)) {
+                if (getSelectedComponent() != null
+                        && getSelectedComponent().equals(plusPanel)) {
                     addNewTab(null);
                 }
             }
         });
     }
 
-    public void addNewTab(Object data) {
+    public void addNewTab(final Chapter chapter) {
         //adding new tab
         try {
             int count = getTabCount();
             ButtonTabComponent tabTitle = new ButtonTabComponent(this);
-            Component c = new JPanel();
+
+            final Component c;
+            if (titleNamingType.equals(DnDTabbedPane.DECIMAL_TO_ROMAN)) {
+                c = new DnDTabbedPane(DnDTabbedPane.INDEX_TO_DECIMAL);
+            } else {
+                final ChapterEditor chapterEditor = new ChapterEditor(chapter);
+                c = new JScrollPane(chapterEditor);
+
+                if (chapter != null) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            chapterEditor.requestFocus();
+                            ((JScrollPane) c).getVerticalScrollBar().setValue(chapter.getViewPosition());
+                        }
+                    });
+
+                }
+            }
+
             insertTab(getLabelByIndex(count - 1), null, c, null, count - 1);
             setTabComponentAt(count - 1, tabTitle);
             setSelectedComponent(c);
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -149,6 +172,7 @@ public class DnDTabbedPane extends JTabbedPane {
     public void updateLabels() {
         for (int i = 0; i < getTabCount() - 1; i++) {
             setTitleAt(i, getLabelByIndex(i));
+            getTabComponentAt(i).revalidate();
         }
     }
 

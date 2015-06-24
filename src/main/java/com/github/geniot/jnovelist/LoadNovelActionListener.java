@@ -1,5 +1,7 @@
 package com.github.geniot.jnovelist;
 
+import com.github.geniot.jnovelist.model.Chapter;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -29,15 +31,34 @@ public class LoadNovelActionListener implements ActionListener {
 
             File selectedFile = fc.getSelectedFile();
             frame.openDB = DataAccessObject.open(selectedFile);
-            frame.editorPane.setText((String) frame.openDB.treeMap(Constants.COLLECTION_NOVEL).get(1));
 
-            Object o = frame.openDB.treeMap(Constants.COLLECTION_PROPS).get(Constants.PROP_CARET_POS);
-            int caretPos = o == null ? 0 : (Integer) o;
-            frame.editorPane.setCaretPosition(caretPos);
+            frame.dnDTabbedPane = new DnDTabbedPane(DnDTabbedPane.DECIMAL_TO_ROMAN);
+            frame.getContentPane().add(frame.dnDTabbedPane, BorderLayout.CENTER);
+
+            int chaptersCount = frame.openDB.treeMap(Constants.COLLECTION_NOVEL).size();
+            int currentPart = -1;
+            int selectedIndex = 0;
+            for (int i = 0; i < chaptersCount; i++) {
+                Chapter chapter = (Chapter) frame.openDB.treeMap(Constants.COLLECTION_NOVEL).get(i);
+                if (chapter.getPart() != currentPart) {
+                    frame.dnDTabbedPane.addNewTab(null);
+                    currentPart = chapter.getPart();
+                }
+                DnDTabbedPane partTab = (DnDTabbedPane) frame.dnDTabbedPane.getComponentAt(currentPart);
+                partTab.addNewTab(chapter);
+                if (chapter.isSelected()) {
+                    selectedIndex = partTab.getTabCount() - 2;
+                }
+                partTab.setSelectedIndex(selectedIndex);
+            }
 
 
+            Object o = frame.openDB.treeMap(Constants.COLLECTION_PROPS).get(Constants.PROP_SELECTED_PART);
+            frame.dnDTabbedPane.setSelectedIndex(o == null ? 0 : (Integer) o);
 
             frame.updateState(selectedFile.getName());
+            frame.validate();
+            frame.repaint();
         }
     }
 }

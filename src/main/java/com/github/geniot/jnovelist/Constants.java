@@ -12,6 +12,5 @@ public class Constants {
     public static final String COLLECTION_NOVEL = "COLLECTION_NOVEL";
     public static final String COLLECTION_PROPS = "COLLECTION_PROPS";
 
-    public static final String PROP_CARET_POS = "PROP_CARET_POS";
-    public static final String PROP_VIEW_POS = "PROP_VIEW_POS";
+    public static final String PROP_SELECTED_PART = "PROP_SELECTED_PART";
 }
