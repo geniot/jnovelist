@@ -81,6 +81,12 @@ public class LoadNovelAction implements ActionListener {
                 partTab.setSelectedIndex(selectedIndex);
             }
 
+            if (chaptersCount == 0) {
+                frame.dnDTabbedPane.addNewTab(null);
+                DnDTabbedPane partTab = (DnDTabbedPane) frame.dnDTabbedPane.getComponentAt(0);
+                partTab.addNewTab(null);
+            }
+
             Object o = frame.openDB.treeMap(Constants.COLLECTION_PROPS).get(Constants.PROP_SELECTED_PART);
             frame.dnDTabbedPane.setSelectedIndex(o == null ? 0 : (Integer) o);
             frame.updateStatus();
