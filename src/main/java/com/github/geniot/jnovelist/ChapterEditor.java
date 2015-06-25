@@ -3,6 +3,8 @@ package com.github.geniot.jnovelist;
 import com.github.geniot.jnovelist.model.Chapter;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.text.Document;
@@ -84,6 +86,26 @@ public class ChapterEditor extends JEditorPane {
         // Bind the redo action to ctl-Y
         getInputMap().put(KeyStroke.getKeyStroke("control Y"), "Redo");
 
+        doc.addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateStatus();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateStatus();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateStatus();
+            }
+        });
+    }
+
+    private void updateStatus(){
+         System.out.println(getText().length());
     }
 
 

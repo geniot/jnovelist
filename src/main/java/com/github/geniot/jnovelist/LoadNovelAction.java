@@ -1,6 +1,7 @@
 package com.github.geniot.jnovelist;
 
 import com.github.geniot.jnovelist.model.Chapter;
+import com.github.geniot.jnovelist.model.Stats;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,11 +44,14 @@ public class LoadNovelAction implements ActionListener {
         int chaptersCount = frame.openDB.treeMap(Constants.COLLECTION_NOVEL).size();
         int currentPart = -1;
         int selectedIndex = 0;
+        Stats stats = new Stats();
+
         for (int i = 0; i < chaptersCount; i++) {
             Chapter chapter = (Chapter) frame.openDB.treeMap(Constants.COLLECTION_NOVEL).get(i);
             if (chapter == null) {
                 continue;
             }
+            stats.process(chapter.getNumber(), chapter.getText());
             if (chapter.getPart() != currentPart) {
                 frame.dnDTabbedPane.addNewTab(null);
                 currentPart = chapter.getPart();
@@ -63,6 +67,8 @@ public class LoadNovelAction implements ActionListener {
 
         Object o = frame.openDB.treeMap(Constants.COLLECTION_PROPS).get(Constants.PROP_SELECTED_PART);
         frame.dnDTabbedPane.setSelectedIndex(o == null ? 0 : (Integer) o);
+        frame.stats = stats;
+
         frame.updateState();
         frame.validate();
         frame.repaint();

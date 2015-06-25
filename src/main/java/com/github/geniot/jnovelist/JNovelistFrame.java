@@ -1,8 +1,10 @@
 package com.github.geniot.jnovelist;
 
+import com.github.geniot.jnovelist.model.Stats;
 import org.mapdb.DB;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -25,10 +27,12 @@ public class JNovelistFrame extends JFrame {
     protected JButton loadNovel;
     protected JButton unloadNovel;
     protected DnDTabbedPane dnDTabbedPane;
+    protected JLabel statusLabel;
 
 
     protected DB openDB;
     protected String openFileName;
+    protected Stats stats;
 
     public JNovelistFrame() {
         super("JNovelist");
@@ -50,6 +54,8 @@ public class JNovelistFrame extends JFrame {
                     Constants.PROPS.setProperty(Constants.PROP_POS_X, String.valueOf((int) getLocation().getX()));
                     Constants.PROPS.setProperty(Constants.PROP_POS_Y, String.valueOf((int) getLocation().getY()));
                     unloadNovel.doClick();
+                }else{
+                    Constants.PROPS.remove(Constants.PROP_LAST_OPEN_FILE);
                 }
                 try {
                     FileOutputStream fos = new FileOutputStream(System.getProperty("user.home") + File.separator + Constants.PROPS_FILE_NAME);
@@ -75,6 +81,15 @@ public class JNovelistFrame extends JFrame {
         toolBar.add(unloadNovel);
 
         getContentPane().add(toolBar, BorderLayout.PAGE_START);
+
+        JPanel statusPanel = new JPanel();
+        statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        add(statusPanel, BorderLayout.SOUTH);
+        statusPanel.setPreferredSize(new Dimension(getWidth(), 30));
+        statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
+        statusLabel = new JLabel();
+        statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        statusPanel.add(statusLabel);
 
 
         //Display the window.
@@ -152,10 +167,12 @@ public class JNovelistFrame extends JFrame {
                 dnDTabbedPane = null;
                 validate();
                 repaint();
-
             }
             unloadNovel.setEnabled(false);
         } else {
+            if (stats!=null){
+                statusLabel.setText(stats.getStatus());
+            }
             unloadNovel.setEnabled(true);
         }
         setTitle(getDynTitle());
