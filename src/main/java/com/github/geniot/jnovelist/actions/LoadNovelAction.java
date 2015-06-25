@@ -11,6 +11,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Author: Vitaly Sazanovich
@@ -18,6 +20,7 @@ import java.io.File;
  * Date: 23/06/15
  */
 public class LoadNovelAction implements ActionListener {
+    private static final Logger logger = Logger.getLogger(LoadNovelAction.class.getName());
     private JNovelistFrame frame;
 
     public LoadNovelAction(JNovelistFrame f) {
@@ -26,7 +29,18 @@ public class LoadNovelAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        final JFileChooser fc = new JFileChooser();
+        JFileChooser fc;
+        if (Constants.PROPS.containsKey(Constants.PROP_LAST_OPEN_DIR)) {
+            try {
+                fc = new JFileChooser(Constants.PROPS.getProperty(Constants.PROP_LAST_OPEN_DIR));
+            } catch (Exception ex) {
+                logger.log(Level.WARNING, ex.getMessage());
+                fc = new JFileChooser();
+            }
+        } else {
+            fc = new JFileChooser();
+        }
+
         int returnVal = fc.showOpenDialog(frame);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             if (frame.openDB != null) {
@@ -34,6 +48,7 @@ public class LoadNovelAction implements ActionListener {
             }
 
             File selectedFile = fc.getSelectedFile();
+            Constants.PROPS.setProperty(Constants.PROP_LAST_OPEN_DIR, selectedFile.getPath());
             loadNovel(frame, selectedFile);
         }
     }

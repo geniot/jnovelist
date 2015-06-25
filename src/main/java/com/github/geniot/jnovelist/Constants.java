@@ -23,6 +23,7 @@ public class Constants {
     public static final String PROP_HEIGHT = "PROP_HEIGHT";
     public static final String PROP_POS_X = "PROP_POS_X";
     public static final String PROP_POS_Y = "PROP_POS_Y";
+    public static final String PROP_LAST_OPEN_DIR = "PROP_LAST_OPEN_DIR";
 
     public static Properties PROPS = new Properties();
 }
