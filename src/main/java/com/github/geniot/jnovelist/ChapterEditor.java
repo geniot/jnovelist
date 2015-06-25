@@ -14,7 +14,6 @@ import javax.swing.text.html.StyleSheet;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -121,14 +120,7 @@ public class ChapterEditor extends JEditorPane {
         charsNoSpaces = chars.length();
         words = wds.length == 1 && wds[0].equals("") ? 0 : wds.length;
 
-
-        Container c = getParent();
-        while (c != null && !(c instanceof JNovelistFrame)) {
-            c = c.getParent();
-        }
-        if (c != null) {
-            ((JNovelistFrame) c).updateStatus();
-        }
+        Utils.updateStatus(this);
     }
 
 

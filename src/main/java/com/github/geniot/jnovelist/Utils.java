@@ -1,6 +1,7 @@
 package com.github.geniot.jnovelist;
 
 import javax.swing.*;
+import java.awt.*;
 import java.beans.PersistenceDelegate;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
@@ -72,6 +73,23 @@ public class Utils {
             logger.log(Level.SEVERE, ex.getMessage(), ex);
             return "";
         }
+    }
+
+    public static void updateStatus(final Component component) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                Container c = component.getParent();
+                while (c != null && !(c instanceof JNovelistFrame)) {
+                    c = c.getParent();
+                }
+                if (c != null) {
+                    ((JNovelistFrame) c).updateStatus();
+                }
+            }
+        });
+
+
     }
 
 }

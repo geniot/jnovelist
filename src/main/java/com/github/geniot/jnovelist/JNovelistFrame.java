@@ -142,6 +142,6 @@ public class JNovelistFrame extends JFrame {
                 }
             }
         }
-        statusLabel.setText(" C: " + chars + " / CNS: " + charsNoSpaces + " / W: " + words);
+        statusLabel.setText(" CAL: " + chars + " / CNS: " + charsNoSpaces + " / WDS: " + words);
     }
 }

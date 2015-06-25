@@ -4,9 +4,7 @@ import com.github.geniot.jnovelist.model.Chapter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
 public class DnDTabbedPane extends JTabbedPane {
@@ -52,6 +50,13 @@ public class DnDTabbedPane extends JTabbedPane {
         super();
         this.titleNamingType = tnt;
         final DnDTabbedPane thisRef = this;
+
+        addContainerListener(new ContainerAdapter() {
+            @Override
+            public void componentRemoved(ContainerEvent e) {
+                Utils.updateStatus(DnDTabbedPane.this);
+            }
+        });
 
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
