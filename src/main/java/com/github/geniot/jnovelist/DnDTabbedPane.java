@@ -115,6 +115,17 @@ public class DnDTabbedPane extends JTabbedPane {
                     }
                 }
 
+
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        Component c = getSelectedComponent();
+                        if (c != null && c instanceof JScrollPane) {
+                            (((JScrollPane) c).getViewport().getView()).requestFocus();
+                        }
+                    }
+                });
+
                 dragging = false;
                 tabImage = null;
                 repaint();
@@ -149,6 +160,9 @@ public class DnDTabbedPane extends JTabbedPane {
             final Component c;
             if (titleNamingType.equals(DnDTabbedPane.DECIMAL_TO_ROMAN)) {
                 c = new DnDTabbedPane(DnDTabbedPane.INDEX_TO_DECIMAL);
+                if (chapter == null) {
+                    ((DnDTabbedPane) c).addNewTab(null);
+                }
             } else {
                 final ChapterEditor chapterEditor = new ChapterEditor(chapter);
                 c = new JScrollPane(chapterEditor);

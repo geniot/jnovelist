@@ -14,7 +14,6 @@
     </properties>
 
 
-
     <dependencies>
         <dependency>
             <!-- jsoup HTML parser library @ http://jsoup.org/ -->
@@ -22,6 +21,12 @@
             <artifactId>jsoup</artifactId>
             <version>1.8.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.3.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>

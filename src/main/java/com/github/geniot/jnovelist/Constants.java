@@ -1,5 +1,7 @@
 package com.github.geniot.jnovelist;
 
+import com.github.geniot.jnovelist.model.PersistedModel;
+
 import java.util.Properties;
 
 /**
@@ -26,4 +28,5 @@ public class Constants {
     public static final String PROP_LAST_OPEN_DIR = "PROP_LAST_OPEN_DIR";
 
     public static Properties PROPS = new Properties();
+
 }

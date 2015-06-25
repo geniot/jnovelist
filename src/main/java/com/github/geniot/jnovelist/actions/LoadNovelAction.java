@@ -1,18 +1,22 @@
 package com.github.geniot.jnovelist.actions;
 
 import com.github.geniot.jnovelist.Constants;
-import com.github.geniot.jnovelist.DataAccessObject;
 import com.github.geniot.jnovelist.DnDTabbedPane;
 import com.github.geniot.jnovelist.JNovelistFrame;
+import com.github.geniot.jnovelist.Utils;
 import com.github.geniot.jnovelist.model.Chapter;
+import com.github.geniot.jnovelist.model.PersistedModel;
+import org.apache.commons.io.IOUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 /**
  * Author: Vitaly Sazanovich
@@ -41,9 +45,11 @@ public class LoadNovelAction implements ActionListener {
             fc = new JFileChooser();
         }
 
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
         int returnVal = fc.showOpenDialog(frame);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            if (frame.openDB != null) {
+            if (frame.openFileName != null) {
                 frame.unloadNovel.doClick();
             }
 
@@ -53,25 +59,32 @@ public class LoadNovelAction implements ActionListener {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static void loadNovel(JNovelistFrame frame, File selectedFile) {
         try {
-            frame.openDB = DataAccessObject.open(selectedFile);
+            PersistedModel model = new PersistedModel();
+            if (selectedFile.exists()) {
+                model = (PersistedModel) Utils.deserialize(IOUtils.toByteArray(new FileInputStream(selectedFile)));
+            }
+
             frame.openFileName = selectedFile.getAbsolutePath();
             frame.dnDTabbedPane = new DnDTabbedPane(DnDTabbedPane.DECIMAL_TO_ROMAN);
             frame.getContentPane().add(frame.dnDTabbedPane, BorderLayout.CENTER);
 
-            int chaptersCount = frame.openDB.treeMap(Constants.COLLECTION_NOVEL).size();
+
+            int chaptersCount = model.getNovel().size();
             int currentPart = -1;
             int selectedIndex = 0;
 
             for (int i = 0; i < chaptersCount; i++) {
-                Chapter chapter = (Chapter) frame.openDB.treeMap(Constants.COLLECTION_NOVEL).get(i);
+                Chapter chapter = model.getNovel().get(i);
                 if (chapter == null) {
                     continue;
                 }
                 if (chapter.getPart() != currentPart) {
-                    frame.dnDTabbedPane.addNewTab(null);
+                    frame.dnDTabbedPane.addNewTab(chapter);
                     currentPart = chapter.getPart();
+                    selectedIndex = 0;
                 }
                 DnDTabbedPane partTab = (DnDTabbedPane) frame.dnDTabbedPane.getComponentAt(currentPart);
                 partTab.addNewTab(chapter);
@@ -87,12 +100,16 @@ public class LoadNovelAction implements ActionListener {
                 partTab.addNewTab(null);
             }
 
-            Object o = frame.openDB.treeMap(Constants.COLLECTION_PROPS).get(Constants.PROP_SELECTED_PART);
-            frame.dnDTabbedPane.setSelectedIndex(o == null ? 0 : (Integer) o);
+
+            Object o = model.getProperties().get(Constants.PROP_SELECTED_PART);
+            frame.dnDTabbedPane.setSelectedIndex(o == null ? 0 : Integer.parseInt(o.toString()));
+
+
             frame.updateStatus();
             frame.updateState();
             frame.validate();
             frame.repaint();
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }

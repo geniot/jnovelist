@@ -2,11 +2,14 @@ package com.github.geniot.jnovelist.actions;
 
 import com.github.geniot.jnovelist.*;
 import com.github.geniot.jnovelist.model.Chapter;
+import com.github.geniot.jnovelist.model.PersistedModel;
+import org.apache.commons.io.IOUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -16,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 /**
  * Author: Vitaly Sazanovich
@@ -51,7 +55,7 @@ public class SaveAction implements ActionListener {
     protected void save() {
         int number = 0;
         List<String> lines = new ArrayList<String>();
-        frame.openDB.treeMap(Constants.COLLECTION_NOVEL).clear();
+        PersistedModel model = new PersistedModel();
         for (int i = 0; i < frame.dnDTabbedPane.getTabCount(); i++) {
             Component c = frame.dnDTabbedPane.getComponentAt(i);
             if (c instanceof DnDTabbedPane) {
@@ -68,15 +72,22 @@ public class SaveAction implements ActionListener {
                         chapter.setCaretPosition(editor.getCaretPosition());
                         chapter.setViewPosition(sp.getVerticalScrollBar().getValue());
                         chapter.setSelected(dnd.getSelectedComponent().equals(o));
-                        frame.openDB.treeMap(Constants.COLLECTION_NOVEL).put(chapter.getNumber(), chapter);
+                        model.getNovel().add(chapter);
                         lines.add(Utils.entry2xml(chapter));
                         ++number;
                     }
                 }
             }
         }
-        frame.openDB.treeMap(Constants.COLLECTION_PROPS).put(Constants.PROP_SELECTED_PART, frame.dnDTabbedPane.getSelectedIndex());
-        frame.openDB.commit();
+
+        model.getProperties().setProperty(Constants.PROP_SELECTED_PART, String.valueOf(frame.dnDTabbedPane.getSelectedIndex()));
+
+        try {
+            IOUtils.write(Utils.serialize(model), new FileOutputStream(frame.openFileName));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         Path textFile = Paths.get(frame.openFileName + ".xml");
         try {

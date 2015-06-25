@@ -22,12 +22,13 @@ public class OnExitAction extends WindowAdapter {
 
     @Override
     public void windowClosing(WindowEvent e) {
-        if (frame.openDB != null) {
+        Constants.PROPS.setProperty(Constants.PROP_WIDTH, String.valueOf(frame.getWidth()));
+        Constants.PROPS.setProperty(Constants.PROP_HEIGHT, String.valueOf(frame.getHeight()));
+        Constants.PROPS.setProperty(Constants.PROP_POS_X, String.valueOf((int) frame.getLocation().getX()));
+        Constants.PROPS.setProperty(Constants.PROP_POS_Y, String.valueOf((int) frame.getLocation().getY()));
+
+        if (frame.openFileName != null) {
             Constants.PROPS.setProperty(Constants.PROP_LAST_OPEN_FILE, frame.openFileName);
-            Constants.PROPS.setProperty(Constants.PROP_WIDTH, String.valueOf(frame.getWidth()));
-            Constants.PROPS.setProperty(Constants.PROP_HEIGHT, String.valueOf(frame.getHeight()));
-            Constants.PROPS.setProperty(Constants.PROP_POS_X, String.valueOf((int) frame.getLocation().getX()));
-            Constants.PROPS.setProperty(Constants.PROP_POS_Y, String.valueOf((int) frame.getLocation().getY()));
             frame.unloadNovel.doClick();
         } else {
             Constants.PROPS.remove(Constants.PROP_LAST_OPEN_FILE);

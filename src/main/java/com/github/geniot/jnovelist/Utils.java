@@ -5,8 +5,7 @@ import java.awt.*;
 import java.beans.PersistenceDelegate;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.*;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -92,4 +91,56 @@ public class Utils {
 
     }
 
+    public static byte[] serialize(Object yourObject) {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutput out = null;
+        try {
+            out = new ObjectOutputStream(bos);
+            out.writeObject(yourObject);
+            byte[] yourBytes = bos.toByteArray();
+            return yourBytes;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException ex) {
+                // ignore close exception
+            }
+            try {
+                bos.close();
+            } catch (IOException ex) {
+                // ignore close exception
+            }
+        }
+        return new byte[]{};
+    }
+
+    public static Object deserialize(byte[] yourBytes) {
+        ByteArrayInputStream bis = new ByteArrayInputStream(yourBytes);
+        ObjectInput in = null;
+        try {
+            in = new ObjectInputStream(bis);
+            Object o = in.readObject();
+            return o;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                bis.close();
+            } catch (IOException ex) {
+                // ignore close exception
+            }
+            try {
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException ex) {
+                // ignore close exception
+            }
+        }
+        return null;
+    }
 }

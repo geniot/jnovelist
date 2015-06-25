@@ -19,8 +19,6 @@ public class UnloadAction extends SaveAction {
     public void actionPerformed(ActionEvent e) {
         save();
         frame.statusLabel.setText("");
-        frame.openDB.close();
-        frame.openDB = null;
         frame.openFileName = null;
         frame.updateState();
     }

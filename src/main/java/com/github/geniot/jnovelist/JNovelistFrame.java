@@ -1,7 +1,8 @@
 package com.github.geniot.jnovelist;
 
 import com.github.geniot.jnovelist.actions.*;
-import org.mapdb.DB;
+
+
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -22,8 +23,6 @@ public class JNovelistFrame extends JFrame {
     public DnDTabbedPane dnDTabbedPane;
     public JLabel statusLabel;
 
-
-    public DB openDB;
     public String openFileName;
 
     public JNovelistFrame() {
@@ -99,12 +98,12 @@ public class JNovelistFrame extends JFrame {
 
 
     private String getDynTitle() {
-        return "JNovelist" + (openDB == null ? "" : " - " + openFileName.substring(openFileName.lastIndexOf(File.separator) + 1, openFileName.length()));
+        return "JNovelist" + (openFileName == null ? "" : " - " + openFileName.substring(openFileName.lastIndexOf(File.separator) + 1, openFileName.length()));
     }
 
 
     public void updateState() {
-        if (openDB == null) {
+        if (openFileName == null) {
             if (dnDTabbedPane != null) {
                 getContentPane().remove(dnDTabbedPane);
                 dnDTabbedPane = null;
