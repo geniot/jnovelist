@@ -48,7 +48,7 @@ public class LoadNovelAction implements ActionListener {
             }
 
             File selectedFile = fc.getSelectedFile();
-            Constants.PROPS.setProperty(Constants.PROP_LAST_OPEN_DIR, selectedFile.getPath());
+            Constants.PROPS.setProperty(Constants.PROP_LAST_OPEN_DIR, fc.getCurrentDirectory().getPath());
             loadNovel(frame, selectedFile);
         }
     }
