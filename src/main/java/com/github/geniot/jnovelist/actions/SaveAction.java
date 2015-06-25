@@ -82,10 +82,20 @@ public class SaveAction implements ActionListener {
 
         model.getProperties().setProperty(Constants.PROP_SELECTED_PART, String.valueOf(frame.dnDTabbedPane.getSelectedIndex()));
 
+        FileOutputStream fos = null;
         try {
-            IOUtils.write(Utils.serialize(model), new FileOutputStream(frame.openFileName));
+            fos = new FileOutputStream(frame.openFileName);
+            IOUtils.write(Utils.serialize(model), fos);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
 

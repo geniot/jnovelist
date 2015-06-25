@@ -64,7 +64,9 @@ public class LoadNovelAction implements ActionListener {
         try {
             PersistedModel model = new PersistedModel();
             if (selectedFile.exists()) {
-                model = (PersistedModel) Utils.deserialize(IOUtils.toByteArray(new FileInputStream(selectedFile)));
+                FileInputStream fis = new FileInputStream(selectedFile);
+                model = (PersistedModel) Utils.deserialize(IOUtils.toByteArray(fis));
+                fis.close();
             }
 
             frame.openFileName = selectedFile.getAbsolutePath();
