@@ -30,7 +30,7 @@
     </dependencies>
 
     <build>
-        <finalName>dictiographer-${version}</finalName>
+        <finalName>jnovelist-${version}</finalName>
 
         <resources>
             <resource>
@@ -45,7 +45,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.dictiographer.DictiographerLauncher</mainClass>
+                            <mainClass>com.github.geniot.jnovelist.JNovelistLauncher</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
