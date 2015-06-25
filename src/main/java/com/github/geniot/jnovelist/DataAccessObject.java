@@ -18,8 +18,6 @@ public class DataAccessObject {
         return DBMaker.fileDB(f)
                 .closeOnJvmShutdown()
                 .compressionEnable()
-                .transactionDisable()
-                .encryptionEnable("password")
                 .make();
 
     }

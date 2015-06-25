@@ -1,6 +1,7 @@
 package com.github.geniot.jnovelist;
 
 import com.github.geniot.jnovelist.model.Chapter;
+import org.jsoup.Jsoup;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -13,6 +14,7 @@ import javax.swing.text.html.StyleSheet;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -22,6 +24,10 @@ import java.awt.event.ActionEvent;
  */
 public class ChapterEditor extends JEditorPane {
     protected LinePainter linePainter;
+
+    public int charsSpaces = 0;
+    public int charsNoSpaces = 0;
+    public int words = 0;
 
     public ChapterEditor(Chapter ch) {
         super("text/html", "");
@@ -40,8 +46,8 @@ public class ChapterEditor extends JEditorPane {
 
         if (ch != null) {
             setText(ch.getText());
-            setCaretPosition(ch.getCaretPosition());
-        }else{
+            setCaretPosition(ch.getCaretPosition() > getDocument().getLength() ? getDocument().getLength() : ch.getCaretPosition());
+        } else {
             setText("<html><head></head><body><p></p></body></html>");
         }
 
@@ -102,17 +108,33 @@ public class ChapterEditor extends JEditorPane {
                 updateStatus();
             }
         });
+
+        updateStatus();
     }
 
-    private void updateStatus(){
-         System.out.println(getText().length());
+    private void updateStatus() {
+        String s = Jsoup.parse(getText()).text();
+        String str = s.replaceAll("[!?,]", "");
+        String[] wds = str.split("\\s+");
+        String chars = s.replaceAll("\\s+", "");
+        charsSpaces = s.length();
+        charsNoSpaces = chars.length();
+        words = wds.length == 1 && wds[0].equals("") ? 0 : wds.length;
+
+
+        Container c = getParent();
+        while (c != null && !(c instanceof JNovelistFrame)) {
+            c = c.getParent();
+        }
+        if (c != null) {
+            ((JNovelistFrame) c).updateStatus();
+        }
     }
 
 
     public Chapter getChapter() {
         Chapter ch = new Chapter();
         String text = getText();
-        text = text.replaceAll("style=\"[^\"]+\"","");
         ch.setText(text);
         return ch;
     }
