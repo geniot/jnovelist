@@ -98,8 +98,6 @@ public class LoadNovelAction implements ActionListener {
 
             if (chaptersCount == 0) {
                 frame.dnDTabbedPane.addNewTab(null);
-                DnDTabbedPane partTab = (DnDTabbedPane) frame.dnDTabbedPane.getComponentAt(0);
-                partTab.addNewTab(null);
             }
 
 

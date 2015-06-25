@@ -24,6 +24,15 @@ import java.awt.event.ActionEvent;
 public class ChapterEditor extends JEditorPane {
     protected LinePainter linePainter;
 
+    private static final String EMPTY_DOC = "<html><head></head><body><p></p></body></html>";
+    private static final String EMPTY_STRIPPED = "<html>\n" +
+            "  <head>\n" +
+            "    \n" +
+            "  </head>\n" +
+            "  <body>\n" +
+            "  </body>\n" +
+            "</html>\n";
+
     public int charsSpaces = 0;
     public int charsNoSpaces = 0;
     public int words = 0;
@@ -47,7 +56,7 @@ public class ChapterEditor extends JEditorPane {
             setText(ch.getText());
             setCaretPosition(ch.getCaretPosition() > getDocument().getLength() ? getDocument().getLength() : ch.getCaretPosition());
         } else {
-            setText("<html><head></head><body><p></p></body></html>");
+            setText(EMPTY_DOC);
         }
 
         final UndoManager undo = new UndoManager();
@@ -127,6 +136,9 @@ public class ChapterEditor extends JEditorPane {
     public Chapter getChapter() {
         Chapter ch = new Chapter();
         String text = getText();
+        if (text.equals(EMPTY_STRIPPED)) {
+            text = EMPTY_DOC;
+        }
         ch.setText(text);
         return ch;
     }
