@@ -133,10 +133,10 @@ public class JNovelistFrame extends JFrame {
                     if (o instanceof JScrollPane) {
                         JScrollPane sp = (JScrollPane) o;
                         JViewport viewport = sp.getViewport();
-                        ChapterEditor editor = (ChapterEditor) viewport.getView();
-                        chars += editor.charsSpaces;
-                        charsNoSpaces += editor.charsNoSpaces;
-                        words += editor.words;
+//                        ChapterEditor editor = (ChapterEditor) viewport.getView();
+//                        chars += editor.charsSpaces;
+//                        charsNoSpaces += editor.charsNoSpaces;
+//                        words += editor.words;
                     }
                 }
             }

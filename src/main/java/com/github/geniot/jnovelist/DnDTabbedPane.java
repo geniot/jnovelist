@@ -1,6 +1,7 @@
 package com.github.geniot.jnovelist;
 
 import com.github.geniot.jnovelist.model.Chapter;
+import com.lightdev.app.shtm.DocumentPane;
 
 import javax.swing.*;
 import java.awt.*;
@@ -164,17 +165,17 @@ public class DnDTabbedPane extends JTabbedPane {
                     ((DnDTabbedPane) c).addNewTab(null);
                 }
             } else {
-                final ChapterEditor chapterEditor = new ChapterEditor(chapter);
-                c = new JScrollPane(chapterEditor);
-
+//                final ChapterEditor chapterEditor = new ChapterEditor(chapter);
+//                c = new JScrollPane(chapterEditor);
+                c = new DocumentPane();
 
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        chapterEditor.requestFocus();
-                        if (chapter != null) {
-                            ((JScrollPane) c).getVerticalScrollBar().setValue(chapter.getViewPosition());
-                        }
+//                        chapterEditor.requestFocus();
+//                        if (chapter != null) {
+//                            ((JScrollPane) c).getVerticalScrollBar().setValue(chapter.getViewPosition());
+//                        }
                     }
                 });
 

@@ -65,15 +65,15 @@ public class SaveAction implements ActionListener {
                     if (o instanceof JScrollPane) {
                         JScrollPane sp = (JScrollPane) o;
                         JViewport viewport = sp.getViewport();
-                        ChapterEditor editor = (ChapterEditor) viewport.getView();
-                        Chapter chapter = editor.getChapter();
-                        chapter.setPart(i);
-                        chapter.setNumber(number);
-                        chapter.setCaretPosition(editor.getCaretPosition());
-                        chapter.setViewPosition(sp.getVerticalScrollBar().getValue());
-                        chapter.setSelected(dnd.getSelectedComponent().equals(o));
-                        model.getNovel().add(chapter);
-                        lines.add(Utils.entry2xml(chapter));
+//                        ChapterEditor editor = (ChapterEditor) viewport.getView();
+//                        Chapter chapter = editor.getChapter();
+//                        chapter.setPart(i);
+//                        chapter.setNumber(number);
+//                        chapter.setCaretPosition(editor.getCaretPosition());
+//                        chapter.setViewPosition(sp.getVerticalScrollBar().getValue());
+//                        chapter.setSelected(dnd.getSelectedComponent().equals(o));
+//                        model.getNovel().add(chapter);
+//                        lines.add(Utils.entry2xml(chapter));
                         ++number;
                     }
                 }
