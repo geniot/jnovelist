@@ -121,8 +121,8 @@ public class DnDTabbedPane extends JTabbedPane {
                     @Override
                     public void run() {
                         Component c = getSelectedComponent();
-                        if (c != null && c instanceof JScrollPane) {
-                            (((JScrollPane) c).getViewport().getView()).requestFocus();
+                        if (c != null && c instanceof ChapterEditor) {
+                            ((ChapterEditor) c).getEditor().requestFocus();
                         }
                     }
                 });
@@ -133,11 +133,7 @@ public class DnDTabbedPane extends JTabbedPane {
             }
         });
 
-//        add("I", new JButton("Click here "));
-//        setTabComponentAt(0, new ButtonTabComponent(this));
-
         plusPanel = new JPanel();
-
         addTab("+", plusPanel);
 
 
@@ -165,17 +161,16 @@ public class DnDTabbedPane extends JTabbedPane {
                     ((DnDTabbedPane) c).addNewTab(null);
                 }
             } else {
-//                final ChapterEditor chapterEditor = new ChapterEditor(chapter);
-//                c = new JScrollPane(chapterEditor);
-                c = new DocumentPane();
+                c = new ChapterEditor(chapter);
+
 
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-//                        chapterEditor.requestFocus();
-//                        if (chapter != null) {
-//                            ((JScrollPane) c).getVerticalScrollBar().setValue(chapter.getViewPosition());
-//                        }
+                        ((ChapterEditor)c).getEditor().requestFocus();
+                        if (chapter != null) {
+                            ((ChapterEditor) c).getVerticalScrollBar().setValue(chapter.getViewPosition());
+                        }
                     }
                 });
 

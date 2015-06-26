@@ -14,8 +14,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 
 /**
@@ -64,9 +68,22 @@ public class LoadNovelAction implements ActionListener {
         try {
             PersistedModel model = new PersistedModel();
             if (selectedFile.exists()) {
-                FileInputStream fis = new FileInputStream(selectedFile);
-                model = (PersistedModel) Utils.deserialize(IOUtils.toByteArray(fis));
-                fis.close();
+                try {
+                    ZipFile zipFile = new ZipFile(selectedFile);
+                    Enumeration<? extends ZipEntry> entries = zipFile.entries();
+                    while (entries.hasMoreElements()) {
+                        ZipEntry entry = entries.nextElement();
+                        InputStream stream = zipFile.getInputStream(entry);
+                        model = (PersistedModel) Utils.deserialize(IOUtils.toByteArray(stream));
+                        stream.close();
+                    }
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                    FileInputStream fis = new FileInputStream(selectedFile);
+                    model = (PersistedModel) Utils.deserialize(IOUtils.toByteArray(fis));
+                    fis.close();
+                }
+
             }
 
             frame.openFileName = selectedFile.getAbsolutePath();

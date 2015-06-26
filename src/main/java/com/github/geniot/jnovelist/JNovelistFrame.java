@@ -89,9 +89,14 @@ public class JNovelistFrame extends JFrame {
 
         if (Constants.PROPS.containsKey(Constants.PROP_LAST_OPEN_FILE)) {
             String lastOpenFile = Constants.PROPS.getProperty(Constants.PROP_LAST_OPEN_FILE);
-            File f = new File(lastOpenFile);
+            final File f = new File(lastOpenFile);
             if (f.exists()) {
-                LoadNovelAction.loadNovel(this, f);
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        LoadNovelAction.loadNovel(JNovelistFrame.this, f);
+                    }
+                });
             }
         }
     }
@@ -130,13 +135,11 @@ public class JNovelistFrame extends JFrame {
                 DnDTabbedPane dnd = (DnDTabbedPane) c;
                 for (int k = 0; k < dnd.getTabCount(); k++) {
                     Component o = dnd.getComponentAt(k);
-                    if (o instanceof JScrollPane) {
-                        JScrollPane sp = (JScrollPane) o;
-                        JViewport viewport = sp.getViewport();
-//                        ChapterEditor editor = (ChapterEditor) viewport.getView();
-//                        chars += editor.charsSpaces;
-//                        charsNoSpaces += editor.charsNoSpaces;
-//                        words += editor.words;
+                    if (o instanceof ChapterEditor) {
+                        ChapterEditor editor = (ChapterEditor) o;
+                        chars += editor.charsSpaces;
+                        charsNoSpaces += editor.charsNoSpaces;
+                        words += editor.words;
                     }
                 }
             }

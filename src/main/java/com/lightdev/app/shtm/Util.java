@@ -981,6 +981,6 @@ public class Util {
      *  editor pane using the UI element of tab, shown below the editing panes. If false, switching
      *  between editor panes is still possible, albeit not using the tabs. */
     static boolean showViewsInTabs() {
-        return Util.preferenceIsTrue("showViewsInTabs", "true");
+        return Util.preferenceIsTrue("showViewsInTabs", "false");
     }
 }

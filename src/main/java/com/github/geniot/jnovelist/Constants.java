@@ -27,6 +27,8 @@ public class Constants {
     public static final String PROP_POS_Y = "PROP_POS_Y";
     public static final String PROP_LAST_OPEN_DIR = "PROP_LAST_OPEN_DIR";
 
+    public static final String EMPTY_DOC = "<html><head><style>body {font-family:verdana; margin: 15px;}</style></head><body><p></p></body></html>";
+
     public static Properties PROPS = new Properties();
 
 }

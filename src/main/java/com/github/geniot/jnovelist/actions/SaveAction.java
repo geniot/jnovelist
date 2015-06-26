@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 
 /**
@@ -44,7 +46,7 @@ public class SaveAction implements ActionListener {
             @Override
             public void run() {
                 try {
-                    (((JScrollPane) ((DnDTabbedPane) frame.dnDTabbedPane.getSelectedComponent()).getSelectedComponent()).getViewport().getView()).requestFocus();
+                    (((ChapterEditor) ((DnDTabbedPane) frame.dnDTabbedPane.getSelectedComponent()).getSelectedComponent())).requestFocus();
                 } catch (Exception ex) {
                     logger.log(Level.INFO, ex.getMessage());
                 }
@@ -62,18 +64,16 @@ public class SaveAction implements ActionListener {
                 DnDTabbedPane dnd = (DnDTabbedPane) c;
                 for (int k = 0; k < dnd.getTabCount(); k++) {
                     Component o = dnd.getComponentAt(k);
-                    if (o instanceof JScrollPane) {
-                        JScrollPane sp = (JScrollPane) o;
-                        JViewport viewport = sp.getViewport();
-//                        ChapterEditor editor = (ChapterEditor) viewport.getView();
-//                        Chapter chapter = editor.getChapter();
-//                        chapter.setPart(i);
-//                        chapter.setNumber(number);
-//                        chapter.setCaretPosition(editor.getCaretPosition());
-//                        chapter.setViewPosition(sp.getVerticalScrollBar().getValue());
-//                        chapter.setSelected(dnd.getSelectedComponent().equals(o));
-//                        model.getNovel().add(chapter);
-//                        lines.add(Utils.entry2xml(chapter));
+                    if (o instanceof ChapterEditor) {
+                        ChapterEditor editor = (ChapterEditor)o;
+                        Chapter chapter = editor.getChapter();
+                        chapter.setPart(i);
+                        chapter.setNumber(number);
+                        chapter.setCaretPosition(editor.getEditor().getCaretPosition());
+                        chapter.setViewPosition(editor.getVerticalScrollBar().getValue());
+                        chapter.setSelected(dnd.getSelectedComponent().equals(o));
+                        model.getNovel().add(chapter);
+                        lines.add(Utils.entry2xml(chapter));
                         ++number;
                     }
                 }
@@ -82,16 +82,19 @@ public class SaveAction implements ActionListener {
 
         model.getProperties().setProperty(Constants.PROP_SELECTED_PART, String.valueOf(frame.dnDTabbedPane.getSelectedIndex()));
 
-        FileOutputStream fos = null;
+        ZipOutputStream zos = null;
         try {
-            fos = new FileOutputStream(frame.openFileName);
-            IOUtils.write(Utils.serialize(model), fos);
+            zos = new ZipOutputStream(new FileOutputStream(frame.openFileName));
+            ZipEntry zipEntry = new ZipEntry("model.ser");
+            zos.putNextEntry(zipEntry);
+            zos.write(Utils.serialize(model));
+            zos.closeEntry();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (fos != null) {
+            if (zos != null) {
                 try {
-                    fos.close();
+                    zos.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -99,11 +102,11 @@ public class SaveAction implements ActionListener {
         }
 
 
-        Path textFile = Paths.get(frame.openFileName + ".xml");
-        try {
-            Files.write(textFile, lines, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        Path textFile = Paths.get(frame.openFileName + ".xml");
+//        try {
+//            Files.write(textFile, lines, StandardCharsets.UTF_8);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 }

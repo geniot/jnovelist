@@ -18,28 +18,9 @@
  */
 package com.lightdev.app.shtm;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Font;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Enumeration;
-import java.util.EventObject;
-import java.util.Vector;
+import com.sun.demo.ExampleFileFilter;
 
-import javax.swing.JComponent;
-import javax.swing.JEditorPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -47,26 +28,31 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.StyleSheet;
-
-import com.sun.demo.ExampleFileFilter;
+import java.awt.*;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.EventObject;
+import java.util.Vector;
 
 /**
  * GUI representation of a document.
- *
+ * <p/>
  * <p>Swing already uses three types of classes to implement a model, view,
  * controller (MVC) approach for a document:</p>
- *
+ * <p/>
  * <p>JTextComponent - the view implementation<br>
  * Document - the model implementation<br>
  * EditorKit - the controller implementation</p>
- *
+ * <p/>
  * <p>For a GUI representation of a document, additional parts are needed, such
  * as a JScrollPane as well as listeners and fields to track the state of
  * the document while it is represented on a GUI.</p>
- *
+ * <p/>
  * <p><code>DocumentPane</code> wraps all those elements to implement a single
  * document centric external view to all elements.</p>
- *
+ * <p/>
  * <p>If for instance an application wants to create a new document, it simply
  * creates an instance of this class instead of having to implement own
  * methods for instatiating each element (editor pane, scroll pane, etc.)
@@ -77,24 +63,34 @@ import com.sun.demo.ExampleFileFilter;
  * @author <a href="http://www.lightdev.com">http://www.lightdev.com</a>
  * @author <a href="mailto:info@lightdev.com">info@lightdev.com</a>
  * @author published under the terms and conditions of the
- *      GNU General Public License,
- *      for details see file gpl.txt in the distribution
- *      package of this software
- *
- * 
+ *         GNU General Public License,
+ *         for details see file gpl.txt in the distribution
+ *         package of this software
  */
 public class DocumentPane extends JPanel implements DocumentListener, ChangeListener {
-    /** the editor displaying the document in layout view */
+    /**
+     * the editor displaying the document in layout view
+     */
     private final SHTMLEditorPane editorPane;
-    /** the editor displaying the document in HTML code view */
+    /**
+     * the editor displaying the document in HTML code view
+     */
     private final SyntaxPane sourceEditorPane;
-    /** temporary storage location for this document */
+    /**
+     * temporary storage location for this document
+     */
     private File docTempDir = null;
-    /** the save thread, if a save operation is in progress */
+    /**
+     * the save thread, if a save operation is in progress
+     */
     public Thread saveThread = null;
-    /** indicator if a save operation was succesful */
+    /**
+     * indicator if a save operation was succesful
+     */
     public boolean saveSuccessful = false;
-    /** indicates if the document text has changed */
+    /**
+     * indicates if the document text has changed
+     */
     private boolean documentChanged = false;
 
     /**
@@ -111,7 +107,9 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
         return documentChanged;
     }
 
-    /** indicates if the document text has changed */
+    /**
+     * indicates if the document text has changed
+     */
     private boolean htmlChanged = true;
 
     /**
@@ -128,13 +126,21 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
         return htmlChanged;
     }
 
-    /** the name of the document */
+    /**
+     * the name of the document
+     */
     private String docName;
-    /** the file the current style sheet was loaded from, if any */
+    /**
+     * the file the current style sheet was loaded from, if any
+     */
     private final File loadedStyleSheet = null;
-    /** the URL the document was loaded from (if applicable)*/
+    /**
+     * the URL the document was loaded from (if applicable)
+     */
     private URL sourceUrl = null;
-    /** JTabbedPane for our views */
+    /**
+     * JTabbedPane for our views
+     */
     private JComponent paneHoldingScrollPanes;
     private final JScrollPane richViewScrollPane;
     private final JScrollPane sourceViewScrollPane;
@@ -145,20 +151,29 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
      * under a new name and this fails
      */
     private URL savedUrl = null;
-    /** indicates if this document was loaded froma file */
+    /**
+     * indicates if this document was loaded froma file
+     */
     private boolean loadedFromFile = false;
-    /** default document name */
+    /**
+     * default document name
+     */
     private String DEFAULT_DOC_NAME = "Untitled";
-    /** default name for style sheet, when saved */
+    /**
+     * default name for style sheet, when saved
+     */
     public static String DEFAULT_STYLE_SHEET_NAME = "style.css";
-    /** number for title of a new document */
+    /**
+     * number for title of a new document
+     */
     private int newDocNo;
     private int activeView;
 
     //private int renderMode;
+
     /**
      * construct a new <code>DocumentPane</code>.
-     *
+     * <p/>
      * <p>A document still has to be either created or loaded after using
      * this constructor, so it is better to use the constructor doing this
      * right away instead.</p>
@@ -190,8 +205,7 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
             tabbedPane.addChangeListener(this);
             setLayout(new BorderLayout());
             add(paneHoldingScrollPanes, BorderLayout.CENTER);
-        }
-        else {
+        } else {
             paneHoldingScrollPanes = new JPanel(new BorderLayout());
             paneHoldingScrollPanes.add(richViewScrollPane, BorderLayout.CENTER);
             activeView = VIEW_TAB_LAYOUT;
@@ -211,18 +225,17 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
      * Document that is to be loaded into the DocumentPane upon construction.
      *
      * @param docToLoad the document to be loaded. If this is null, a new
-     *      Document is created upon construction of the DocumentPane
+     *                  Document is created upon construction of the DocumentPane
      * @param newDocNo  the number a new document shall have in the
-     * title as long as it is not saved (such as in 'Untitled1'). If an
-     * existing document shall be loaded, this number is ignored
+     *                  title as long as it is not saved (such as in 'Untitled1'). If an
+     *                  existing document shall be loaded, this number is ignored
      */
     public DocumentPane(final URL docToLoad, final int newDocNo/*, int renderMode*/) {
         this(/*renderMode*/);
         DEFAULT_DOC_NAME = Util.getResourceString("defaultDocName");
         if (docToLoad != null) {
             loadDocument(docToLoad);
-        }
-        else {
+        } else {
             this.newDocNo = newDocNo;
             createNewDocument();
         }
@@ -273,8 +286,7 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
             if (useStyle) {
                 doc.insertStyleRef();
             }
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             Util.errMsg(this, e.getMessage(), e);
         }
     }
@@ -288,8 +300,7 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
             }
             docToSet.addDocumentListener(this); // listen to changes
             editorPane.setDocument(docToSet); // let the document be edited in our editor
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             Util.errMsg(this, e.getMessage(), e);
         }
     }
@@ -335,8 +346,7 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
             editorPane.setDocument(doc); // let the document be edited in our editor
             setSource(url); // remember where the document came from
             loadedFromFile = true;
-        }
-        catch (final Exception ex) {
+        } catch (final Exception ex) {
             Util.errMsg(this, "An exception occurred while loading the file", ex);
             ex.printStackTrace();
         }
@@ -345,8 +355,7 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
     /**
      * load the rules from a given style sheet file into a new <code>StyleSheet</code> object.
      *
-     * @param  cssFile  the file object referring to the style sheet to load from
-     *
+     * @param cssFile the file object referring to the style sheet to load from
      * @return the style sheet with rules loaded
      */
     private StyleSheet loadStyleSheet(final File cssFile) throws MalformedURLException, IOException {
@@ -358,17 +367,17 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
     /**
      * saves the document to the file specified in the source of the
      * <code>DocumentPane</code> and creates the associated style sheet.
-     *
+     * <p/>
      * The actual save process only is done, when there is a name to save
      * to. The class(es) calling this method have to make sure that a
      * name for new documents is requested from the user, for instance.
-     *
+     * <p/>
      * The desired name and location for the save need then to be set using method
      * setSource prior to a call to this method
      *
      * @throws DocNameMissingException to ensure the caller gets notified
-     *        that a save did not take place because of a missing name
-     *        and location
+     *                                 that a save did not take place because of a missing name
+     *                                 and location
      */
     public void saveDocument() throws DocNameMissingException {
         if (!saveInProgress()) {
@@ -407,21 +416,17 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
                     deleteTempDir();
                     //System.out.println("DocumentPane saveSuccessful = true");
                     saveSuccessful = true; // signal that saving was successful
-                }
-                else {
+                } else {
                     saveThread = null;
                     throw new DocNameMissingException();
                 }
-            }
-            catch (final MalformedURLException mue) {
+            } catch (final MalformedURLException mue) {
                 if (file != null) {
                     Util.errMsg(this, "Can not create a valid URL for\n" + file.getAbsolutePath(), mue);
-                }
-                else {
+                } else {
                     Util.errMsg(this, mue.getMessage(), mue);
                 }
-            }
-            catch (final Exception e) {
+            } catch (final Exception e) {
                 if (savedUrl != null) {
                     sourceUrl = savedUrl;
                 }
@@ -437,21 +442,19 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
      * files from
      *
      * @return the directory image files referenced by this
-     * <code>DocumentPane</code> are found
+     *         <code>DocumentPane</code> are found
      */
     public File getImageDir() {
         File srcDir = null;
         if (savedUrl == null && newDocNo > 0) {
             // new Document: use temp dir as source
             srcDir = new File(docTempDir + File.separator + SHTMLPanelImpl.IMAGE_DIR + File.separator);
-        }
-        else {
+        } else {
             if (savedUrl == null) {
                 // document has been saved before: source is 'sourceUrl'
                 srcDir = new File(new File(sourceUrl.getPath()).getParent() + File.separator + SHTMLPanelImpl.IMAGE_DIR
                         + File.separator);
-            }
-            else {
+            } else {
                 /*
                    document has been saved before but now is
                    to be saved under new name: source is 'old' url
@@ -479,11 +482,10 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
                 final File[] imgFiles = srcDir.listFiles();
                 for (int i = 0; i < imgFiles.length; i++) {
                     Util.copyFile(imgFiles[i],
-                        new File(destDir.getAbsolutePath() + File.separator + imgFiles[i].getName()));
+                            new File(destDir.getAbsolutePath() + File.separator + imgFiles[i].getName()));
                 }
             }
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             Util.errMsg(this, e.getMessage(), e);
         }
     }
@@ -500,7 +502,7 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
 
     /**
      * Saves the style sheet of this document to a CSS file.
-     *
+     * <p/>
      * <p>With stage 8, saves a style sheet by merging it with the existing
      * one with the same name/location. Styles in this style sheet overwrite
      * styles in the already existing style sheet.</p>
@@ -514,8 +516,7 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
             if (!styleSheetFile.exists()) {
                 // no styles present at save location, create new style sheet
                 styleSheetFile.createNewFile();
-            }
-            else {
+            } else {
                 if (loadedFromFile) {
                     if ((savedUrl == null) || (!savedUrl.getPath().equals(sourceUrl.getPath()))) {
                         /*
@@ -524,8 +525,7 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
                             havig the same name --> merge
                         */
                         mergeStyleSheets(loadStyleSheet(styleSheetFile), styles);
-                    }
-                    else {
+                    } else {
                         /*
                             same location where styles originally came
                             from, overwrite existing styles with new version
@@ -533,8 +533,7 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
                         styleSheetFile.delete();
                         styleSheetFile.createNewFile();
                     }
-                }
-                else {
+                } else {
                     /*
                         this style sheet was newly created and now is
                         being saved at a location where a style sheet exists
@@ -559,8 +558,8 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
      * in the destination style sheet. Assumes the rules
      * of src and dest are already loaded.
      *
-     * @param sourceStyleSheet  the source StyleSheet
-     * @param destinationStyleSheet  the destination StyleSheet
+     * @param sourceStyleSheet      the source StyleSheet
+     * @param destinationStyleSheet the destination StyleSheet
      */
     private void mergeStyleSheets(final StyleSheet sourceStyleSheet, final StyleSheet destinationStyleSheet)
             throws IOException {
@@ -585,7 +584,7 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
 
     /**
      * get the URL of the style sheet of this document
-     *
+     * <p/>
      * <p>The name is built by<ol>
      * <li>get the style sheet reference, if none, use default style
      * sheet name</li>
@@ -605,19 +604,16 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
         String newDocBase = null;
         try {
             newDocBase = file.toURI().toURL().toString();
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             if (file != null) {
                 Util.errMsg(this, "Can not create a valid URL for\n" + file.getAbsolutePath(), e);
-            }
-            else {
+            } else {
                 Util.errMsg(this, e.getMessage(), e);
             }
         }
         if (styleRef != null) {
             name = Util.resolveRelativePath(styleRef, newDocBase);
-        }
-        else {
+        } else {
             name = null; // Util.resolveRelativePath(name, newDocBase);
         }
         //System.out.println("DocumentPane.getStyleSheetName=" + name);
@@ -627,14 +623,13 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
     /**
      * get the name of the document of this pane.
      *
-     * @return  the name of the document
+     * @return the name of the document
      */
     public String getDocumentName() {
         String theName;
         if (docName == null || docName.length() < 1) {
             theName = DEFAULT_DOC_NAME + " " + Integer.toString(newDocNo);
-        }
-        else {
+        } else {
             theName = docName;
         }
         return theName;
@@ -643,7 +638,7 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
     /**
      * indicates whether or not the document needs to be saved.
      *
-     * @return  true, if changes need to be saved
+     * @return true, if changes need to be saved
      */
     public boolean needsSaving() {
         //System.out.println("DocumentPane.needsSaving=" + textChanged + " for document " + getDocumentName());
@@ -652,12 +647,12 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
 
     /**
      * set the source this document is to be loaded from
-     *
+     * <p/>
      * <p>This is only to be used when it is made sure,
      * that the document is saved at the location specified
      * by 'source'.</p>
      *
-     * @param the URL of the source this document is to be loaded from
+     * @param source this document is to be loaded from
      */
     public void setSource(final URL source) {
         savedUrl = sourceUrl;
@@ -676,8 +671,7 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
     public URL getOldSource() {
         if (savedUrl == null) {
             return sourceUrl;
-        }
-        else {
+        } else {
             return savedUrl;
         }
     }
@@ -731,8 +725,7 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
             paneHoldingScrollPanes.remove(richViewScrollPane);
             paneHoldingScrollPanes.add(sourceViewScrollPane);
             activeView = VIEW_TAB_HTML;
-        }
-        else {
+        } else {
             setLayoutView();
             paneHoldingScrollPanes.remove(sourceViewScrollPane);
             paneHoldingScrollPanes.add(richViewScrollPane);
@@ -749,7 +742,7 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
             final StringWriter stringWriter = new StringWriter();
             if (isHtmlChanged()) {
                 editorPane.getEditorKit().write(stringWriter, editorPane.getDocument(), 0,
-                    editorPane.getDocument().getLength());
+                        editorPane.getDocument().getLength());
                 stringWriter.close();
                 String newText = stringWriter.toString();
                 if (!Util.preferenceIsTrue("writeHead", "true")) {
@@ -761,8 +754,7 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
             sourceEditorPane.getDocument().addDocumentListener(this);
             sourceEditorPane.addCaretListener(sourceEditorPane);
             setHtmlChanged(false);
-        }
-        catch (final Exception ex) {
+        } catch (final Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -784,9 +776,10 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
 
     /**
      * Convenience method for obtaining the document text
+     *
      * @return returns the document text as string.
      */
-    String getDocumentText() {
+    public String getDocumentText() {
         if (getSelectedTab() == VIEW_TAB_HTML) {
             editorPane.setText(sourceEditorPane.getText());
         }
@@ -796,7 +789,7 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
     /**
      * Convenience method for setting the document text
      */
-    void setDocumentText(final String sText) {
+    public void setDocumentText(final String sText) {
         switch (getSelectedTab()) {
             case VIEW_TAB_LAYOUT:
                 editorPane.setText(sText);
@@ -831,6 +824,7 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
 
     /* ----------------- changeListener implementation end ------------------------ */
     /* -------- DocumentListener implementation start ------------*/
+
     /**
      * listens to inserts into the document to track whether or not the document
      * needs to be saved.
@@ -863,6 +857,7 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
 
     /* -------- DocumentListener implementation end ------------*/
     /* -------- DocumentPaneListener definition start --------------- */
+
     /**
      * interface to be implemented for being notified of
      * changes to the name of this document
@@ -873,14 +868,18 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
         public void activated(DocumentPaneEvent e);
     }
 
-    /** the event object definition for DocumentPaneEvents */
+    /**
+     * the event object definition for DocumentPaneEvents
+     */
     class DocumentPaneEvent extends EventObject {
         public DocumentPaneEvent(final Object source) {
             super(source);
         }
     }
 
-    /** listeners for DocumentPaneEvents */
+    /**
+     * listeners for DocumentPaneEvents
+     */
     private final Vector dpListeners = new Vector();
 
     /**
@@ -898,7 +897,7 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
     /**
      * remove a DocumentPaneListener from this Document
      *
-     * @param listener  the listener object to remove
+     * @param listener the listener object to remove
      */
     public void removeDocumentPaneListener(final DocumentPaneListener listener) {
         dpListeners.remove(listener);
@@ -949,6 +948,10 @@ public class DocumentPane extends JPanel implements DocumentListener, ChangeList
             scrollPane.setPreferredSize(prefSize);
             scrollPane.invalidate();
         }
+    }
+
+    public JScrollBar getVerticalScrollBar(){
+        return richViewScrollPane.getVerticalScrollBar();
     }
     /* -------- DocumentPaneListener definition end --------------- */
 }
