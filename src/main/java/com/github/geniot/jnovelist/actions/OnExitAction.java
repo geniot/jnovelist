@@ -41,5 +41,6 @@ public class OnExitAction extends WindowAdapter {
         }
 
         e.getWindow().dispose();
+        System.exit(0);
     }
 }
