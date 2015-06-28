@@ -67,8 +67,8 @@ class FrmMain extends JFrame {
         try {
             EventQueue.invokeAndWait(new Runnable() {
                 public void run() {
-                    mainPane = new SHTMLPanelMultipleDocImpl();
-                    //                    mainPane = new SHTMLPanelSingleDocImpl();
+//                    mainPane = new SHTMLPanelMultipleDocImpl();
+                                        mainPane = new SHTMLPanelSingleDocImpl();
                     mainPane.setContentPanePreferredSize(new Dimension(1024, 500));
                     getContentPane().add(mainPane);
                     pack();

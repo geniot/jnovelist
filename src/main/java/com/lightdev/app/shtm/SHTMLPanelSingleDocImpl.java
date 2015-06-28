@@ -19,7 +19,7 @@
  */
 package com.lightdev.app.shtm;
 
-class SHTMLPanelSingleDocImpl extends SHTMLPanelImpl {
+public class SHTMLPanelSingleDocImpl extends SHTMLPanelImpl {
     public SHTMLPanelSingleDocImpl() {
         super();
     }

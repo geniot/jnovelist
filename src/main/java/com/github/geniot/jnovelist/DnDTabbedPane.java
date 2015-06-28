@@ -1,7 +1,6 @@
 package com.github.geniot.jnovelist;
 
 import com.github.geniot.jnovelist.model.Chapter;
-import com.lightdev.app.shtm.DocumentPane;
 
 import javax.swing.*;
 import java.awt.*;
@@ -122,7 +121,7 @@ public class DnDTabbedPane extends JTabbedPane {
                     public void run() {
                         Component c = getSelectedComponent();
                         if (c != null && c instanceof ChapterEditor) {
-                            ((ChapterEditor) c).getEditor().requestFocus();
+                            ((ChapterEditor) c).getDocumentPane().getEditor().requestFocus();
                         }
                     }
                 });
@@ -167,9 +166,9 @@ public class DnDTabbedPane extends JTabbedPane {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        ((ChapterEditor)c).getEditor().requestFocus();
+                        ((ChapterEditor) c).getDocumentPane().getEditor().requestFocus();
                         if (chapter != null) {
-                            ((ChapterEditor) c).getVerticalScrollBar().setValue(chapter.getViewPosition());
+                            ((ChapterEditor) c).getDocumentPane().getVerticalScrollBar().setValue(chapter.getViewPosition());
                         }
                     }
                 });
@@ -207,7 +206,8 @@ public class DnDTabbedPane extends JTabbedPane {
 
 
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+
+            super.paintComponent(g);
 
         // Are we dragging?
         if (dragging && currentMouseLocation != null && tabImage != null) {

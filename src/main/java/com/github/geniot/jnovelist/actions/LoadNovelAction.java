@@ -77,6 +77,7 @@ public class LoadNovelAction implements ActionListener {
                         model = (PersistedModel) Utils.deserialize(IOUtils.toByteArray(stream));
                         stream.close();
                     }
+                    zipFile.close();
                 } catch (Exception ex) {
                     System.out.println(ex.getMessage());
                     FileInputStream fis = new FileInputStream(selectedFile);
@@ -85,6 +86,7 @@ public class LoadNovelAction implements ActionListener {
                 }
 
             }
+
 
             frame.openFileName = selectedFile.getAbsolutePath();
             frame.dnDTabbedPane = new DnDTabbedPane(DnDTabbedPane.DECIMAL_TO_ROMAN);

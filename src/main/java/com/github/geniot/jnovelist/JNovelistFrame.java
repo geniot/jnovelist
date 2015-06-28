@@ -2,8 +2,6 @@ package com.github.geniot.jnovelist;
 
 import com.github.geniot.jnovelist.actions.*;
 
-
-
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;

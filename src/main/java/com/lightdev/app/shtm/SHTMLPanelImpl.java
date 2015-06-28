@@ -228,21 +228,21 @@ public class SHTMLPanelImpl extends SHTMLPanel implements CaretListener {
     /** construct a new main application frame */
     SHTMLPanelImpl() {
         super(new BorderLayout());
-        SplashScreen.showInstance();
+//        SplashScreen.showInstance();
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
         initActions();
         if(actionBuilder != null)
         	actionBuilder.initActions(this);
         menuBar = dynRes.createMenubar(textResources, "menubar");
         editorPopup = dynRes.createPopupMenu(textResources, "popup");
-        setJMenuBar(menuBar);
+//        setJMenuBar(menuBar);
         customizeFrame();
         initAppTempDir();
         initPlugins();
         initDocumentPane();
         updateActions();
-        initJavaHelp();
-        SplashScreen.hideInstance();
+//        initJavaHelp();
+//        SplashScreen.hideInstance();
     }
 
     private void setJMenuBar(final JMenuBar bar) {
@@ -811,7 +811,7 @@ public class SHTMLPanelImpl extends SHTMLPanel implements CaretListener {
         paraToolBar = createToolBar("paraToolBar");
         toolBarPanel.add(formatToolBar);
         toolBarPanel.add(paraToolBar);
-        if (Util.getPreference("show_toolbars", "true").equalsIgnoreCase("true")) {
+        if (Util.getPreference("show_toolbars", "false").equalsIgnoreCase("true")) {
             contentPane.add(toolBarPanel, BorderLayout.NORTH);
         }
         //contentPane.add(workPanel, BorderLayout.CENTER);
@@ -1067,7 +1067,7 @@ public class SHTMLPanelImpl extends SHTMLPanel implements CaretListener {
      * @param cmd the name of the action to get properties for
      */
     public static void getActionProperties(final Action action, final String cmd) {
-        final Icon icon = DynamicResource.getIconForCommand(textResources, cmd);
+        final Icon icon = DynamicResource.getIconForCommand(getResources(), cmd);
         if (icon != null) {
             action.putValue(Action.SMALL_ICON, icon);
         }

@@ -3,7 +3,6 @@ package com.github.geniot.jnovelist.actions;
 import com.github.geniot.jnovelist.*;
 import com.github.geniot.jnovelist.model.Chapter;
 import com.github.geniot.jnovelist.model.PersistedModel;
-import org.apache.commons.io.IOUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,10 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -65,12 +60,12 @@ public class SaveAction implements ActionListener {
                 for (int k = 0; k < dnd.getTabCount(); k++) {
                     Component o = dnd.getComponentAt(k);
                     if (o instanceof ChapterEditor) {
-                        ChapterEditor editor = (ChapterEditor)o;
+                        ChapterEditor editor = (ChapterEditor) o;
                         Chapter chapter = editor.getChapter();
                         chapter.setPart(i);
                         chapter.setNumber(number);
-                        chapter.setCaretPosition(editor.getEditor().getCaretPosition());
-                        chapter.setViewPosition(editor.getVerticalScrollBar().getValue());
+                        chapter.setCaretPosition(editor.getDocumentPane().getEditor().getCaretPosition());
+                        chapter.setViewPosition(editor.getDocumentPane().getVerticalScrollBar().getValue());
                         chapter.setSelected(dnd.getSelectedComponent().equals(o));
                         model.getNovel().add(chapter);
                         lines.add(Utils.entry2xml(chapter));
@@ -83,8 +78,10 @@ public class SaveAction implements ActionListener {
         model.getProperties().setProperty(Constants.PROP_SELECTED_PART, String.valueOf(frame.dnDTabbedPane.getSelectedIndex()));
 
         ZipOutputStream zos = null;
+        FileOutputStream fos = null;
         try {
-            zos = new ZipOutputStream(new FileOutputStream(frame.openFileName));
+            fos = new FileOutputStream(frame.openFileName);
+            zos = new ZipOutputStream(fos);
             ZipEntry zipEntry = new ZipEntry("model.ser");
             zos.putNextEntry(zipEntry);
             zos.write(Utils.serialize(model));
@@ -95,6 +92,7 @@ public class SaveAction implements ActionListener {
             if (zos != null) {
                 try {
                     zos.close();
+                    fos.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

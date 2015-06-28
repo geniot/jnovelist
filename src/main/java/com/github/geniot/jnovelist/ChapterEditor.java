@@ -2,20 +2,28 @@ package com.github.geniot.jnovelist;
 
 import com.github.geniot.jnovelist.model.Chapter;
 import com.lightdev.app.shtm.DocumentPane;
+import com.lightdev.app.shtm.SHTMLPanelSingleDocImpl;
 import org.jsoup.Jsoup;
 
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 import javax.swing.text.Document;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.UndoManager;
+import java.awt.event.ActionEvent;
 
 /**
  * Author: Vitaly Sazanovich
  * Email: vitaly.sazanovich@gmail.com
  * Date: 24/06/15
  */
-public class ChapterEditor extends DocumentPane {
+public class ChapterEditor extends SHTMLPanelSingleDocImpl {
     protected LinePainter linePainter;
 
     public int charsSpaces = 0;
@@ -34,13 +42,13 @@ public class ChapterEditor extends DocumentPane {
 //        styleSheet.addRule("h2 {color: #008000;}");
 //        styleSheet.addRule("p {margin-bottom: 0;}");
 
-        linePainter = new LinePainter(this.getEditor());
+        linePainter = new LinePainter(this.getDocumentPane().getEditor());
 
         if (ch != null) {
-            setDocumentText(ch.getText());
-            getEditor().setCaretPosition(ch.getCaretPosition() > getDocument().getLength() ? getDocument().getLength() : ch.getCaretPosition());
+            getDocumentPane().setDocumentText(ch.getText());
+            getDocumentPane().getEditor().setCaretPosition(ch.getCaretPosition() > getDocument().getLength() ? getDocument().getLength() : ch.getCaretPosition());
         } else {
-            setDocumentText(Constants.EMPTY_DOC);
+            getDocumentPane().setDocumentText(Constants.EMPTY_DOC);
         }
 
 
@@ -61,6 +69,8 @@ public class ChapterEditor extends DocumentPane {
             }
         });
 
+//        getEditor().registerDocument();
+//        panel.updateActions();
         updateStatus();
     }
 
