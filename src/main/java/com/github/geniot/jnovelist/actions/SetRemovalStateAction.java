@@ -22,7 +22,7 @@ public class SetRemovalStateAction implements KeyEventDispatcher {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
-        boolean enableRemoval = (e.getModifiers() & KeyEvent.ALT_MASK) != 0;
+        boolean enableRemoval = (e.isAltDown() && e.isControlDown());
         if (enableRemoval != isEnabled && frame.dnDTabbedPane != null) {
             isEnabled = enableRemoval;
             for (int i = 0; i < frame.dnDTabbedPane.getTabCount(); i++) {
