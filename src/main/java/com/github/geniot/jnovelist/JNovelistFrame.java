@@ -17,9 +17,17 @@ public class JNovelistFrame extends JFrame {
 
     protected JButton loadNovel;
     public JButton unloadNovel;
-    public JButton saveNovel;
+//    public JButton saveNovel;
+    public JButton heroes;
+    public JButton places;
+    public JButton things;
+    public JButton notes;
+
     public DnDTabbedPane dnDTabbedPane;
+
     public JLabel statusLabel;
+    public JLabel partStatusLabel;
+    public JLabel allStatusLabel;
 
     public String openFileName;
 
@@ -40,16 +48,25 @@ public class JNovelistFrame extends JFrame {
 
         loadNovel = Utils.makeNavigationButton("Load", Constants.LOAD_NOVEL_ACTION_COMMAND, "Load", "Load");
         unloadNovel = Utils.makeNavigationButton("Eject", Constants.UNLOAD_NOVEL_ACTION_COMMAND, "Unload", "Unload");
-        saveNovel = Utils.makeNavigationButton("Save", Constants.SAVE_NOVEL_ACTION_COMMAND, "Save", "Save");
+        heroes = Utils.makeNavigationButton("Heros", Constants.HEROES_NOVEL_ACTION_COMMAND, "Heroes", "Heroes");
+        places = Utils.makeNavigationButton("Places", Constants.PLACES_NOVEL_ACTION_COMMAND, "Places", "Places");
+        things = Utils.makeNavigationButton("Things", Constants.THINGS_NOVEL_ACTION_COMMAND, "Things", "Things");
+        notes = Utils.makeNavigationButton("Notes", Constants.NOTES_NOVEL_ACTION_COMMAND, "Notes", "Notes");
+//        saveNovel = Utils.makeNavigationButton("Save", Constants.SAVE_NOVEL_ACTION_COMMAND, "Save", "Save");
 
         loadNovel.addActionListener(new LoadNovelAction(this));
         unloadNovel.addActionListener(new UnloadAction(this));
-        saveNovel.addActionListener(new SaveAction(this));
+//        saveNovel.addActionListener(new SaveAction(this));
 
-        saveNovel.setEnabled(false);
+//        saveNovel.setEnabled(false);
 
         toolBar.add(loadNovel);
-        toolBar.add(saveNovel);
+//        toolBar.add(saveNovel);
+        toolBar.add(heroes);
+        toolBar.add(places);
+        toolBar.add(things);
+        toolBar.add(notes);
+        toolBar.addSeparator(new Dimension(30,10));
         toolBar.add(unloadNovel);
 
         getContentPane().add(toolBar, BorderLayout.PAGE_START);
@@ -58,10 +75,17 @@ public class JNovelistFrame extends JFrame {
         statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
         add(statusPanel, BorderLayout.SOUTH);
         statusPanel.setPreferredSize(new Dimension(getWidth(), 30));
-        statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
+        statusPanel.setLayout(new BorderLayout());
+
         statusLabel = new JLabel();
-        statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        statusPanel.add(statusLabel);
+        statusPanel.add(statusLabel, BorderLayout.WEST);
+
+        partStatusLabel = new JLabel();
+        statusPanel.add(partStatusLabel, BorderLayout.CENTER);
+        partStatusLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        allStatusLabel = new JLabel();
+        statusPanel.add(allStatusLabel, BorderLayout.EAST);
 
 
         //Display the window.
@@ -114,19 +138,33 @@ public class JNovelistFrame extends JFrame {
                 repaint();
             }
             unloadNovel.setEnabled(false);
-            saveNovel.setEnabled(false);
+            heroes.setEnabled(false);
+            places.setEnabled(false);
+            things.setEnabled(false);
+            notes.setEnabled(false);
         } else {
             unloadNovel.setEnabled(true);
+            heroes.setEnabled(true);
+            places.setEnabled(true);
+            things.setEnabled(true);
+            notes.setEnabled(true);
         }
         setTitle(getDynTitle());
+        updateStatus();
     }
 
 
     public void updateStatus() {
-        saveNovel.setEnabled(true);
+        if (dnDTabbedPane==null){
+            return;
+        }
+
+//        saveNovel.setEnabled(true);
+
         int chars = 0;
         int charsNoSpaces = 0;
         int words = 0;
+
         for (int i = 0; i < dnDTabbedPane.getTabCount(); i++) {
             Component c = dnDTabbedPane.getComponentAt(i);
             if (c instanceof DnDTabbedPane) {
@@ -142,6 +180,29 @@ public class JNovelistFrame extends JFrame {
                 }
             }
         }
-        statusLabel.setText(" CAL: " + chars + " / CNS: " + charsNoSpaces + " / WDS: " + words);
+        if (dnDTabbedPane.getSelectedComponent() != null) {
+            DnDTabbedPane selPart = (DnDTabbedPane) dnDTabbedPane.getSelectedComponent();
+
+            if (selPart.getSelectedComponent() != null) {
+                int partChars = 0;
+                int partCharsNoSpaces = 0;
+                int partWords = 0;
+                for (int k = 0; k < selPart.getTabCount(); k++) {
+                    Component o = selPart.getComponentAt(k);
+                    if (o instanceof ChapterEditor) {
+                        ChapterEditor editor = (ChapterEditor) o;
+                        partChars += editor.charsSpaces;
+                        partCharsNoSpaces += editor.charsNoSpaces;
+                        partWords += editor.words;
+                    }
+                }
+                partStatusLabel.setText(" CAL: " + partChars + " / WDS: " + partWords);
+
+                ChapterEditor chapterEditor = (ChapterEditor) selPart.getSelectedComponent();
+                statusLabel.setText(" CAL: " + chapterEditor.charsSpaces + " / WDS: " + chapterEditor.words);
+
+            }
+        }
+        allStatusLabel.setText(" CAL: " + chars + " / WDS: " + words);
     }
 }

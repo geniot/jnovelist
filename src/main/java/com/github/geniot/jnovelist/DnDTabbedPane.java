@@ -3,6 +3,8 @@ package com.github.geniot.jnovelist;
 import com.github.geniot.jnovelist.model.Chapter;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -54,6 +56,13 @@ public class DnDTabbedPane extends JTabbedPane {
         addContainerListener(new ContainerAdapter() {
             @Override
             public void componentRemoved(ContainerEvent e) {
+                Utils.updateStatus(DnDTabbedPane.this);
+            }
+        });
+
+        addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
                 Utils.updateStatus(DnDTabbedPane.this);
             }
         });

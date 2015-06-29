@@ -31,16 +31,6 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
     public int words = 0;
 
     public ChapterEditor(Chapter ch) {
-//        super("text/html", "");
-
-        //Add the ubiquitous "Hello World" label.
-//        HTMLEditorKit cssKit = new HTMLEditorKit();
-//        setEditorKit(cssKit);
-//        StyleSheet styleSheet = cssKit.getStyleSheet();
-//        styleSheet.addRule("body {font-family:verdana; margin: 15px; font-size:large }");
-//        styleSheet.addRule("h1 {color: #800000;}");
-//        styleSheet.addRule("h2 {color: #008000;}");
-//        styleSheet.addRule("p {margin-bottom: 0;}");
 
         linePainter = new LinePainter(this.getDocumentPane().getEditor());
 
@@ -69,10 +59,9 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
             }
         });
 
-//        getEditor().registerDocument();
-//        panel.updateActions();
         updateStatus();
     }
+
 
     private void updateStatus() {
         String s = Jsoup.parse(getDocumentText()).text();

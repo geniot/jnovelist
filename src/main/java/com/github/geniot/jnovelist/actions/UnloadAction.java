@@ -18,7 +18,6 @@ public class UnloadAction extends SaveAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         save();
-        frame.statusLabel.setText("");
         frame.openFileName = null;
         frame.updateState();
     }
