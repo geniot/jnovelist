@@ -2,7 +2,7 @@ package com.github.geniot.jnovelist.actions;
 
 import com.github.geniot.jnovelist.*;
 import com.github.geniot.jnovelist.model.Chapter;
-import com.github.geniot.jnovelist.model.PersistedModel;
+import com.github.geniot.jnovelist.model.PersistedModel2;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,14 +23,13 @@ import java.util.zip.ZipOutputStream;
  * Email: vitaly.sazanovich@gmail.com
  * Date: 25/06/15
  */
-public class SaveAction implements ActionListener {
+public class SaveAction extends AbstractNovelistAction implements ActionListener {
     private static final Logger logger = Logger.getLogger(SaveAction.class.getName());
 
-    protected JNovelistFrame frame;
-
     public SaveAction(JNovelistFrame f) {
-        this.frame = f;
+        super(f);
     }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -52,7 +51,7 @@ public class SaveAction implements ActionListener {
     protected void save() {
         int number = 0;
         List<String> lines = new ArrayList<String>();
-        PersistedModel model = new PersistedModel();
+        PersistedModel2 model = new PersistedModel2();
         for (int i = 0; i < frame.dnDTabbedPane.getTabCount(); i++) {
             Component c = frame.dnDTabbedPane.getComponentAt(i);
             if (c instanceof DnDTabbedPane) {
@@ -74,6 +73,10 @@ public class SaveAction implements ActionListener {
                 }
             }
         }
+        model.setHeroes(Constants.NOTES_HEROES);
+        model.setLocations(Constants.NOTES_LOCATIONS);
+        model.setThings(Constants.NOTES_THINGS);
+        model.setNotes(Constants.NOTES_NOTES);
 
         model.getProperties().setProperty(Constants.PROP_SELECTED_PART, String.valueOf(frame.dnDTabbedPane.getSelectedIndex()));
 

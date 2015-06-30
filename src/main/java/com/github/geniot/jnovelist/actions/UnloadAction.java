@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
  * Email: vitaly.sazanovich@gmail.com
  * Date: 23/06/15
  */
-public class UnloadAction extends SaveAction {
+public class UnloadAction extends SaveAction  {
 
     public UnloadAction(JNovelistFrame f) {
         super(f);

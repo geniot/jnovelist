@@ -1,0 +1,22 @@
+Name:
+
+History:
+
+Description:
+
+Typical Weather:
+	Summer:
+	Winter:
+	Fall:
+	Spring:
+
+What/who lives here?
+
+Who owns the area?
+
+Who rules the area?
+
+What kind of terrain is it?
+
+If it's a building, when was it built? Who built it?
+

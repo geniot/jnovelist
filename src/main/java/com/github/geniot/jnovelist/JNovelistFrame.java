@@ -17,7 +17,7 @@ public class JNovelistFrame extends JFrame {
 
     protected JButton loadNovel;
     public JButton unloadNovel;
-//    public JButton saveNovel;
+    //    public JButton saveNovel;
     public JButton heroes;
     public JButton places;
     public JButton things;
@@ -48,6 +48,7 @@ public class JNovelistFrame extends JFrame {
 
         loadNovel = Utils.makeNavigationButton("Load", Constants.LOAD_NOVEL_ACTION_COMMAND, "Load", "Load");
         unloadNovel = Utils.makeNavigationButton("Eject", Constants.UNLOAD_NOVEL_ACTION_COMMAND, "Unload", "Unload");
+
         heroes = Utils.makeNavigationButton("Heros", Constants.HEROES_NOVEL_ACTION_COMMAND, "Heroes", "Heroes");
         places = Utils.makeNavigationButton("Places", Constants.PLACES_NOVEL_ACTION_COMMAND, "Places", "Places");
         things = Utils.makeNavigationButton("Things", Constants.THINGS_NOVEL_ACTION_COMMAND, "Things", "Things");
@@ -56,6 +57,11 @@ public class JNovelistFrame extends JFrame {
 
         loadNovel.addActionListener(new LoadNovelAction(this));
         unloadNovel.addActionListener(new UnloadAction(this));
+
+        heroes.addActionListener(new DialogAction(this));
+        places.addActionListener(new DialogAction(this));
+        things.addActionListener(new DialogAction(this));
+        notes.addActionListener(new DialogAction(this));
 //        saveNovel.addActionListener(new SaveAction(this));
 
 //        saveNovel.setEnabled(false);
@@ -66,7 +72,7 @@ public class JNovelistFrame extends JFrame {
         toolBar.add(places);
         toolBar.add(things);
         toolBar.add(notes);
-        toolBar.addSeparator(new Dimension(30,10));
+        toolBar.addSeparator(new Dimension(30, 10));
         toolBar.add(unloadNovel);
 
         getContentPane().add(toolBar, BorderLayout.PAGE_START);
@@ -155,7 +161,7 @@ public class JNovelistFrame extends JFrame {
 
 
     public void updateStatus() {
-        if (dnDTabbedPane==null){
+        if (dnDTabbedPane == null) {
             return;
         }
 

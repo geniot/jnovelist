@@ -1,8 +1,8 @@
 package com.github.geniot.jnovelist;
 
-import com.github.geniot.jnovelist.model.PersistedModel;
+import com.github.geniot.jnovelist.model.NovelNote;
 
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Author: Vitaly Sazanovich
@@ -36,4 +36,33 @@ public class Constants {
 
     public static Properties PROPS = new Properties();
 
+    public static final Map<String, String> VARS;
+
+    static {
+        Map<String, String> aMap = new HashMap<String, String>();
+        aMap.put(HEROES_NOVEL_ACTION_COMMAND, "Characters");
+        aMap.put(PLACES_NOVEL_ACTION_COMMAND, "Places");
+        aMap.put(THINGS_NOVEL_ACTION_COMMAND, "Things");
+        aMap.put(NOTES_NOVEL_ACTION_COMMAND, "Notes");
+        VARS = Collections.unmodifiableMap(aMap);
+    }
+
+    public static List<NovelNote> NOTES_HEROES = new ArrayList<NovelNote>();
+    public static List<NovelNote> NOTES_LOCATIONS = new ArrayList<NovelNote>();
+    public static List<NovelNote> NOTES_THINGS = new ArrayList<NovelNote>();
+    public static List<NovelNote> NOTES_NOTES = new ArrayList<NovelNote>();
+
+    public static List<NovelNote> getNotesByCommand(String actionCommand) {
+        if (actionCommand.equals(HEROES_NOVEL_ACTION_COMMAND)) {
+            return NOTES_HEROES;
+        } else if (actionCommand.equals(PLACES_NOVEL_ACTION_COMMAND)) {
+            return NOTES_LOCATIONS;
+        } else if (actionCommand.equals(THINGS_NOVEL_ACTION_COMMAND)) {
+            return NOTES_THINGS;
+        } else if (actionCommand.equals(NOTES_NOVEL_ACTION_COMMAND)) {
+            return NOTES_NOTES;
+        } else {
+            return new ArrayList<NovelNote>();
+        }
+    }
 }

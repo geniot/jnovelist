@@ -7,7 +7,7 @@ import java.io.Serializable;
  * Email: vitaly.sazanovich@gmail.com
  * Date: 24/06/15
  */
-public class Chapter implements Serializable {
+public class Chapter implements Serializable,ITextable {
     private int number;
     private int part;
     private String text;

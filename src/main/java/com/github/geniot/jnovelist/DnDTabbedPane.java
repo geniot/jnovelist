@@ -1,6 +1,7 @@
 package com.github.geniot.jnovelist;
 
 import com.github.geniot.jnovelist.model.Chapter;
+import com.github.geniot.jnovelist.model.ITextable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -156,7 +157,7 @@ public class DnDTabbedPane extends JTabbedPane {
         });
     }
 
-    public void addNewTab(final Chapter chapter) {
+    public void addNewTab(final ITextable chapter) {
         //adding new tab
         try {
             int count = getTabCount();

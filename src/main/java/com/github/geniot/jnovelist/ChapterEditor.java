@@ -1,6 +1,7 @@
 package com.github.geniot.jnovelist;
 
 import com.github.geniot.jnovelist.model.Chapter;
+import com.github.geniot.jnovelist.model.ITextable;
 import com.lightdev.app.shtm.DocumentPane;
 import com.lightdev.app.shtm.SHTMLPanelSingleDocImpl;
 import org.jsoup.Jsoup;
@@ -30,7 +31,7 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
     public int charsNoSpaces = 0;
     public int words = 0;
 
-    public ChapterEditor(Chapter ch) {
+    public ChapterEditor(ITextable ch) {
 
         linePainter = new LinePainter(this.getDocumentPane().getEditor());
 
