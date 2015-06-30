@@ -5,6 +5,7 @@ import com.github.geniot.jnovelist.DnDTabbedPane;
 import com.github.geniot.jnovelist.JNovelistFrame;
 import com.github.geniot.jnovelist.Utils;
 import com.github.geniot.jnovelist.model.Chapter;
+import com.github.geniot.jnovelist.model.ITextable;
 import com.github.geniot.jnovelist.model.PersistedModel2;
 
 import javax.swing.*;
@@ -73,17 +74,35 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
             int selectedIndex = 0;
 
             for (int i = 0; i < chaptersCount; i++) {
-                Chapter chapter = model.getNovel().get(i);
+                final Chapter chapter = model.getNovel().get(i);
                 if (chapter == null) {
                     continue;
                 }
+
+                ITextable it = new ITextable() {
+                    @Override
+                    public String getText() {
+                        return chapter.getText();
+                    }
+
+                    @Override
+                    public int getViewPosition() {
+                        return chapter.getViewPosition();
+                    }
+
+                    @Override
+                    public int getCaretPosition() {
+                        return chapter.getCaretPosition();
+                    }
+                };
+
                 if (chapter.getPart() != currentPart) {
-                    frame.dnDTabbedPane.addNewTab(chapter);
+                    frame.dnDTabbedPane.addNewTab(it);
                     currentPart = chapter.getPart();
                     selectedIndex = 0;
                 }
                 DnDTabbedPane partTab = (DnDTabbedPane) frame.dnDTabbedPane.getComponentAt(currentPart);
-                partTab.addNewTab(chapter);
+                partTab.addNewTab(it);
                 if (chapter.isSelected()) {
                     selectedIndex = partTab.getTabCount() - 2;
                 }
