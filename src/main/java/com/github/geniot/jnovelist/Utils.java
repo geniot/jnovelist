@@ -3,6 +3,9 @@ package com.github.geniot.jnovelist;
 import com.github.geniot.jnovelist.model.PersistedModel;
 import com.github.geniot.jnovelist.model.PersistedModel2;
 import org.apache.commons.io.IOUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import javax.swing.*;
 import java.awt.*;
@@ -188,4 +191,24 @@ public class Utils {
         }
         return model;
     }
+
+    public static String br2nl(String html) {
+        if (html == null) {
+            return html;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        Elements ps = Jsoup.parse(html).select("p");
+        for (Element el : ps) {
+            String s = el.toString();
+            s = s.replaceAll("<[^>]*>","");
+            s = s.replaceAll("\\n","");
+            s = s.trim();
+            sb.append(s);
+            sb.append('\n');
+        }
+
+        return sb.toString();
+    }
+
 }

@@ -3,15 +3,13 @@ package com.github.geniot.jnovelist.actions;
 import com.github.geniot.jnovelist.*;
 import com.github.geniot.jnovelist.model.Chapter;
 import com.github.geniot.jnovelist.model.PersistedModel2;
+import org.jsoup.Jsoup;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -50,7 +48,6 @@ public class SaveAction extends AbstractNovelistAction implements ActionListener
 
     protected void save() {
         int number = 0;
-        List<String> lines = new ArrayList<String>();
         PersistedModel2 model = new PersistedModel2();
         for (int i = 0; i < frame.dnDTabbedPane.getTabCount(); i++) {
             Component c = frame.dnDTabbedPane.getComponentAt(i);
@@ -67,7 +64,23 @@ public class SaveAction extends AbstractNovelistAction implements ActionListener
                         chapter.setViewPosition(editor.getDocumentPane().getVerticalScrollBar().getValue());
                         chapter.setSelected(dnd.getSelectedComponent().equals(o));
                         model.getNovel().add(chapter);
-                        lines.add(Utils.entry2xml(chapter));
+
+                        //saving as separate files for version control
+                        try {
+                            String folder = frame.openFileName.substring(0, frame.openFileName.lastIndexOf('.'));
+                            String fileDir = folder + File.separator + (i + 1);
+                            File file = new File(fileDir);
+                            file.mkdirs();
+                            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileDir + File.separator + (k + 1) + ".txt"), "UTF-8"));
+                            try {
+                                out.write(Utils.br2nl(chapter.getText()));
+                            } finally {
+                                out.close();
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+
                         ++number;
                     }
                 }
