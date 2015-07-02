@@ -162,6 +162,9 @@ public class JNovelistFrame extends JFrame {
 
     public void updateStatus() {
         if (dnDTabbedPane == null) {
+            partStatusLabel.setText("");
+            statusLabel.setText("");
+            allStatusLabel.setText("");
             return;
         }
 

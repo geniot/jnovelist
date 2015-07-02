@@ -73,7 +73,7 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
             } else {
                 Arrays.sort(ffs, Utils.FILE_NAME_NUMBER_COMPARATOR);
                 for (File f : ffs) {
-                    if (f.isDirectory() && f.list().length>0 && !f.getName().equals(Constants.AUX_FOLDER_NAME)) {
+                    if (f.isDirectory() && f.list().length>0 && !f.getName().equals(Constants.HELP_FOLDER_NAME)) {
                         frame.dnDTabbedPane.addNewTab(f);
                     }
                 }

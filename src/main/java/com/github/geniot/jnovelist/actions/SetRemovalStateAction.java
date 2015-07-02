@@ -28,9 +28,12 @@ public class SetRemovalStateAction extends AbstractNovelistAction implements Key
 
         DnDTabbedPane dnd = frame.dnDTabbedPane;
         Window[] wws = frame.getOwnedWindows();
-        if (wws != null && wws.length > 0 && wws[0] instanceof JDialog) {
-            if (((JDialog) wws[0]).getContentPane() instanceof DnDTabbedPane) {
-                dnd = (DnDTabbedPane) ((JDialog) wws[0]).getContentPane().getComponent(0);
+        for (Window w : wws) {
+            if (w.isActive() && w instanceof JDialog) {
+                JDialog jd = (JDialog) w;
+                if (jd.getContentPane().getComponentCount() > 0 && jd.getContentPane().getComponent(0) instanceof DnDTabbedPane) {
+                    dnd = (DnDTabbedPane) jd.getContentPane().getComponent(0);
+                }
             }
         }
 

@@ -20,5 +20,6 @@ public class UnloadAction extends SaveAction  {
         save();
         frame.openFileName = null;
         frame.updateState();
+        frame.updateStatus();
     }
 }

@@ -40,7 +40,7 @@ public class Constants {
 
     public static Properties PROPS = new Properties();
 
-    public static final String AUX_FOLDER_NAME = "aux";
+    public static final String HELP_FOLDER_NAME = "help";
 
     public static final Map<String, String> VARS;
 
