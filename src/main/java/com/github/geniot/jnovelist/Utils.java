@@ -1,8 +1,5 @@
 package com.github.geniot.jnovelist;
 
-import com.github.geniot.jnovelist.model.PersistedModel;
-import com.github.geniot.jnovelist.model.PersistedModel2;
-import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -14,11 +11,9 @@ import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
 import java.net.URL;
-import java.util.Enumeration;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 
 /**
@@ -154,45 +149,7 @@ public class Utils {
         return null;
     }
 
-    public static PersistedModel2 loadModel(File selectedFile) {
-        PersistedModel2 model = new PersistedModel2();
-        if (selectedFile.exists()) {
-            try {
-                ZipFile zipFile = new ZipFile(selectedFile);
-                Enumeration<? extends ZipEntry> entries = zipFile.entries();
-                while (entries.hasMoreElements()) {
-                    ZipEntry entry = entries.nextElement();
-                    InputStream stream = zipFile.getInputStream(entry);
-                    model = initModel(Utils.deserialize(IOUtils.toByteArray(stream)));
-                    stream.close();
-                }
-                zipFile.close();
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
-                try {
-                    FileInputStream fis = new FileInputStream(selectedFile);
-                    model = initModel(Utils.deserialize(IOUtils.toByteArray(fis)));
-                    fis.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-        return model;
-    }
-
-    private static PersistedModel2 initModel(Object o) {
-        PersistedModel2 model = null;
-        if (o instanceof PersistedModel2) {
-            model = (PersistedModel2) o;
-        } else {
-            model = new PersistedModel2((PersistedModel) o);
-        }
-        return model;
-    }
-
-    public static String br2nl(String html) {
+    public static String html2text(String html) {
         if (html == null) {
             return html;
         }
@@ -201,14 +158,61 @@ public class Utils {
         Elements ps = Jsoup.parse(html).select("p");
         for (Element el : ps) {
             String s = el.toString();
-            s = s.replaceAll("<[^>]*>","");
-            s = s.replaceAll("\\n","");
+            s = s.replaceAll("<[^>]*>", "");
+            s = s.replaceAll("\\n", "");
             s = s.trim();
             sb.append(s);
             sb.append('\n');
         }
 
         return sb.toString();
+    }
+
+    public static String text2html(String text) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(Constants.HTML_DOC_START);
+        String[] pps = text.split("\\n");
+        for (String p : pps) {
+            sb.append("<p>");
+            sb.append(p);
+            sb.append("</p>");
+        }
+        sb.append(Constants.HTML_DOC_END);
+        return sb.toString();
+    }
+
+    public static Comparator<File> FILE_NAME_NUMBER_COMPARATOR = new Comparator<File>() {
+
+        @Override
+        public int compare(File o1, File o2) {
+            Integer i1 = getInteger(o1.getName());
+            Integer i2 = getInteger(o2.getName());
+            if (i1 == null && i2 == null) {
+                return o1.getName().compareTo(o2.getName());
+            }
+            if (i1 == null) {
+                return 1;
+            }
+            if (i2 == null) {
+                return -1;
+            }
+            return i1.compareTo(i2);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return this.equals(obj);
+        }
+    };
+
+
+    public static Integer getInteger(String str) {
+        try {
+            return Integer.parseInt(str);
+
+        } catch (NumberFormatException nfe) {
+        }
+        return null;
     }
 
 }

@@ -1,23 +1,12 @@
 package com.github.geniot.jnovelist;
 
-import com.github.geniot.jnovelist.model.Chapter;
-import com.github.geniot.jnovelist.model.ITextable;
-import com.lightdev.app.shtm.DocumentPane;
 import com.lightdev.app.shtm.SHTMLPanelSingleDocImpl;
-import org.jsoup.Jsoup;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 
-import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.UndoableEditEvent;
-import javax.swing.event.UndoableEditListener;
-import javax.swing.text.Document;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
-import javax.swing.undo.UndoManager;
-import java.awt.event.ActionEvent;
+import java.io.File;
 
 /**
  * Author: Vitaly Sazanovich
@@ -27,17 +16,25 @@ import java.awt.event.ActionEvent;
 public class ChapterEditor extends SHTMLPanelSingleDocImpl {
     protected LinePainter linePainter;
 
+    public String absolutePathToTextFile;
+
     public int charsSpaces = 0;
     public int charsNoSpaces = 0;
     public int words = 0;
 
-    public ChapterEditor(ITextable ch) {
+    public ChapterEditor(File file) {
 
         linePainter = new LinePainter(this.getDocumentPane().getEditor());
 
-        if (ch != null) {
-            getDocumentPane().setDocumentText(ch.getText());
-            getDocumentPane().getEditor().setCaretPosition(ch.getCaretPosition() > getDocument().getLength() ? getDocument().getLength() : ch.getCaretPosition());
+        if (file != null) {
+            absolutePathToTextFile = file.getAbsolutePath();
+            try {
+                getDocumentPane().setDocumentText(Utils.text2html(FileUtils.readFileToString(file, "UTF-8")));
+            } catch (Exception ex) {
+                getDocumentPane().setDocumentText(ExceptionUtils.getFullStackTrace(ex));
+            }
+
+//            getDocumentPane().getEditor().setCaretPosition(ch.getCaretPosition() > getDocument().getLength() ? getDocument().getLength() : ch.getCaretPosition());
         } else {
             getDocumentPane().setDocumentText(Constants.EMPTY_DOC);
         }
@@ -65,7 +62,7 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
 
 
     private void updateStatus() {
-        String s = Jsoup.parse(getDocumentText()).text();
+        String s = Utils.html2text(getDocumentText());
         String str = s.replaceAll("[!?,]", "");
         String[] wds = str.split("\\s+");
         String chars = s.replaceAll("\\s+", "");
@@ -76,10 +73,4 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
         Utils.updateStatus(this);
     }
 
-
-    public Chapter getChapter() {
-        Chapter ch = new Chapter();
-        ch.setText(getDocumentText());
-        return ch;
-    }
 }

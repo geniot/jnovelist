@@ -4,15 +4,13 @@ import com.github.geniot.jnovelist.Constants;
 import com.github.geniot.jnovelist.DnDTabbedPane;
 import com.github.geniot.jnovelist.JNovelistFrame;
 import com.github.geniot.jnovelist.Utils;
-import com.github.geniot.jnovelist.model.Chapter;
-import com.github.geniot.jnovelist.model.ITextable;
-import com.github.geniot.jnovelist.model.PersistedModel2;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,7 +42,7 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
             fc = new JFileChooser();
         }
 
-        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
         int returnVal = fc.showOpenDialog(frame);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -54,74 +52,32 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
 
             File selectedFile = fc.getSelectedFile();
             Constants.PROPS.setProperty(Constants.PROP_LAST_OPEN_DIR, fc.getCurrentDirectory().getPath());
+            if (!selectedFile.exists()) {
+                selectedFile.mkdirs();
+            }
             loadNovel(frame, selectedFile);
         }
     }
 
     @SuppressWarnings("unchecked")
-    public static void loadNovel(JNovelistFrame frame, File selectedFile) {
+    public static void loadNovel(JNovelistFrame frame, File selectedFolder) {
         try {
-            PersistedModel2 model = Utils.loadModel(selectedFile);
-
-
-            frame.openFileName = selectedFile.getAbsolutePath();
+            frame.openFileName = selectedFolder.getAbsolutePath();
             frame.dnDTabbedPane = new DnDTabbedPane(DnDTabbedPane.DECIMAL_TO_ROMAN);
             frame.getContentPane().add(frame.dnDTabbedPane, BorderLayout.CENTER);
 
-
-            int chaptersCount = model.getNovel().size();
-            int currentPart = -1;
-            int selectedIndex = 0;
-
-            for (int i = 0; i < chaptersCount; i++) {
-                final Chapter chapter = model.getNovel().get(i);
-                if (chapter == null) {
-                    continue;
-                }
-
-                ITextable it = new ITextable() {
-                    @Override
-                    public String getText() {
-                        return chapter.getText();
+            File[] ffs = selectedFolder.listFiles();
+            if (ffs == null || ffs.length == 0) {
+                //new project?
+                frame.dnDTabbedPane.newProject();
+            } else {
+                Arrays.sort(ffs, Utils.FILE_NAME_NUMBER_COMPARATOR);
+                for (File f : ffs) {
+                    if (f.isDirectory() && f.list().length>0 && !f.getName().equals(Constants.AUX_FOLDER_NAME)) {
+                        frame.dnDTabbedPane.addNewTab(f);
                     }
-
-                    @Override
-                    public int getViewPosition() {
-                        return chapter.getViewPosition();
-                    }
-
-                    @Override
-                    public int getCaretPosition() {
-                        return chapter.getCaretPosition();
-                    }
-                };
-
-                if (chapter.getPart() != currentPart) {
-                    frame.dnDTabbedPane.addNewTab(it);
-                    currentPart = chapter.getPart();
-                    selectedIndex = 0;
                 }
-                DnDTabbedPane partTab = (DnDTabbedPane) frame.dnDTabbedPane.getComponentAt(currentPart);
-                partTab.addNewTab(it);
-                if (chapter.isSelected()) {
-                    selectedIndex = partTab.getTabCount() - 2;
-                }
-                partTab.setSelectedIndex(selectedIndex);
             }
-
-            if (chaptersCount == 0) {
-                frame.dnDTabbedPane.addNewTab(null);
-            }
-
-            Constants.NOTES_HEROES = model.getHeroes();
-            Constants.NOTES_LOCATIONS = model.getLocations();
-            Constants.NOTES_THINGS = model.getThings();
-            Constants.NOTES_NOTES = model.getNotes();
-
-
-            Object o = model.getProperties().get(Constants.PROP_SELECTED_PART);
-            frame.dnDTabbedPane.setSelectedIndex(o == null ? 0 : Integer.parseInt(o.toString()));
-
 
             frame.updateStatus();
             frame.updateState();

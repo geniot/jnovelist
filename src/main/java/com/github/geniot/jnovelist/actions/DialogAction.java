@@ -1,16 +1,12 @@
 package com.github.geniot.jnovelist.actions;
 
-import com.github.geniot.jnovelist.ChapterEditor;
 import com.github.geniot.jnovelist.Constants;
 import com.github.geniot.jnovelist.DnDTabbedPane;
 import com.github.geniot.jnovelist.JNovelistFrame;
-import com.github.geniot.jnovelist.model.NovelNote;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -34,16 +30,16 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
         dialog = new JDialog(frame);
         dialog.setModal(true);
         dialog.setTitle(Constants.VARS.get(actionCommand));
-        List<NovelNote> notes = Constants.getNotesByCommand(actionCommand);
+//        List<NovelNote> notes = Constants.getNotesByCommand(actionCommand);
 
         dnd = new DnDTabbedPane(DnDTabbedPane.INDEX_TO_ALPHABET);
-        if (notes.isEmpty()) {
-            dnd.addNewTab(null);
-        } else {
-            for (NovelNote nn : notes) {
-                dnd.addNewTab(nn);
-            }
-        }
+//        if (notes.isEmpty()) {
+//            dnd.addNewTab(null);
+//        } else {
+//            for (NovelNote nn : notes) {
+//                dnd.addNewTab(nn);
+//            }
+//        }
 
         dialog.getContentPane().add(dnd, BorderLayout.CENTER);
         dialog.setPreferredSize(new Dimension(600, 800));
@@ -68,16 +64,16 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
     }
 
     private void save() {
-        List<NovelNote> notes = Constants.getNotesByCommand(actionCommand);
-        notes.clear();
-        for (int i = 0; i < dnd.getTabCount(); i++) {
-            Component c = dnd.getComponentAt(i);
-            if (c instanceof ChapterEditor) {
-                ChapterEditor ch = (ChapterEditor) c;
-                NovelNote nn = new NovelNote();
-                nn.setText(ch.getDocumentText());
-                notes.add(nn);
-            }
-        }
+//        List<NovelNote> notes = Constants.getNotesByCommand(actionCommand);
+//        notes.clear();
+//        for (int i = 0; i < dnd.getTabCount(); i++) {
+//            Component c = dnd.getComponentAt(i);
+//            if (c instanceof ChapterEditor) {
+//                ChapterEditor ch = (ChapterEditor) c;
+//                NovelNote nn = new NovelNote();
+//                nn.setText(ch.getDocumentText());
+//                notes.add(nn);
+//            }
+//        }
     }
 }

@@ -1,8 +1,10 @@
 package com.github.geniot.jnovelist;
 
-import com.github.geniot.jnovelist.model.NovelNote;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Author: Vitaly Sazanovich
@@ -32,9 +34,13 @@ public class Constants {
     public static final String PROP_POS_Y = "PROP_POS_Y";
     public static final String PROP_LAST_OPEN_DIR = "PROP_LAST_OPEN_DIR";
 
-    public static final String EMPTY_DOC = "<html><head><style>body {font-family:verdana; margin: 15px;}</style></head><body><p></p></body></html>";
+    public static final String HTML_DOC_START = "<html><head><style>body {font-family:verdana; margin: 15px;}</style></head><body>";
+    public static final String HTML_DOC_END = "</body></html>";
+    public static final String EMPTY_DOC = HTML_DOC_START + "<p></p>" + HTML_DOC_END;
 
     public static Properties PROPS = new Properties();
+
+    public static final String AUX_FOLDER_NAME = "aux";
 
     public static final Map<String, String> VARS;
 
@@ -47,22 +53,5 @@ public class Constants {
         VARS = Collections.unmodifiableMap(aMap);
     }
 
-    public static List<NovelNote> NOTES_HEROES = new ArrayList<NovelNote>();
-    public static List<NovelNote> NOTES_LOCATIONS = new ArrayList<NovelNote>();
-    public static List<NovelNote> NOTES_THINGS = new ArrayList<NovelNote>();
-    public static List<NovelNote> NOTES_NOTES = new ArrayList<NovelNote>();
 
-    public static List<NovelNote> getNotesByCommand(String actionCommand) {
-        if (actionCommand.equals(HEROES_NOVEL_ACTION_COMMAND)) {
-            return NOTES_HEROES;
-        } else if (actionCommand.equals(PLACES_NOVEL_ACTION_COMMAND)) {
-            return NOTES_LOCATIONS;
-        } else if (actionCommand.equals(THINGS_NOVEL_ACTION_COMMAND)) {
-            return NOTES_THINGS;
-        } else if (actionCommand.equals(NOTES_NOVEL_ACTION_COMMAND)) {
-            return NOTES_NOTES;
-        } else {
-            return new ArrayList<NovelNote>();
-        }
-    }
 }
