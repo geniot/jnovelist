@@ -1,9 +1,6 @@
 package com.github.geniot.jnovelist.actions;
 
-import com.github.geniot.jnovelist.ChapterEditor;
-import com.github.geniot.jnovelist.DnDTabbedPane;
-import com.github.geniot.jnovelist.JNovelistFrame;
-import com.github.geniot.jnovelist.Utils;
+import com.github.geniot.jnovelist.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,15 +46,30 @@ public class SaveAction extends AbstractNovelistAction implements ActionListener
             Component c = frame.dnDTabbedPane.getComponentAt(i);
             if (c instanceof DnDTabbedPane) {
                 DnDTabbedPane dnd = (DnDTabbedPane) c;
+                if (frame.dnDTabbedPane.getSelectedComponent().equals(dnd)) {
+                    Constants.PROPS.put("selectedPart:" + frame.openFileName, String.valueOf(i));
+                }
+
+                Constants.PROPS.put("selectedChapter:" + i + ":" + frame.openFileName, String.valueOf(dnd.getSelectedIndex()));
+
+
                 for (int k = 0; k < dnd.getTabCount(); k++) {
                     Component o = dnd.getComponentAt(k);
                     if (o instanceof ChapterEditor) {
                         ChapterEditor editor = (ChapterEditor) o;
+
+
+
                         try {
                             String fileDir = frame.openFileName + File.separator + (i + 1);
                             File file = new File(fileDir);
                             file.mkdirs();
-                            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileDir + File.separator + (k + 1) + ".txt"), "UTF-8"));
+                            String fileName = fileDir + File.separator + (k + 1) + ".txt";
+
+                            Constants.PROPS.put("caretPosition:" + fileName, String.valueOf(editor.getCaretPosition()));
+                            Constants.PROPS.put("verticalScrollBar:" + fileName, String.valueOf(editor.getDocumentPane().getVerticalScrollBar().getValue()));
+
+                            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8"));
                             try {
                                 out.write(Utils.html2text(editor.getDocumentText()));
                             } finally {

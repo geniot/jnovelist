@@ -182,7 +182,7 @@ public class DnDTabbedPane extends JTabbedPane {
         });
     }
 
-    public void addNewTab(File file) {
+    public void addNewTab(final File file) {
         //adding new tab
         try {
             int count = getTabCount();
@@ -208,9 +208,13 @@ public class DnDTabbedPane extends JTabbedPane {
                         @Override
                         public void run() {
                             ((ChapterEditor) c).getDocumentPane().getEditor().requestFocus();
-//                        if (chapter != null) {
-//                            ((ChapterEditor) c).getDocumentPane().getVerticalScrollBar().setValue(chapter.getViewPosition());
-//                        }
+                            int viewPos = 0;
+                            if (Constants.PROPS.getProperty("verticalScrollBar:" + file.getAbsolutePath()) != null) {
+                                viewPos = Integer.parseInt(Constants.PROPS.getProperty("verticalScrollBar:" + file.getAbsolutePath()));
+                            }
+                            if (file != null) {
+                                ((ChapterEditor) c).getDocumentPane().getVerticalScrollBar().setValue(viewPos);
+                            }
                         }
                     });
 

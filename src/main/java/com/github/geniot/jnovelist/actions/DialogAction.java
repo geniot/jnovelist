@@ -41,6 +41,14 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
             dnd.addNewTab(null);
         }
 
+        String sel = Constants.PROPS.getProperty("selectedChapter:" + actionCommand);
+        if (sel != null) {
+            Integer selIndex = Integer.parseInt(sel);
+            if (selIndex + 1 <= dnd.getTabCount()) {
+                dnd.setSelectedIndex(selIndex);
+            }
+        }
+
         dialog.getContentPane().add(dnd, BorderLayout.CENTER);
         dialog.setPreferredSize(new Dimension(600, 800));
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
@@ -55,13 +63,48 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
         dialog.setLocationRelativeTo(frame);
 
         dialog.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowOpened(WindowEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int i = 0; i < dnd.getTabCount(); i++) {
+                            if (dnd.getComponentAt(i) instanceof ChapterEditor) {
+                                ChapterEditor chapterEditor = (ChapterEditor) dnd.getComponentAt(i);
+                                chapterEditor.getDocumentPane().getEditor().requestFocus();
+                            }
+                        }
+                    }
+                });
+            }
+
             @Override
             public void windowClosing(WindowEvent e) {
                 save();
                 dialog.dispose();
             }
+
+            public void windowClosed(WindowEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (frame.dnDTabbedPane.getSelectedComponent() instanceof DnDTabbedPane) {
+                            DnDTabbedPane dnd = (DnDTabbedPane) frame.dnDTabbedPane.getSelectedComponent();
+                            if (dnd.getSelectedComponent() instanceof ChapterEditor) {
+                                ChapterEditor chapterEditor = (ChapterEditor) dnd.getSelectedComponent();
+                                chapterEditor.getDocumentPane().getEditor().requestFocus();
+                            }
+                        }
+                    }
+                });
+            }
         });
+
+
         dialog.setVisible(true);
+
+
     }
 
     private void save() {
@@ -69,9 +112,16 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
             Component c = dnd.getComponentAt(i);
             if (c instanceof ChapterEditor) {
                 ChapterEditor editor = (ChapterEditor) c;
+
+
                 try {
-                    File file = new File(frame.openFileName + File.separator + Constants.HELP_FOLDER_NAME + File.separator + Constants.VARS.get(actionCommand)+File.separator + (i + 1) + ".txt");
+                    String fileName = frame.openFileName + File.separator + Constants.HELP_FOLDER_NAME + File.separator + Constants.VARS.get(actionCommand) + File.separator + (i + 1) + ".txt";
+                    File file = new File(fileName);
                     file.getParentFile().mkdirs();
+
+                    Constants.PROPS.put("caretPosition:" + fileName, String.valueOf(editor.getCaretPosition()));
+                    Constants.PROPS.put("verticalScrollBar:" + fileName, String.valueOf(editor.getDocumentPane().getVerticalScrollBar().getValue()));
+
                     Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
                     try {
                         out.write(Utils.html2text(editor.getDocumentText()));
@@ -83,5 +133,8 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
                 }
             }
         }
+
+        Constants.PROPS.put("selectedChapter:" + actionCommand, String.valueOf(dnd.getSelectedIndex()));
+
     }
 }

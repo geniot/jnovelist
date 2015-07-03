@@ -4,6 +4,7 @@ import com.lightdev.app.shtm.SHTMLPanelSingleDocImpl;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.io.File;
@@ -34,11 +35,14 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
                 getDocumentPane().setDocumentText(ExceptionUtils.getFullStackTrace(ex));
             }
 
-//            getDocumentPane().getEditor().setCaretPosition(ch.getCaretPosition() > getDocument().getLength() ? getDocument().getLength() : ch.getCaretPosition());
+            int caretPos = 0;
+            if (Constants.PROPS.getProperty("caretPosition:" + file.getAbsolutePath()) != null) {
+                caretPos = Integer.parseInt(Constants.PROPS.getProperty("caretPosition:" + file.getAbsolutePath()));
+            }
+            getDocumentPane().getEditor().setCaretPosition(caretPos > getDocument().getLength() ? getDocument().getLength() : caretPos);
         } else {
             getDocumentPane().setDocumentText(Constants.EMPTY_DOC);
         }
-
 
         getDocument().addDocumentListener(new DocumentListener() {
             @Override
