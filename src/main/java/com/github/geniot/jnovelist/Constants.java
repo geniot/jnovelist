@@ -1,10 +1,14 @@
 package com.github.geniot.jnovelist;
 
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import static java.security.MessageDigest.getInstance;
 
 /**
  * Author: Vitaly Sazanovich
@@ -52,6 +56,5 @@ public class Constants {
         aMap.put(NOTES_NOVEL_ACTION_COMMAND, "Notes");
         VARS = Collections.unmodifiableMap(aMap);
     }
-
 
 }

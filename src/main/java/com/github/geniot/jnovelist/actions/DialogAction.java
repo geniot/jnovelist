@@ -1,11 +1,13 @@
 package com.github.geniot.jnovelist.actions;
 
 import com.github.geniot.jnovelist.*;
+import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.Arrays;
 
 
 /**
@@ -113,7 +115,6 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
             if (c instanceof ChapterEditor) {
                 ChapterEditor editor = (ChapterEditor) c;
 
-
                 try {
                     String fileName = frame.openFileName + File.separator + Constants.HELP_FOLDER_NAME + File.separator + Constants.VARS.get(actionCommand) + File.separator + (i + 1) + ".txt";
                     File file = new File(fileName);
@@ -122,14 +123,36 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
                     Constants.PROPS.put("caretPosition:" + fileName, String.valueOf(editor.getCaretPosition()));
                     Constants.PROPS.put("verticalScrollBar:" + fileName, String.valueOf(editor.getDocumentPane().getVerticalScrollBar().getValue()));
 
+                    String newText = Utils.html2text(editor.getDocumentText());
+                    if (file.exists()) {
+                        String oldText = FileUtils.readFileToString(file, "UTF-8");
+                        if (oldText.equals(newText)) {
+                            continue;
+                        }
+                    }
+
                     Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
                     try {
-                        out.write(Utils.html2text(editor.getDocumentText()));
+                        out.write(newText);
                     } finally {
                         out.close();
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
+                }
+            }
+        }
+
+        //removing remaining files, obviously removed in UI
+        String fileDir = frame.openFileName + File.separator + Constants.HELP_FOLDER_NAME + File.separator + Constants.VARS.get(actionCommand);
+        File[] ffs = new File(fileDir).listFiles();
+        if (ffs.length > dnd.getTabCount() - 1) {
+            Arrays.sort(ffs, Utils.FILE_NAME_NUMBER_COMPARATOR);
+            for (int l = dnd.getTabCount() - 1; l < ffs.length; l++) {
+                String fileName = fileDir + File.separator + (l + 1) + ".txt";
+                File f = new File(fileName);
+                if (f.exists()) {
+                    f.delete();
                 }
             }
         }

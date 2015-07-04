@@ -4,10 +4,10 @@ import com.lightdev.app.shtm.SHTMLPanelSingleDocImpl;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
-import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.io.File;
+
 
 /**
  * Author: Vitaly Sazanovich
@@ -17,18 +17,18 @@ import java.io.File;
 public class ChapterEditor extends SHTMLPanelSingleDocImpl {
     protected LinePainter linePainter;
 
-    public String absolutePathToTextFile;
 
     public int charsSpaces = 0;
     public int charsNoSpaces = 0;
     public int words = 0;
+
+
 
     public ChapterEditor(File file) {
 
         linePainter = new LinePainter(this.getDocumentPane().getEditor());
 
         if (file != null) {
-            absolutePathToTextFile = file.getAbsolutePath();
             try {
                 getDocumentPane().setDocumentText(Utils.text2html(FileUtils.readFileToString(file, "UTF-8")));
             } catch (Exception ex) {

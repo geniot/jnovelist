@@ -206,7 +206,6 @@ public class JNovelistFrame extends JFrame {
                     }
                 }
                 partStatusLabel.setText(" CAL: " + partChars + " / WDS: " + partWords);
-
                 ChapterEditor chapterEditor = (ChapterEditor) selPart.getSelectedComponent();
                 statusLabel.setText(" CAL: " + chapterEditor.charsSpaces + " / WDS: " + chapterEditor.words);
 

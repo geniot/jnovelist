@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 public class Utils {
     private static final Logger logger = Logger.getLogger(Utils.class.getName());
 
+
     public static JButton makeNavigationButton(String imageName,
                                                String actionCommand,
                                                String toolTipText,
@@ -162,7 +163,7 @@ public class Utils {
             s = s.replaceAll("\\n", "");
             s = s.trim();
             sb.append(s);
-            sb.append('\n');
+            sb.append("\r\n");
         }
 
         return sb.toString();

@@ -1,12 +1,14 @@
 package com.github.geniot.jnovelist.actions;
 
 import com.github.geniot.jnovelist.*;
+import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,25 +60,45 @@ public class SaveAction extends AbstractNovelistAction implements ActionListener
                     if (o instanceof ChapterEditor) {
                         ChapterEditor editor = (ChapterEditor) o;
 
-
-
                         try {
                             String fileDir = frame.openFileName + File.separator + (i + 1);
-                            File file = new File(fileDir);
-                            file.mkdirs();
                             String fileName = fileDir + File.separator + (k + 1) + ".txt";
+                            File file = new File(fileName);
+                            file.getParentFile().mkdirs();
 
                             Constants.PROPS.put("caretPosition:" + fileName, String.valueOf(editor.getCaretPosition()));
                             Constants.PROPS.put("verticalScrollBar:" + fileName, String.valueOf(editor.getDocumentPane().getVerticalScrollBar().getValue()));
 
-                            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8"));
+                            String newText = Utils.html2text(editor.getDocumentText());
+                            if (file.exists()) {
+                                String oldText = FileUtils.readFileToString(file, "UTF-8");
+                                if (oldText.equals(newText)) {
+                                    continue;
+                                }
+                            }
+
+                            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
                             try {
-                                out.write(Utils.html2text(editor.getDocumentText()));
+                                out.write(newText);
                             } finally {
                                 out.close();
                             }
                         } catch (Exception ex) {
                             ex.printStackTrace();
+                        }
+                    }
+                }
+
+                //removing remaining files, obviously removed in UI
+                String fileDir = frame.openFileName + File.separator + (i + 1);
+                File[] ffs = new File(fileDir).listFiles();
+                if (ffs.length > dnd.getTabCount()-1) {
+                    Arrays.sort(ffs, Utils.FILE_NAME_NUMBER_COMPARATOR);
+                    for (int l = dnd.getTabCount()-1; l < ffs.length; l++) {
+                        String fileName = fileDir + File.separator + (l + 1) + ".txt";
+                        File f = new File(fileName);
+                        if (f.exists()) {
+                            f.delete();
                         }
                     }
                 }

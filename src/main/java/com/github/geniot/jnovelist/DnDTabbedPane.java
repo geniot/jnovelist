@@ -58,26 +58,6 @@ public class DnDTabbedPane extends JTabbedPane {
         addContainerListener(new ContainerAdapter() {
             @Override
             public void componentRemoved(ContainerEvent e) {
-                try {
-                    if (e.getChild() instanceof ChapterEditor) {
-                        ChapterEditor che = (ChapterEditor) e.getChild();
-                        if (che.absolutePathToTextFile != null) {
-                            FileUtils.forceDelete(new File(che.absolutePathToTextFile));
-                        }
-                    } else if (e.getChild() instanceof DnDTabbedPane) {
-                        DnDTabbedPane dnd = (DnDTabbedPane) e.getChild();
-                        for (int i = 0; i < dnd.getTabCount(); i++) {
-                            if (dnd.getComponentAt(i) instanceof ChapterEditor) {
-                                ChapterEditor che = (ChapterEditor) dnd.getComponentAt(i);
-                                if (che.absolutePathToTextFile != null) {
-                                    FileUtils.forceDelete(new File(che.absolutePathToTextFile));
-                                }
-                            }
-                        }
-                    }
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
                 Utils.updateStatus(DnDTabbedPane.this);
             }
         });
