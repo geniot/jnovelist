@@ -36,6 +36,7 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
         File f = new File(frame.openFileName + File.separator + Constants.HELP_FOLDER_NAME + File.separator + Constants.VARS.get(actionCommand));
         if (f.exists() && f.isDirectory()) {
             File[] ffs = f.listFiles();
+            Arrays.sort(ffs,Utils.FILE_NAME_NUMBER_COMPARATOR);
             for (File note : ffs) {
                 dnd.addNewTab(note);
             }

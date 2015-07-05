@@ -163,7 +163,7 @@ public class Utils {
             s = s.replaceAll("\\n", "");
             s = s.trim();
             sb.append(s);
-            sb.append("\r\n");
+            sb.append("\n");
         }
 
         return sb.toString();
