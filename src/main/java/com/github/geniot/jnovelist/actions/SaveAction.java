@@ -72,7 +72,7 @@ public class SaveAction extends AbstractNovelistAction implements ActionListener
                             String newText = Utils.html2text(editor.getDocumentText());
                             if (file.exists()) {
                                 String oldText = FileUtils.readFileToString(file, "UTF-8");
-                                if (oldText.equals(newText)) {
+                                if (Utils.textsEqual(oldText,newText)) {
                                     continue;
                                 }
                             }

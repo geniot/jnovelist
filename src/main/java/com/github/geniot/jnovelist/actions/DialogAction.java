@@ -36,7 +36,7 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
         File f = new File(frame.openFileName + File.separator + Constants.HELP_FOLDER_NAME + File.separator + Constants.VARS.get(actionCommand));
         if (f.exists() && f.isDirectory()) {
             File[] ffs = f.listFiles();
-            Arrays.sort(ffs,Utils.FILE_NAME_NUMBER_COMPARATOR);
+            Arrays.sort(ffs, Utils.FILE_NAME_NUMBER_COMPARATOR);
             for (File note : ffs) {
                 dnd.addNewTab(note);
             }
@@ -127,7 +127,7 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
                     String newText = Utils.html2text(editor.getDocumentText());
                     if (file.exists()) {
                         String oldText = FileUtils.readFileToString(file, "UTF-8");
-                        if (oldText.equals(newText)) {
+                        if (Utils.textsEqual(oldText, newText)) {
                             continue;
                         }
                     }
