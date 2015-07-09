@@ -70,7 +70,7 @@ import de.calcom.cclib.text.FindReplaceEvent;
 import de.calcom.cclib.text.FindReplaceListener;
 
 /** A class groupping actions. Most actions forward the operation to editor pane. */
-class SHTMLEditorKitActions {
+public class SHTMLEditorKitActions {
     /**
      * action to set the style
      */
@@ -263,7 +263,7 @@ class SHTMLEditorKitActions {
      * Created on 20.08.2006
      * Copyright (C) 2006 Dimitri Polivaev
      */
-    static class BoldAction extends StyledEditorKit.BoldAction implements SHTMLAction, AttributeComponent {
+  public  static class BoldAction extends StyledEditorKit.BoldAction implements SHTMLAction, AttributeComponent {
         /**
          *
          */
