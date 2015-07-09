@@ -218,7 +218,7 @@ public class Utils {
 
     public static boolean textsEqual(String s1, String s2) {
         String tmp1 = s1.replaceAll("\n", "").replaceAll("\r", "");
-        String tmp2 = s1.replaceAll("\n", "").replaceAll("\r", "");
+        String tmp2 = s2.replaceAll("\n", "").replaceAll("\r", "");
         return tmp1.equals(tmp2);
     }
 
