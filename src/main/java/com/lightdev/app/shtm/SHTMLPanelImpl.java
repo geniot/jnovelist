@@ -233,7 +233,7 @@ public class SHTMLPanelImpl extends SHTMLPanel implements CaretListener {
         initActions();
         if(actionBuilder != null)
         	actionBuilder.initActions(this);
-        menuBar = null;//dynRes.createMenubar(textResources, "menubar");
+        menuBar = dynRes.createMenubar(textResources, "menubar");
         editorPopup = null;//dynRes.createPopupMenu(textResources, "popup");
 //        setJMenuBar(menuBar);
         customizeFrame();
@@ -256,7 +256,7 @@ public class SHTMLPanelImpl extends SHTMLPanel implements CaretListener {
         if (super.processKeyBinding(ks, e, condition, pressed)) {
             return true;
         }
-        return false;//menuBar.handleKeyBinding(ks, e, condition, pressed);
+        return menuBar.handleKeyBinding(ks, e, condition, pressed);
     }
 
     public JMenuItem newActionMenuItem(final String actionName) {
