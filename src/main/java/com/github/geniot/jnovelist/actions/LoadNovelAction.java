@@ -77,37 +77,6 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
             }
 
 
-//            SwingUtilities.invokeLater(new Runnable() {
-//                @Override
-//                public void run() {
-//                    for (int i = 0; i < frame.dnDTabbedPane.getTabCount(); i++) {
-//                        String selChapterStr = Constants.PROPS.getProperty("selectedChapter:" + i + ":" + selectedFolder.getAbsolutePath());
-//                        if (selChapterStr != null) {
-//                            int selChapter = Integer.parseInt(selChapterStr);
-//                            Component c = frame.dnDTabbedPane.getComponentAt(i);
-//                            if (c instanceof DnDTabbedPane) {
-//                                DnDTabbedPane dnd = (DnDTabbedPane) c;
-//                                if (selChapter < dnd.getTabCount()) {
-//                                    dnd.setSelectedIndex(selChapter);
-//                                }
-//                                if (dnd.getSelectedComponent() instanceof ChapterEditor){
-//                                    ChapterEditor chapterEditor = (ChapterEditor) dnd.getSelectedComponent();
-//                                    chapterEditor.getDocumentPane().getEditor().requestFocus();
-//                                }
-//                            }
-//                        }
-//                    }
-//                    String selPartStr = Constants.PROPS.getProperty("selectedPart:" + selectedFolder.getAbsolutePath());
-//                    if (selPartStr != null) {
-//                        int selPart = Integer.parseInt(selPartStr);
-//                        if (selPart < frame.dnDTabbedPane.getTabCount()) {
-//                            frame.dnDTabbedPane.setSelectedIndex(selPart);
-//                        }
-//                    }
-//                }
-//            });
-
-
             frame.updateStatus();
             frame.updateState();
             frame.validate();

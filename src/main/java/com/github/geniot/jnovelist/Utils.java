@@ -161,6 +161,7 @@ public class Utils {
             String s = el.toString();
             s = s.replaceAll("<[^>]*>", "");
             s = s.replaceAll("\\n", "");
+            s = s.replaceAll("&nbsp;", " ");
             s = s.trim();
             sb.append(s);
             sb.append("\n");
