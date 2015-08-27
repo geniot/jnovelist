@@ -8,6 +8,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.io.File;
 import java.io.IOException;
 
@@ -178,6 +179,7 @@ public class DnDTabbedPane extends JTabbedPane {
                 if (file.isDirectory()) {
                     c = new DnDTabbedPane(DnDTabbedPane.INDEX_TO_DECIMAL);
                     File[] ffs = file.listFiles();
+                    Arrays.sort(ffs, Utils.FILE_NAME_NUMBER_COMPARATOR);
                     for (File f : ffs) {
                         ((DnDTabbedPane) c).addNewTab(f);
                     }
