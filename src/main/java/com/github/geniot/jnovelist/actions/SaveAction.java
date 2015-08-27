@@ -29,7 +29,7 @@ public class SaveAction extends AbstractNovelistAction implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e) {
         save();
-//        frame.saveNovel.setEnabled(false);
+        frame.saveNovel.setEnabled(false);
         frame.updateState();
         SwingUtilities.invokeLater(new Runnable() {
             @Override

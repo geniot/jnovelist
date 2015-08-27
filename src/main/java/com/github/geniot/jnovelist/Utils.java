@@ -93,8 +93,21 @@ public class Utils {
                 }
             }
         });
+    }
 
-
+    public static void enableSave(final Component component) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                Container c = component.getParent();
+                while (c != null && !(c instanceof JNovelistFrame)) {
+                    c = c.getParent();
+                }
+                if (c != null) {
+                    ((JNovelistFrame) c).saveNovel.setEnabled(true);
+                }
+            }
+        });
     }
 
     public static byte[] serialize(Object yourObject) {

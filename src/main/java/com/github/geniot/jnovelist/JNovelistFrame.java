@@ -17,7 +17,7 @@ public class JNovelistFrame extends JFrame {
 
     protected JButton loadNovel;
     public JButton unloadNovel;
-    //    public JButton saveNovel;
+    public JButton saveNovel;
     public JButton heroes;
     public JButton places;
     public JButton things;
@@ -53,7 +53,7 @@ public class JNovelistFrame extends JFrame {
         places = Utils.makeNavigationButton("Places", Constants.PLACES_NOVEL_ACTION_COMMAND, "Places", "Places");
         things = Utils.makeNavigationButton("Things", Constants.THINGS_NOVEL_ACTION_COMMAND, "Things", "Things");
         notes = Utils.makeNavigationButton("Notes", Constants.NOTES_NOVEL_ACTION_COMMAND, "Notes", "Notes");
-//        saveNovel = Utils.makeNavigationButton("Save", Constants.SAVE_NOVEL_ACTION_COMMAND, "Save", "Save");
+        saveNovel = Utils.makeNavigationButton("Save", Constants.SAVE_NOVEL_ACTION_COMMAND, "Save", "Save");
 
         loadNovel.addActionListener(new LoadNovelAction(this));
         unloadNovel.addActionListener(new UnloadAction(this));
@@ -62,12 +62,12 @@ public class JNovelistFrame extends JFrame {
         places.addActionListener(new DialogAction(this));
         things.addActionListener(new DialogAction(this));
         notes.addActionListener(new DialogAction(this));
-//        saveNovel.addActionListener(new SaveAction(this));
+        saveNovel.addActionListener(new SaveAction(this));
 
-//        saveNovel.setEnabled(false);
+        saveNovel.setEnabled(false);
 
         toolBar.add(loadNovel);
-//        toolBar.add(saveNovel);
+        toolBar.add(saveNovel);
         toolBar.add(heroes);
         toolBar.add(places);
         toolBar.add(things);
@@ -167,8 +167,6 @@ public class JNovelistFrame extends JFrame {
             allStatusLabel.setText("");
             return;
         }
-
-//        saveNovel.setEnabled(true);
 
         int chars = 0;
         int charsNoSpaces = 0;

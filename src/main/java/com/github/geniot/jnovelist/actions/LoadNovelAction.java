@@ -1,6 +1,10 @@
 package com.github.geniot.jnovelist.actions;
 
-import com.github.geniot.jnovelist.*;
+import com.github.geniot.jnovelist.Constants;
+import com.github.geniot.jnovelist.DnDTabbedPane;
+import com.github.geniot.jnovelist.JNovelistFrame;
+import com.github.geniot.jnovelist.Utils;
+import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,7 +74,9 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
             } else {
                 Arrays.sort(ffs, Utils.FILE_NAME_NUMBER_COMPARATOR);
                 for (File f : ffs) {
-                    if (f.isDirectory() && f.list().length > 0 && !f.getName().equals(Constants.HELP_FOLDER_NAME)) {
+                    if (f.isDirectory() && f.list().length > 0 &&
+                            StringUtils.isNumeric(f.getName()) &&
+                            !f.getName().equals(Constants.HELP_FOLDER_NAME)) {
                         frame.dnDTabbedPane.addNewTab(f);
                     }
                 }

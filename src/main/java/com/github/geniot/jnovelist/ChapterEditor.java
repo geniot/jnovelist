@@ -23,7 +23,6 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
     public int words = 0;
 
 
-
     public ChapterEditor(File file) {
 
         linePainter = new LinePainter(this.getDocumentPane().getEditor());
@@ -47,20 +46,24 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
         getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                updateStatus();
+                enableSave();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                updateStatus();
+                enableSave();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                updateStatus();
+                enableSave();
             }
         });
+        updateStatus();
+    }
 
+    private void enableSave() {
+        Utils.enableSave(this);
         updateStatus();
     }
 
