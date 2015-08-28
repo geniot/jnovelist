@@ -57,6 +57,18 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
                 selectedFile.mkdirs();
             }
             loadNovel(frame, selectedFile);
+
+
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    String selPartS = Constants.PROPS.getProperty("selectedPart:" + frame.openFileName);
+                    if (!StringUtils.isEmpty(selPartS)) {
+                        int selPart = Integer.parseInt(selPartS);
+                        frame.dnDTabbedPane.setSelectedIndex(selPart);
+                    }
+                }
+            });
         }
     }
 
@@ -73,11 +85,25 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
                 frame.dnDTabbedPane.newProject();
             } else {
                 Arrays.sort(ffs, Utils.FILE_NAME_NUMBER_COMPARATOR);
-                for (File f : ffs) {
+                for (final File f : ffs) {
                     if (f.isDirectory() && f.list().length > 0 &&
                             StringUtils.isNumeric(f.getName()) &&
                             !f.getName().equals(Constants.HELP_FOLDER_NAME)) {
                         frame.dnDTabbedPane.addNewTab(f);
+
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                for (int i=0;i<f.list().length;i++){
+                                    String selChapterS = Constants.PROPS.getProperty("selectedChapter:" + i + ":" + frame.openFileName);
+                                    if (!StringUtils.isEmpty(selChapterS)) {
+                                        int selChapter = Integer.parseInt(selChapterS);
+                                        DnDTabbedPane pane = (DnDTabbedPane) frame.dnDTabbedPane.getComponentAt(i);
+                                        pane.setSelectedIndex(selChapter);
+                                    }
+                                }
+                            }
+                        });
                     }
                 }
             }

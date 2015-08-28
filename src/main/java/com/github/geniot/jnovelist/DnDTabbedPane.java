@@ -178,7 +178,7 @@ public class DnDTabbedPane extends JTabbedPane {
             } else {
                 if (file.isDirectory()) {
                     c = new DnDTabbedPane(DnDTabbedPane.INDEX_TO_DECIMAL);
-                    File[] ffs = file.listFiles();
+                    final File[] ffs = file.listFiles();
                     Arrays.sort(ffs, Utils.FILE_NAME_NUMBER_COMPARATOR);
                     for (File f : ffs) {
                         ((DnDTabbedPane) c).addNewTab(f);

@@ -148,6 +148,7 @@ public class JNovelistFrame extends JFrame {
             places.setEnabled(false);
             things.setEnabled(false);
             notes.setEnabled(false);
+            saveNovel.setEnabled(false);
         } else {
             unloadNovel.setEnabled(true);
             heroes.setEnabled(true);
