@@ -73,7 +73,7 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
         String str = s.replaceAll("[!?,]", "");
         String[] wds = str.split("\\s+");
         String chars = s.replaceAll("\\s+", "");
-        charsSpaces = s.length();
+        charsSpaces = s.replaceAll("\n","").length();
         charsNoSpaces = chars.length();
         words = wds.length == 1 && wds[0].equals("") ? 0 : wds.length;
 

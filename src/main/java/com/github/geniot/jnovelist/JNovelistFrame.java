@@ -204,12 +204,12 @@ public class JNovelistFrame extends JFrame {
                         partWords += editor.words;
                     }
                 }
-                partStatusLabel.setText(" CAL: " + partChars + " / WDS: " + partWords);
+                partStatusLabel.setText(" CHR: " + partChars + " / WDS: " + partWords);
                 ChapterEditor chapterEditor = (ChapterEditor) selPart.getSelectedComponent();
-                statusLabel.setText(" CAL: " + chapterEditor.charsSpaces + " / WDS: " + chapterEditor.words);
+                statusLabel.setText(" CHR: " + chapterEditor.charsSpaces + " / WDS: " + chapterEditor.words);
 
             }
         }
-        allStatusLabel.setText(" CAL: " + chars + " / WDS: " + words);
+        allStatusLabel.setText(" CHR: " + chars + " / WDS: " + words);
     }
 }
