@@ -99,7 +99,9 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
                                     if (!StringUtils.isEmpty(selChapterS)) {
                                         int selChapter = Integer.parseInt(selChapterS);
                                         DnDTabbedPane pane = (DnDTabbedPane) frame.dnDTabbedPane.getComponentAt(i);
-                                        pane.setSelectedIndex(selChapter);
+                                        if (pane.getComponentCount()>=selChapter+1){
+                                            pane.setSelectedIndex(selChapter);
+                                        }
                                     }
                                 }
                             }
