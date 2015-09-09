@@ -124,6 +124,7 @@ public class DnDTabbedPane extends JTabbedPane {
                         thisRef.setTabComponentAt(tabNumber, tabTitle);
                         setSelectedComponent(comp);
                         updateLabels();
+                        Utils.enableSave(comp);
                     }
                 }
 
@@ -175,6 +176,7 @@ public class DnDTabbedPane extends JTabbedPane {
             if (file == null) {
                 //creating empty tab (mouse click)
                 c = new ChapterEditor(file);
+                Utils.enableSave(this);
             } else {
                 if (file.isDirectory()) {
                     c = new DnDTabbedPane(DnDTabbedPane.INDEX_TO_DECIMAL);

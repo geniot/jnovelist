@@ -108,6 +108,7 @@ public class ButtonTabComponent extends JPanel {
                     pane.setSelectedIndex(pane.getTabCount() - 2);
                 }
                 pane.updateLabels();
+                Utils.enableSave(pane);
             }
         }
 

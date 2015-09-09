@@ -1,5 +1,6 @@
 package com.github.geniot.jnovelist;
 
+import org.apache.commons.io.FilenameUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -200,8 +201,8 @@ public class Utils {
 
         @Override
         public int compare(File o1, File o2) {
-            Integer i1 = getInteger(o1.getName());
-            Integer i2 = getInteger(o2.getName());
+            Integer i1 = getInteger(FilenameUtils.removeExtension(o1.getName()));
+            Integer i2 = getInteger(FilenameUtils.removeExtension(o2.getName()));
             if (i1 == null && i2 == null) {
                 return o1.getName().compareTo(o2.getName());
             }
