@@ -188,7 +188,7 @@ public class JNovelistFrame extends JFrame {
                 }
             }
         }
-        if (dnDTabbedPane.getSelectedComponent() != null) {
+        if (dnDTabbedPane.getSelectedComponent() != null && dnDTabbedPane.getSelectedComponent() instanceof DnDTabbedPane) {
             DnDTabbedPane selPart = (DnDTabbedPane) dnDTabbedPane.getSelectedComponent();
 
             if (selPart.getSelectedComponent() != null) {

@@ -94,13 +94,16 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                for (int i=0;i<f.list().length;i++){
+                                for (int i = 0; i < f.list().length; i++) {
                                     String selChapterS = Constants.PROPS.getProperty("selectedChapter:" + i + ":" + frame.openFileName);
                                     if (!StringUtils.isEmpty(selChapterS)) {
                                         int selChapter = Integer.parseInt(selChapterS);
-                                        DnDTabbedPane pane = (DnDTabbedPane) frame.dnDTabbedPane.getComponentAt(i);
-                                        if (pane.getComponentCount()>=selChapter+1){
-                                            pane.setSelectedIndex(selChapter);
+
+                                        if (frame.dnDTabbedPane.getTabCount()>i && frame.dnDTabbedPane.getComponentAt(i) instanceof DnDTabbedPane) {
+                                            DnDTabbedPane pane = (DnDTabbedPane) frame.dnDTabbedPane.getComponentAt(i);
+                                            if (pane.getComponentCount() >= selChapter + 1) {
+                                                pane.setSelectedIndex(selChapter);
+                                            }
                                         }
                                     }
                                 }
