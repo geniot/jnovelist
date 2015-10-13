@@ -205,9 +205,11 @@ public class JNovelistFrame extends JFrame {
                     }
                 }
                 partStatusLabel.setText(" CHR: " + partChars + " / WDS: " + partWords);
-                ChapterEditor chapterEditor = (ChapterEditor) selPart.getSelectedComponent();
-                statusLabel.setText(" CHR: " + chapterEditor.charsSpaces + " / WDS: " + chapterEditor.words);
 
+                if (selPart.getSelectedComponent() instanceof ChapterEditor){
+                    ChapterEditor chapterEditor = (ChapterEditor) selPart.getSelectedComponent();
+                    statusLabel.setText(" CHR: " + chapterEditor.charsSpaces + " / WDS: " + chapterEditor.words);
+                }
             }
         }
         allStatusLabel.setText(" CHR: " + chars + " / WDS: " + words);
