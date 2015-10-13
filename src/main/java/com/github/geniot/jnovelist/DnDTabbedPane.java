@@ -1,6 +1,8 @@
 package com.github.geniot.jnovelist;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -183,7 +185,9 @@ public class DnDTabbedPane extends JTabbedPane {
                     final File[] ffs = file.listFiles();
                     Arrays.sort(ffs, Utils.FILE_NAME_NUMBER_COMPARATOR);
                     for (File f : ffs) {
-                        ((DnDTabbedPane) c).addNewTab(f);
+                        if (StringUtils.isNumeric(FilenameUtils.getBaseName(f.getName()))){
+                            ((DnDTabbedPane) c).addNewTab(f);
+                        }
                     }
                 } else {
                     c = new ChapterEditor(file);
