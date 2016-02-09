@@ -1,6 +1,7 @@
 package com.github.geniot.jnovelist;
 
 import com.github.geniot.jnovelist.actions.*;
+import com.lightdev.app.shtm.SHTMLPanelImpl;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -138,10 +139,13 @@ public class JNovelistFrame extends JFrame {
     public void updateState() {
         if (openFileName == null) {
             if (dnDTabbedPane != null) {
+                dnDTabbedPane.removeAll();
                 getContentPane().remove(dnDTabbedPane);
                 dnDTabbedPane = null;
                 validate();
                 repaint();
+                SHTMLPanelImpl.pluginManager = null;
+                System.gc();
             }
             unloadNovel.setEnabled(false);
             heroes.setEnabled(false);
