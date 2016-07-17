@@ -76,20 +76,20 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
     public static void loadNovel(final JNovelistFrame frame, final File selectedFolder) {
         try {
             frame.openFileName = selectedFolder.getAbsolutePath();
-            frame.dnDTabbedPane = new DnDTabbedPane(DnDTabbedPane.DECIMAL_TO_ROMAN);
+            frame.dnDTabbedPane = new DnDTabbedPane(DnDTabbedPane.DECIMAL_TO_ROMAN,Constants.LOAD_NOVEL_ACTION_COMMAND);
             frame.getContentPane().add(frame.dnDTabbedPane, BorderLayout.CENTER);
 
             File[] ffs = selectedFolder.listFiles();
             if (ffs == null || ffs.length == 0) {
                 //new project?
-                frame.dnDTabbedPane.newProject();
+                frame.dnDTabbedPane.newProject(Constants.LOAD_NOVEL_ACTION_COMMAND);
             } else {
                 Arrays.sort(ffs, Utils.FILE_NAME_NUMBER_COMPARATOR);
                 for (final File f : ffs) {
                     if (f.isDirectory() && f.list().length > 0 &&
                             StringUtils.isNumeric(f.getName()) &&
                             !f.getName().equals(Constants.HELP_FOLDER_NAME)) {
-                        frame.dnDTabbedPane.addNewTab(f);
+                        frame.dnDTabbedPane.addNewTab(f,Constants.LOAD_NOVEL_ACTION_COMMAND);
 
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override

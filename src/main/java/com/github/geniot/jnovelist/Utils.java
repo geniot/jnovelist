@@ -4,7 +4,11 @@ import org.apache.commons.io.FilenameUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PersistenceDelegate;
@@ -12,6 +16,7 @@ import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
 import java.net.URL;
+import java.security.Key;
 import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,6 +30,85 @@ import java.util.logging.Logger;
 public class Utils {
     private static final Logger logger = Logger.getLogger(Utils.class.getName());
 
+    public static final String DEFAULT_ENCODING = "UTF-8";
+    static BASE64Encoder enc = new BASE64Encoder();
+    static BASE64Decoder dec = new BASE64Decoder();
+
+
+    private static final String ALGORITHM = "AES";
+    private static final byte[] keyValue =
+            new byte[]{'T', 'h', 'i', 's', 'I', 's', 'A', 'S', 'e', 'c', 'r', 'e', 't', 'K', 'e', 'y'};
+
+    public static String base64encode(String text) {
+        try {
+            return enc.encode(text.getBytes(DEFAULT_ENCODING));
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+    }//base64encode
+
+    public static String base64decode(String text) {
+        try {
+            return new String(dec.decodeBuffer(text), DEFAULT_ENCODING);
+        } catch (IOException e) {
+            return null;
+        }
+    }//base64decode
+
+
+    public static String encrypt(String valueToEnc) throws Exception {
+        Key key = generateKey();
+        Cipher c = Cipher.getInstance(ALGORITHM);
+        c.init(Cipher.ENCRYPT_MODE, key);
+        byte[] encValue = c.doFinal(valueToEnc.getBytes());
+        String encryptedValue = new BASE64Encoder().encode(encValue);
+        return encryptedValue;
+    }
+
+    public static String decrypt(String encryptedValue) throws Exception {
+        Key key = generateKey();
+        Cipher c = Cipher.getInstance(ALGORITHM);
+        c.init(Cipher.DECRYPT_MODE, key);
+        byte[] decordedValue = new BASE64Decoder().decodeBuffer(encryptedValue);
+        byte[] decValue = c.doFinal(decordedValue);
+        String decryptedValue = new String(decValue);
+        return decryptedValue;
+    }
+
+    public static byte[] encryptBytes(byte[] valueToEnc) {
+        try {
+            Key key = generateKey();
+            Cipher c = Cipher.getInstance(ALGORITHM);
+            c.init(Cipher.ENCRYPT_MODE, key);
+            byte[] encValue = c.doFinal(valueToEnc);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            new BASE64Encoder().encode(encValue, baos);
+            return baos.toByteArray();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return valueToEnc;
+        }
+    }
+
+    public static byte[] decryptBytes(byte[] encryptedValue) {
+        try {
+            Key key = generateKey();
+            Cipher c = Cipher.getInstance(ALGORITHM);
+            c.init(Cipher.DECRYPT_MODE, key);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            new BASE64Decoder().decodeBuffer(new ByteArrayInputStream(encryptedValue), baos);
+            byte[] decValue = c.doFinal(baos.toByteArray());
+            return decValue;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return encryptedValue;
+        }
+    }
+
+    private static Key generateKey() throws Exception {
+        Key key = new SecretKeySpec(keyValue, ALGORITHM);
+        return key;
+    }
 
     public static JButton makeNavigationButton(String imageName,
                                                String actionCommand,

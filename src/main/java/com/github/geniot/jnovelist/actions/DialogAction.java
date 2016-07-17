@@ -2,6 +2,7 @@ package com.github.geniot.jnovelist.actions;
 
 import com.github.geniot.jnovelist.*;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,16 +33,19 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
         dialog.setModal(true);
         dialog.setTitle(Constants.VARS.get(actionCommand));
 
-        dnd = new DnDTabbedPane(DnDTabbedPane.INDEX_TO_ALPHABET);
+        dnd = new DnDTabbedPane(DnDTabbedPane.INDEX_TO_ALPHABET,actionCommand);
         File f = new File(frame.openFileName + File.separator + Constants.HELP_FOLDER_NAME + File.separator + Constants.VARS.get(actionCommand));
         if (f.exists() && f.isDirectory()) {
             File[] ffs = f.listFiles();
             Arrays.sort(ffs, Utils.FILE_NAME_NUMBER_COMPARATOR);
             for (File note : ffs) {
-                dnd.addNewTab(note);
+                dnd.addNewTab(note,actionCommand);
             }
-        } else {
-            dnd.addNewTab(null);
+        }
+        if (dnd.getTabCount()==1){
+            if (!actionCommand.equals(Constants.IMAGES_NOVEL_ACTION_COMMAND)) {
+                dnd.addNewTab(null,actionCommand);
+            }
         }
 
         String sel = Constants.PROPS.getProperty("selectedChapter:" + actionCommand);
@@ -53,7 +57,13 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
         }
 
         dialog.getContentPane().add(dnd, BorderLayout.CENTER);
-        dialog.setPreferredSize(new Dimension(600, 800));
+
+        Dimension dim = new Dimension(frame.getWidth(), frame.getHeight());
+        dialog.setPreferredSize(dim);
+        dialog.setSize(dim);
+//        dialog.setMaximumSize(dim);
+//        dialog.setMinimumSize(dim);
+
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
         dialog.getRootPane().registerKeyboardAction(new ActionListener() {
             @Override
@@ -124,7 +134,12 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
                     Constants.PROPS.put("caretPosition:" + fileName, String.valueOf(editor.getCaretPosition()));
                     Constants.PROPS.put("verticalScrollBar:" + fileName, String.valueOf(editor.getDocumentPane().getVerticalScrollBar().getValue()));
 
-                    String newText = Utils.html2text(editor.getDocumentText());
+                    String text = Utils.html2text(editor.getDocumentText());
+                    if (StringUtils.isBlank(text)){
+                        continue;
+                    }
+
+                    String newText = Utils.base64encode(text);
                     if (file.exists()) {
                         String oldText = FileUtils.readFileToString(file, "UTF-8");
                         if (Utils.textsEqual(oldText, newText)) {
@@ -147,18 +162,19 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
         //removing remaining files, obviously removed in UI
         String fileDir = frame.openFileName + File.separator + Constants.HELP_FOLDER_NAME + File.separator + Constants.VARS.get(actionCommand);
         File[] ffs = new File(fileDir).listFiles();
-        if (ffs.length > dnd.getTabCount() - 1) {
-            Arrays.sort(ffs, Utils.FILE_NAME_NUMBER_COMPARATOR);
-            for (int l = dnd.getTabCount() - 1; l < ffs.length; l++) {
-                String fileName = fileDir + File.separator + (l + 1) + ".txt";
-                File f = new File(fileName);
-                if (f.exists()) {
-                    f.delete();
+        if (ffs != null) {
+            if (ffs.length > dnd.getTabCount() - 1) {
+                Arrays.sort(ffs, Utils.FILE_NAME_NUMBER_COMPARATOR);
+                for (int l = dnd.getTabCount() - 1; l < ffs.length; l++) {
+                    String fileName = fileDir + File.separator + (l + 1) + ".txt";
+                    File f = new File(fileName);
+                    if (f.exists()) {
+                        f.delete();
+                    }
                 }
             }
+
+            Constants.PROPS.put("selectedChapter:" + actionCommand, String.valueOf(dnd.getSelectedIndex()));
         }
-
-        Constants.PROPS.put("selectedChapter:" + actionCommand, String.valueOf(dnd.getSelectedIndex()));
-
     }
 }

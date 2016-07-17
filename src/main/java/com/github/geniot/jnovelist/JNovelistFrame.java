@@ -2,12 +2,12 @@ package com.github.geniot.jnovelist;
 
 import com.github.geniot.jnovelist.actions.*;
 import com.lightdev.app.shtm.SHTMLPanelImpl;
+import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.*;
 
 /**
  * Author: Vitaly Sazanovich
@@ -19,10 +19,13 @@ public class JNovelistFrame extends JFrame {
     protected JButton loadNovel;
     public JButton unloadNovel;
     public JButton saveNovel;
+    public JButton exportNovel;
+
     public JButton heroes;
     public JButton places;
     public JButton things;
     public JButton notes;
+    public JButton images;
 
     public DnDTabbedPane dnDTabbedPane;
 
@@ -49,20 +52,26 @@ public class JNovelistFrame extends JFrame {
 
         loadNovel = Utils.makeNavigationButton("Load", Constants.LOAD_NOVEL_ACTION_COMMAND, "Load", "Load");
         unloadNovel = Utils.makeNavigationButton("Eject", Constants.UNLOAD_NOVEL_ACTION_COMMAND, "Unload", "Unload");
+        exportNovel = Utils.makeNavigationButton("Export", Constants.EXPORT_NOVEL_ACTION_COMMAND, "Export", "Export");
 
         heroes = Utils.makeNavigationButton("Heros", Constants.HEROES_NOVEL_ACTION_COMMAND, "Heroes", "Heroes");
         places = Utils.makeNavigationButton("Places", Constants.PLACES_NOVEL_ACTION_COMMAND, "Places", "Places");
         things = Utils.makeNavigationButton("Things", Constants.THINGS_NOVEL_ACTION_COMMAND, "Things", "Things");
         notes = Utils.makeNavigationButton("Notes", Constants.NOTES_NOVEL_ACTION_COMMAND, "Notes", "Notes");
+        images = Utils.makeNavigationButton("Images", Constants.IMAGES_NOVEL_ACTION_COMMAND, "Images", "Images");
+
         saveNovel = Utils.makeNavigationButton("Save", Constants.SAVE_NOVEL_ACTION_COMMAND, "Save", "Save");
 
         loadNovel.addActionListener(new LoadNovelAction(this));
         unloadNovel.addActionListener(new UnloadAction(this));
+        exportNovel.addActionListener(new ExportAction(this));
 
         heroes.addActionListener(new DialogAction(this));
         places.addActionListener(new DialogAction(this));
         things.addActionListener(new DialogAction(this));
         notes.addActionListener(new DialogAction(this));
+        images.addActionListener(new DialogAction(this));
+
         saveNovel.addActionListener(new SaveAction(this));
 
         saveNovel.setEnabled(false);
@@ -73,7 +82,9 @@ public class JNovelistFrame extends JFrame {
         toolBar.add(places);
         toolBar.add(things);
         toolBar.add(notes);
+        toolBar.add(images);
         toolBar.addSeparator(new Dimension(30, 10));
+        toolBar.add(exportNovel);
         toolBar.add(unloadNovel);
 
         getContentPane().add(toolBar, BorderLayout.PAGE_START);
@@ -132,7 +143,11 @@ public class JNovelistFrame extends JFrame {
 
 
     private String getDynTitle() {
-        return "JNovelist" + (openFileName == null ? "" : " - " + openFileName.substring(openFileName.lastIndexOf(File.separator) + 1, openFileName.length()));
+        return "JNovelist" + (openFileName == null ? "" : " - " + getNovelName());
+    }
+
+    public String getNovelName(){
+        return openFileName.substring(openFileName.lastIndexOf(File.separator) + 1, openFileName.length());
     }
 
 
@@ -152,13 +167,18 @@ public class JNovelistFrame extends JFrame {
             places.setEnabled(false);
             things.setEnabled(false);
             notes.setEnabled(false);
+            images.setEnabled(false);
+
             saveNovel.setEnabled(false);
+            exportNovel.setEnabled(false);
         } else {
+            exportNovel.setEnabled(true);
             unloadNovel.setEnabled(true);
             heroes.setEnabled(true);
             places.setEnabled(true);
             things.setEnabled(true);
             notes.setEnabled(true);
+            images.setEnabled(true);
         }
         setTitle(getDynTitle());
         updateStatus();
@@ -217,5 +237,30 @@ public class JNovelistFrame extends JFrame {
             }
         }
         allStatusLabel.setText(" CHR: " + chars + " / WDS: " + words);
+    }
+
+    public String getNovelText() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < dnDTabbedPane.getTabCount(); i++) {
+            Component c = dnDTabbedPane.getComponentAt(i);
+            if (c instanceof DnDTabbedPane) {
+                DnDTabbedPane dnd = (DnDTabbedPane) c;
+                for (int k = 0; k < dnd.getTabCount(); k++) {
+                    Component o = dnd.getComponentAt(k);
+                    if (o instanceof ChapterEditor) {
+                        ChapterEditor editor = (ChapterEditor) o;
+                        try {
+                            String newText = Utils.html2text(editor.getDocumentText());
+                            sb.append(k+1);
+                            sb.append('\n');
+                            sb.append(newText);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+        return sb.toString();
     }
 }

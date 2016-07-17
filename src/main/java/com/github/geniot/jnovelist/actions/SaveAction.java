@@ -2,6 +2,7 @@ package com.github.geniot.jnovelist.actions;
 
 import com.github.geniot.jnovelist.*;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +19,7 @@ import java.util.logging.Logger;
  * Email: vitaly.sazanovich@gmail.com
  * Date: 25/06/15
  */
-public class SaveAction extends AbstractNovelistAction implements ActionListener {
+public class SaveAction extends AbstractNovelistAction  {
     private static final Logger logger = Logger.getLogger(SaveAction.class.getName());
 
     public SaveAction(JNovelistFrame f) {
@@ -69,7 +70,12 @@ public class SaveAction extends AbstractNovelistAction implements ActionListener
                             Constants.PROPS.put("caretPosition:" + fileName, String.valueOf(editor.getCaretPosition()));
                             Constants.PROPS.put("verticalScrollBar:" + fileName, String.valueOf(editor.getDocumentPane().getVerticalScrollBar().getValue()));
 
-                            String newText = Utils.html2text(editor.getDocumentText());
+                            String text = Utils.html2text(editor.getDocumentText());
+                            if (StringUtils.isBlank(text)){
+                                continue;
+                            }
+
+                            String newText = Utils.base64encode(text);
                             if (file.exists()) {
                                 String oldText = FileUtils.readFileToString(file, "UTF-8");
                                 if (Utils.textsEqual(oldText,newText)) {

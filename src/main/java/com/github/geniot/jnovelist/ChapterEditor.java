@@ -15,7 +15,7 @@ import java.io.File;
  * Date: 24/06/15
  */
 public class ChapterEditor extends SHTMLPanelSingleDocImpl {
-    protected LinePainter linePainter;
+//    protected LinePainter linePainter;
 
 
     public int charsSpaces = 0;
@@ -25,11 +25,12 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
 
     public ChapterEditor(File file) {
 
-        linePainter = new LinePainter(this.getDocumentPane().getEditor());
+//        linePainter = new LinePainter(this.getDocumentPane().getEditor());
 
         if (file != null) {
             try {
-                getDocumentPane().setDocumentText(Utils.text2html(FileUtils.readFileToString(file, "UTF-8")));
+                getDocumentPane().setDocumentText(Utils.text2html(Utils.base64decode(FileUtils.readFileToString(file, "UTF-8"))));
+//                getDocumentPane().setDocumentText(Utils.text2html(FileUtils.readFileToString(file, "UTF-8")));
             } catch (Exception ex) {
                 getDocumentPane().setDocumentText(ExceptionUtils.getFullStackTrace(ex));
             }
@@ -60,6 +61,15 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
             }
         });
         updateStatus();
+    }
+
+    public ChapterEditor(String file) {
+        try {
+            getDocumentPane().setDocumentText(Utils.text2html(file));
+        } catch (Exception ex) {
+            getDocumentPane().setDocumentText(ExceptionUtils.getFullStackTrace(ex));
+        }
+        getEditorPane().setEditable(false);
     }
 
     private void enableSave() {
