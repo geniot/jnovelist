@@ -99,7 +99,7 @@ public class WordIterator implements Iterator<String> {
         URLConnection conn = filename.openConnection();
         conn.setReadTimeout( 5000 );
         InputStream input = conn.getInputStream();
-        input = new InflaterInputStream( input );
+//        input = new InflaterInputStream( input );
         return new BufferedInputStream( input );
     }
     

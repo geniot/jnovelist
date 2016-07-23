@@ -27,6 +27,11 @@ public class Constants {
     public static final String THINGS_NOVEL_ACTION_COMMAND = "THINGS_NOVEL_ACTION_COMMAND";
     public static final String NOTES_NOVEL_ACTION_COMMAND = "NOTES_NOVEL_ACTION_COMMAND";
     public static final String IMAGES_NOVEL_ACTION_COMMAND = "IMAGES_NOVEL_ACTION_COMMAND";
+    public static final String DICTIONARY_ACTION_COMMAND = "DICTIONARY_ACTION_COMMAND";
+    public static final String INFO_ACTION_COMMAND = "INFO_ACTION_COMMAND";
+
+    public static final String WORDS_COUNTER = "WORDS_COUNTER";
+    public static final String CHARS_COUNTER = "CHARS_COUNTER";
 
     public static final String SAVE_NOVEL_ACTION_COMMAND = "SAVE_NOVEL_ACTION_COMMAND";
 
@@ -58,6 +63,10 @@ public class Constants {
         aMap.put(THINGS_NOVEL_ACTION_COMMAND, "Things");
         aMap.put(NOTES_NOVEL_ACTION_COMMAND, "Notes");
         aMap.put(IMAGES_NOVEL_ACTION_COMMAND, "Images");
+        aMap.put(DICTIONARY_ACTION_COMMAND, "Synonyms");
+        aMap.put(INFO_ACTION_COMMAND, "Info");
+        aMap.put(WORDS_COUNTER, "СЛВ");
+        aMap.put(CHARS_COUNTER, "СМВ");
         VARS = Collections.unmodifiableMap(aMap);
     }
 

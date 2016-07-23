@@ -1,11 +1,14 @@
 package com.github.geniot.jnovelist;
 
+import com.inet.jortho.SpellChecker;
 import com.lightdev.app.shtm.SHTMLPanelSingleDocImpl;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.io.File;
 
 
@@ -60,6 +63,10 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
                 enableSave();
             }
         });
+
+        // enable the spell checking on the text component with all features
+        SpellChecker.register(getDocumentPane().getEditor());
+
         updateStatus();
     }
 
@@ -83,11 +90,12 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
         String str = s.replaceAll("[!?,]", "");
         String[] wds = str.split("\\s+");
         String chars = s.replaceAll("\\s+", "");
-        charsSpaces = s.replaceAll("\n","").length();
+        charsSpaces = s.replaceAll("\n", "").length();
         charsNoSpaces = chars.length();
         words = wds.length == 1 && wds[0].equals("") ? 0 : wds.length;
 
         Utils.updateStatus(this);
     }
+
 
 }

@@ -28,11 +28,10 @@ public class ExportAction extends AbstractNovelistAction {
     public void actionPerformed(ActionEvent e) {
         this.actionCommand = e.getActionCommand();
         dialog = new JDialog(frame);
-        dialog.setTitle(frame.getNovelName());
         dialog.setModal(true);
-        dialog.setTitle(Constants.VARS.get(actionCommand));
         dialog.getContentPane().setLayout(new BorderLayout());
         dialog.setTitle(frame.getNovelName());
+
         final String novelText = frame.getNovelText();
         dialog.getContentPane().add(new ChapterEditor(novelText), BorderLayout.CENTER);
         JToolBar toolbar = new JToolBar();

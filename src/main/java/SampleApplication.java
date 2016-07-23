@@ -5,6 +5,8 @@ import javax.swing.JTextPane;
 import com.inet.jortho.FileUserDictionary;
 import com.inet.jortho.SpellChecker;
 
+import java.net.URL;
+
 /*
  *  JOrtho
  *
@@ -50,7 +52,7 @@ public class SampleApplication extends JFrame{
         // Load the configuration from the file dictionaries.cnf and 
         // use the current locale or the first language as default
         // You can download the dictionary files from http://sourceforge.net/projects/jortho/files/Dictionaries/
-        SpellChecker.registerDictionaries( null, null );
+        SpellChecker.registerDictionaries( null, "ru" );
 
         // enable the spell checking on the text component with all features
         SpellChecker.register( text );

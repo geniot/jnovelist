@@ -1,13 +1,15 @@
 package com.github.geniot.jnovelist;
 
 import com.github.geniot.jnovelist.actions.*;
+import com.inet.jortho.FileUserDictionary;
+import com.inet.jortho.SpellChecker;
 import com.lightdev.app.shtm.SHTMLPanelImpl;
-import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
 
 /**
  * Author: Vitaly Sazanovich
@@ -26,6 +28,9 @@ public class JNovelistFrame extends JFrame {
     public JButton things;
     public JButton notes;
     public JButton images;
+    public JButton info;
+
+    public JButton dictionary;
 
     public DnDTabbedPane dnDTabbedPane;
 
@@ -50,17 +55,19 @@ public class JNovelistFrame extends JFrame {
         JToolBar toolBar = new JToolBar("Still draggable");
         toolBar.setFloatable(false);
 
-        loadNovel = Utils.makeNavigationButton("Load", Constants.LOAD_NOVEL_ACTION_COMMAND, "Load", "Load");
-        unloadNovel = Utils.makeNavigationButton("Eject", Constants.UNLOAD_NOVEL_ACTION_COMMAND, "Unload", "Unload");
-        exportNovel = Utils.makeNavigationButton("Export", Constants.EXPORT_NOVEL_ACTION_COMMAND, "Export", "Export");
+        loadNovel = Utils.makeNavigationButton("Load", Constants.LOAD_NOVEL_ACTION_COMMAND, "Открыть", "Load");
+        unloadNovel = Utils.makeNavigationButton("Eject", Constants.UNLOAD_NOVEL_ACTION_COMMAND, "Закрыть", "Unload");
+        exportNovel = Utils.makeNavigationButton("Export", Constants.EXPORT_NOVEL_ACTION_COMMAND, "Экспорт", "Export");
 
-        heroes = Utils.makeNavigationButton("Heros", Constants.HEROES_NOVEL_ACTION_COMMAND, "Heroes", "Heroes");
-        places = Utils.makeNavigationButton("Places", Constants.PLACES_NOVEL_ACTION_COMMAND, "Places", "Places");
-        things = Utils.makeNavigationButton("Things", Constants.THINGS_NOVEL_ACTION_COMMAND, "Things", "Things");
-        notes = Utils.makeNavigationButton("Notes", Constants.NOTES_NOVEL_ACTION_COMMAND, "Notes", "Notes");
-        images = Utils.makeNavigationButton("Images", Constants.IMAGES_NOVEL_ACTION_COMMAND, "Images", "Images");
+        heroes = Utils.makeNavigationButton("Heros", Constants.HEROES_NOVEL_ACTION_COMMAND, "Люди", "Heroes");
+        places = Utils.makeNavigationButton("Places", Constants.PLACES_NOVEL_ACTION_COMMAND, "Места", "Places");
+        things = Utils.makeNavigationButton("Things", Constants.THINGS_NOVEL_ACTION_COMMAND, "Вещи", "Things");
+        notes = Utils.makeNavigationButton("Notes", Constants.NOTES_NOVEL_ACTION_COMMAND, "Записи", "Notes");
+        images = Utils.makeNavigationButton("Images", Constants.IMAGES_NOVEL_ACTION_COMMAND, "Картинки", "Images");
+        dictionary = Utils.makeNavigationButton("Dictionary", Constants.DICTIONARY_ACTION_COMMAND, "Синонимы", "Dictionary");
+        info = Utils.makeNavigationButton("Info", Constants.INFO_ACTION_COMMAND, "Помощь", "Info");
 
-        saveNovel = Utils.makeNavigationButton("Save", Constants.SAVE_NOVEL_ACTION_COMMAND, "Save", "Save");
+        saveNovel = Utils.makeNavigationButton("Save", Constants.SAVE_NOVEL_ACTION_COMMAND, "Сохранить", "Save");
 
         loadNovel.addActionListener(new LoadNovelAction(this));
         unloadNovel.addActionListener(new UnloadAction(this));
@@ -71,21 +78,27 @@ public class JNovelistFrame extends JFrame {
         things.addActionListener(new DialogAction(this));
         notes.addActionListener(new DialogAction(this));
         images.addActionListener(new DialogAction(this));
+        dictionary.addActionListener(new DictionaryAction(this));
+        info.addActionListener(new InfoAction(this));
 
         saveNovel.addActionListener(new SaveAction(this));
 
         saveNovel.setEnabled(false);
 
         toolBar.add(loadNovel);
+        toolBar.add(unloadNovel);
         toolBar.add(saveNovel);
+        toolBar.add(exportNovel);
+        toolBar.addSeparator(new Dimension(30, 10));
         toolBar.add(heroes);
         toolBar.add(places);
         toolBar.add(things);
         toolBar.add(notes);
         toolBar.add(images);
-        toolBar.addSeparator(new Dimension(30, 10));
-        toolBar.add(exportNovel);
-        toolBar.add(unloadNovel);
+        toolBar.add(Box.createHorizontalGlue());
+        toolBar.add(info);
+        toolBar.add(dictionary);
+
 
         getContentPane().add(toolBar, BorderLayout.PAGE_START);
 
@@ -139,6 +152,17 @@ public class JNovelistFrame extends JFrame {
                 });
             }
         }
+
+
+        // Create user dictionary in the current working directory of your application
+        SpellChecker.setUserDictionaryProvider(new FileUserDictionary());
+
+        // Load the configuration from the file dictionaries.cnf and
+        // use the current locale or the first language as default
+        // You can download the dictionary files from http://sourceforge.net/projects/jortho/files/Dictionaries/
+        SpellChecker.registerDictionaries(null, "ru");
+        Synonymizer.init();
+
     }
 
 
@@ -146,7 +170,7 @@ public class JNovelistFrame extends JFrame {
         return "JNovelist" + (openFileName == null ? "" : " - " + getNovelName());
     }
 
-    public String getNovelName(){
+    public String getNovelName() {
         return openFileName.substring(openFileName.lastIndexOf(File.separator) + 1, openFileName.length());
     }
 
@@ -228,15 +252,18 @@ public class JNovelistFrame extends JFrame {
                         partWords += editor.words;
                     }
                 }
-                partStatusLabel.setText(" CHR: " + partChars + " / WDS: " + partWords);
 
-                if (selPart.getSelectedComponent() instanceof ChapterEditor){
+                if (dnDTabbedPane.getTabCount() != 2) {//no need to show part stats if we have only one part
+                    partStatusLabel.setText(" " + Constants.VARS.get(Constants.CHARS_COUNTER) + ": " + partChars + " / " + Constants.VARS.get(Constants.WORDS_COUNTER) + ": " + partWords);
+                }
+
+                if (selPart.getSelectedComponent() instanceof ChapterEditor) {
                     ChapterEditor chapterEditor = (ChapterEditor) selPart.getSelectedComponent();
-                    statusLabel.setText(" CHR: " + chapterEditor.charsSpaces + " / WDS: " + chapterEditor.words);
+                    statusLabel.setText(" " + Constants.VARS.get(Constants.CHARS_COUNTER) + ": " + chapterEditor.charsSpaces + " / " + Constants.VARS.get(Constants.WORDS_COUNTER) + ": " + chapterEditor.words);
                 }
             }
         }
-        allStatusLabel.setText(" CHR: " + chars + " / WDS: " + words);
+        allStatusLabel.setText(" " + Constants.VARS.get(Constants.CHARS_COUNTER) + ": " + chars + " / " + Constants.VARS.get(Constants.WORDS_COUNTER) + ": " + words);
     }
 
     public String getNovelText() {
@@ -251,7 +278,7 @@ public class JNovelistFrame extends JFrame {
                         ChapterEditor editor = (ChapterEditor) o;
                         try {
                             String newText = Utils.html2text(editor.getDocumentText());
-                            sb.append(k+1);
+                            sb.append(k + 1);
                             sb.append('\n');
                             sb.append(newText);
                         } catch (Exception ex) {

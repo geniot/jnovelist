@@ -37,7 +37,7 @@ public class SampleApplet extends JApplet {
         // Load the configuration from the file dictionaries.cnf and 
         // use the English dictionary as default 
         // You can download the dictionary files from http://sourceforge.net/projects/jortho/files/Dictionaries/
-        SpellChecker.registerDictionaries( getCodeBase(), "en" );
+        SpellChecker.registerDictionaries( getCodeBase(), "ru" );
 
         // enable the spell checking on the text component with all features
         SpellChecker.register( text );

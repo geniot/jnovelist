@@ -72,8 +72,9 @@ public class DnDTabbedPane extends JTabbedPane {
 
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
+                boolean enableRemoval = (e.isAltDown() && e.isControlDown());
 
-                if (!dragging) {
+                if (!dragging && enableRemoval) {
                     // Gets the tab index based on the mouse position
                     int tabNumber = getUI().tabForCoordinate(DnDTabbedPane.this, e.getX(), e.getY());
 
@@ -214,12 +215,12 @@ public class DnDTabbedPane extends JTabbedPane {
             }
 
             int extraTabsCount = 1;
-            if (actionCommand.equals(Constants.IMAGES_NOVEL_ACTION_COMMAND)){
+            if (actionCommand.equals(Constants.IMAGES_NOVEL_ACTION_COMMAND)) {
                 extraTabsCount = 0;
             }
 
-            insertTab(getLabelByIndex(count-extraTabsCount), null, c, null, count-extraTabsCount);
-            setTabComponentAt(count-extraTabsCount, tabTitle);
+            insertTab(getLabelByIndex(count - extraTabsCount), null, c, null, count - extraTabsCount);
+            setTabComponentAt(count - extraTabsCount, tabTitle);
             setSelectedComponent(c);
 
         } catch (Exception ex) {
