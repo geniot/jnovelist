@@ -32,7 +32,11 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
 
         if (file != null) {
             try {
-                getDocumentPane().setDocumentText(Utils.text2html(Utils.base64decode(FileUtils.readFileToString(file, "UTF-8"))));
+                String str = FileUtils.readFileToString(file, "UTF-8");
+                if (!str.contains(" ")){
+                    str = Utils.base64decode(str);
+                }
+                getDocumentPane().setDocumentText(Utils.text2html(str));
 //                getDocumentPane().setDocumentText(Utils.text2html(FileUtils.readFileToString(file, "UTF-8")));
             } catch (Exception ex) {
                 getDocumentPane().setDocumentText(ExceptionUtils.getFullStackTrace(ex));
@@ -70,13 +74,13 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
         updateStatus();
     }
 
-    public ChapterEditor(String file) {
+    public ChapterEditor(String file, boolean editable) {
         try {
             getDocumentPane().setDocumentText(Utils.text2html(file));
         } catch (Exception ex) {
             getDocumentPane().setDocumentText(ExceptionUtils.getFullStackTrace(ex));
         }
-        getEditorPane().setEditable(false);
+        getEditorPane().setEditable(editable);
     }
 
     private void enableSave() {

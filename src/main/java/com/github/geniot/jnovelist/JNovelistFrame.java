@@ -28,6 +28,10 @@ public class JNovelistFrame extends JFrame {
     public JButton things;
     public JButton notes;
     public JButton images;
+
+    public JButton style;
+
+
     public JButton info;
 
     public JButton dictionary;
@@ -43,8 +47,13 @@ public class JNovelistFrame extends JFrame {
     public JNovelistFrame() {
         super("JNovelist");
 
+        setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/appicon.ico_32x32.png")).getImage());
+
         try {
             Constants.PROPS.load(new FileInputStream(System.getProperty("user.home") + File.separator + Constants.PROPS_FILE_NAME));
+            if (Constants.PROPS.containsKey(Constants.PROP_STYLE)) {
+                Constants.HTML_DOC_START = Constants.PROPS.getProperty(Constants.PROP_STYLE);
+            }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
@@ -64,6 +73,9 @@ public class JNovelistFrame extends JFrame {
         things = Utils.makeNavigationButton("Things", Constants.THINGS_NOVEL_ACTION_COMMAND, "Вещи", "Things");
         notes = Utils.makeNavigationButton("Notes", Constants.NOTES_NOVEL_ACTION_COMMAND, "Записи", "Notes");
         images = Utils.makeNavigationButton("Images", Constants.IMAGES_NOVEL_ACTION_COMMAND, "Картинки", "Images");
+
+        style = Utils.makeNavigationButton("Style", Constants.STYLE_NOVEL_ACTION_COMMAND, "Стиль", "Style");
+
         dictionary = Utils.makeNavigationButton("Dictionary", Constants.DICTIONARY_ACTION_COMMAND, "Синонимы", "Dictionary");
         info = Utils.makeNavigationButton("Info", Constants.INFO_ACTION_COMMAND, "Помощь", "Info");
 
@@ -78,6 +90,7 @@ public class JNovelistFrame extends JFrame {
         things.addActionListener(new DialogAction(this));
         notes.addActionListener(new DialogAction(this));
         images.addActionListener(new DialogAction(this));
+        style.addActionListener(new StyleAction(this));
         dictionary.addActionListener(new DictionaryAction(this));
         info.addActionListener(new InfoAction(this));
 
@@ -95,6 +108,8 @@ public class JNovelistFrame extends JFrame {
         toolBar.add(things);
         toolBar.add(notes);
         toolBar.add(images);
+        toolBar.addSeparator(new Dimension(30, 10));
+        toolBar.add(style);
         toolBar.add(Box.createHorizontalGlue());
         toolBar.add(info);
         toolBar.add(dictionary);
@@ -137,21 +152,10 @@ public class JNovelistFrame extends JFrame {
         }
 
 
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new SetRemovalStateAction(this));
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyAction(this));
         updateState();
 
-        if (Constants.PROPS.containsKey(Constants.PROP_LAST_OPEN_FILE)) {
-            String lastOpenFile = Constants.PROPS.getProperty(Constants.PROP_LAST_OPEN_FILE);
-            final File f = new File(lastOpenFile);
-            if (f.exists()) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        LoadNovelAction.loadNovel(JNovelistFrame.this, f);
-                    }
-                });
-            }
-        }
+        load();
 
 
         // Create user dictionary in the current working directory of your application
@@ -165,9 +169,25 @@ public class JNovelistFrame extends JFrame {
 
     }
 
+    public void load(){
+        if (Constants.PROPS.containsKey(Constants.PROP_LAST_OPEN_FILE)) {
+            String lastOpenFile = Constants.PROPS.getProperty(Constants.PROP_LAST_OPEN_FILE);
+            final File f = new File(lastOpenFile);
+            if (f.exists()) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        LoadNovelAction.loadNovel(JNovelistFrame.this, f);
+                    }
+                });
+            }
+        }
+    }
+
 
     private String getDynTitle() {
-        return "JNovelist" + (openFileName == null ? "" : " - " + getNovelName());
+//        return "JNovelist" + (openFileName == null ? "" : " - " + getNovelName());
+        return openFileName == null ? "" : openFileName;
     }
 
     public String getNovelName() {

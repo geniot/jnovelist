@@ -1,13 +1,11 @@
 package com.github.geniot.jnovelist.actions;
 
 import com.github.geniot.jnovelist.*;
+import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 /**
  * Author: Vitaly Sazanovich
@@ -15,6 +13,9 @@ import java.awt.event.KeyEvent;
  * Date: 19/07/16
  */
 public class DictionaryAction extends AbstractNovelistAction implements ActionListener {
+    private static String LAST_SEARCH = "";
+    private static String LAST_SEARCH_RESULT = "";
+
     public DictionaryAction(JNovelistFrame f) {
         super(f);
     }
@@ -39,14 +40,14 @@ public class DictionaryAction extends AbstractNovelistAction implements ActionLi
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    entryArea.getDocumentPane().setDocumentText(Synonymizer.search(searchTextField.getText()));
+                    runSearch();
                 }
             }
         });
 
         contentPane.add(searchTextField, BorderLayout.NORTH);
 
-        entryArea = new ChapterEditor("");
+        entryArea = new ChapterEditor("",false);
         contentPane.add(entryArea, BorderLayout.CENTER);
 
         dialog.getContentPane().add(contentPane, BorderLayout.CENTER);
@@ -66,6 +67,48 @@ public class DictionaryAction extends AbstractNovelistAction implements ActionLi
         dialog.setLocationRelativeTo(frame);
 
 
+        dialog.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                dialog.dispose();
+            }
+
+            public void windowClosed(WindowEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (frame.dnDTabbedPane!=null && frame.dnDTabbedPane.getSelectedComponent() instanceof DnDTabbedPane) {
+                            DnDTabbedPane dnd = (DnDTabbedPane) frame.dnDTabbedPane.getSelectedComponent();
+                            if (dnd.getSelectedComponent() instanceof ChapterEditor) {
+                                ChapterEditor chapterEditor = (ChapterEditor) dnd.getSelectedComponent();
+                                chapterEditor.getDocumentPane().getEditor().requestFocus();
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        if (StringUtils.isNotEmpty(LAST_SEARCH)) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    searchTextField.setText(LAST_SEARCH);
+                    entryArea.getDocumentPane().setDocumentText(LAST_SEARCH_RESULT);
+                }
+            });
+        }
+
+
         dialog.setVisible(true);
+    }
+
+    private void runSearch() {
+        LAST_SEARCH_RESULT = Synonymizer.search(searchTextField.getText());
+        entryArea.getDocumentPane().setDocumentText(LAST_SEARCH_RESULT);
+        if (StringUtils.isNotEmpty(LAST_SEARCH_RESULT)) {
+            LAST_SEARCH = searchTextField.getText();
+        }
     }
 }

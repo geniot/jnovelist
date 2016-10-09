@@ -33,7 +33,7 @@ public class ExportAction extends AbstractNovelistAction {
         dialog.setTitle(frame.getNovelName());
 
         final String novelText = frame.getNovelText();
-        dialog.getContentPane().add(new ChapterEditor(novelText), BorderLayout.CENTER);
+        dialog.getContentPane().add(new ChapterEditor(novelText,false), BorderLayout.CENTER);
         JToolBar toolbar = new JToolBar();
         toolbar.setFloatable(false);
         JButton copy2clipboard = new JButton("Copy to clipboard");

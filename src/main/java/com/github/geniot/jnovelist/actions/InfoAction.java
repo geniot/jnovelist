@@ -52,7 +52,7 @@ public class InfoAction extends AbstractNovelistAction {
             ex.printStackTrace();
         }
 
-        dialog.getContentPane().add(new ChapterEditor(sb.toString()), BorderLayout.CENTER);
+        dialog.getContentPane().add(new ChapterEditor(sb.toString(),false), BorderLayout.CENTER);
 
 
         Dimension dim = new Dimension(frame.getWidth(), frame.getHeight());

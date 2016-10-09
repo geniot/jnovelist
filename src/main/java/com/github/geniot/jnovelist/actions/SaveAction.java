@@ -32,16 +32,16 @@ public class SaveAction extends AbstractNovelistAction  {
         save();
         frame.saveNovel.setEnabled(false);
         frame.updateState();
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    (((ChapterEditor) ((DnDTabbedPane) frame.dnDTabbedPane.getSelectedComponent()).getSelectedComponent())).requestFocus();
-                } catch (Exception ex) {
-                    logger.log(Level.INFO, ex.getMessage());
-                }
-            }
-        });
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    (((ChapterEditor) ((DnDTabbedPane) frame.dnDTabbedPane.getSelectedComponent()).getSelectedComponent())).requestFocus();
+//                } catch (Exception ex) {
+//                    logger.log(Level.INFO, ex.getMessage());
+//                }
+//            }
+//        });
     }
 
     protected void save() {

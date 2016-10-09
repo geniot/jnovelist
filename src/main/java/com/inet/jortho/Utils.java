@@ -248,7 +248,7 @@ public class Utils {
                 case '\u2019': // RIGHT SINGLE QUOTATION MARK
                 case '\u201a': // SINGLE LOW-9 QUOTATION MARK
                 case '\u201b': // SINGLE HIGH-REVERSED-9 QUOTATION MARK
-                case '´': // These last two should probably not be included,
+                case '\u00b4': // These last two should probably not be included,
                 case '`': // they are not really quotation marks.
                     if( newWord == null ){
                         newWord = word.toCharArray();

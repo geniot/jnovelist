@@ -27,6 +27,7 @@ public class Constants {
     public static final String THINGS_NOVEL_ACTION_COMMAND = "THINGS_NOVEL_ACTION_COMMAND";
     public static final String NOTES_NOVEL_ACTION_COMMAND = "NOTES_NOVEL_ACTION_COMMAND";
     public static final String IMAGES_NOVEL_ACTION_COMMAND = "IMAGES_NOVEL_ACTION_COMMAND";
+    public static final String STYLE_NOVEL_ACTION_COMMAND = "STYLE_NOVEL_ACTION_COMMAND";
     public static final String DICTIONARY_ACTION_COMMAND = "DICTIONARY_ACTION_COMMAND";
     public static final String INFO_ACTION_COMMAND = "INFO_ACTION_COMMAND";
 
@@ -35,18 +36,15 @@ public class Constants {
 
     public static final String SAVE_NOVEL_ACTION_COMMAND = "SAVE_NOVEL_ACTION_COMMAND";
 
-    public static final String COLLECTION_NOVEL = "COLLECTION_NOVEL";
-    public static final String COLLECTION_PROPS = "COLLECTION_PROPS";
-
-    public static final String PROP_SELECTED_PART = "PROP_SELECTED_PART";
     public static final String PROP_LAST_OPEN_FILE = "PROP_LAST_OPEN_FILE";
     public static final String PROP_WIDTH = "PROP_WIDTH";
     public static final String PROP_HEIGHT = "PROP_HEIGHT";
     public static final String PROP_POS_X = "PROP_POS_X";
     public static final String PROP_POS_Y = "PROP_POS_Y";
     public static final String PROP_LAST_OPEN_DIR = "PROP_LAST_OPEN_DIR";
+    public static final String PROP_STYLE = "PROP_STYLE";
 
-    public static final String HTML_DOC_START = "<html><head><style>body {font-family:verdana; margin: 15px;}</style></head><body>";
+    public static String HTML_DOC_START = "<html><head><style>body {background-color: white; font-color: black; font-size:16pt; font-family:verdana; margin: 15px;}</style></head><body>";
     public static final String HTML_DOC_END = "</body></html>";
     public static final String EMPTY_DOC = HTML_DOC_START + "<p></p>" + HTML_DOC_END;
 
