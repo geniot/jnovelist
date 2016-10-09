@@ -9,6 +9,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -17,6 +19,7 @@ import java.util.Arrays;
  * Date: 30/06/15
  */
 public class DialogAction extends AbstractNovelistAction implements ActionListener {
+
     public DialogAction(JNovelistFrame f) {
         super(f);
     }
@@ -30,7 +33,7 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
     public void actionPerformed(ActionEvent e) {
         this.actionCommand = e.getActionCommand();
         dialog = new JDialog(frame);
-        dialog.setModal(true);
+        dialog.setModal(actionCommand.equals(Constants.IMAGES_NOVEL_ACTION_COMMAND)?false:true);
         dialog.setTitle(Constants.VARS.get(actionCommand));
 
         dnd = new DnDTabbedPane(DnDTabbedPane.INDEX_TO_ALPHABET,actionCommand);
