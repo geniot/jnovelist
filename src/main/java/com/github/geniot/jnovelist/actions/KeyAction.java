@@ -29,7 +29,8 @@ public class KeyAction extends AbstractNovelistAction implements KeyEventDispatc
         Window[] windows = Window.getWindows();
         if (windows != null) { // don't rely on current implementation, which at least returns [0].
             for (Window w : windows) {
-                if (w.isShowing() && w instanceof JDialog && ((JDialog) w).isModal())
+//                if (w.isShowing() && w instanceof JDialog && ((JDialog) w).isModal())
+                if (w.isShowing() && w instanceof JDialog)
                     return true;
             }
         }
