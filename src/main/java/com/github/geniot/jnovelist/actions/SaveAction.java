@@ -104,7 +104,7 @@ public class SaveAction extends AbstractNovelistAction  {
                         String fileName = fileDir + File.separator + (l + 1) + ".txt";
                         File f = new File(fileName);
                         if (f.exists()) {
-                            f.delete();
+                            f.renameTo(new File(f.getPath()+"."+System.currentTimeMillis()));
                         }
                     }
                 }
