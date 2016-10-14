@@ -205,6 +205,15 @@ public class JNovelistFrame extends JFrame {
                 repaint();
                 SHTMLPanelImpl.pluginManager = null;
                 System.gc();
+
+                Window[] wws = getOwnedWindows();
+                for (Window w : wws) {
+                    if (w instanceof JDialog) {
+                        JDialog jd = (JDialog) w;
+                        jd.dispose();
+                    }
+                }
+
             }
             unloadNovel.setEnabled(false);
             heroes.setEnabled(false);

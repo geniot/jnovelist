@@ -46,6 +46,8 @@ public class StyleAction extends AbstractNovelistAction {
         dialog.setPreferredSize(dim);
         dialog.setSize(dim);
 
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
 
         dialog.getRootPane().registerKeyboardAction(new ActionListener() {
@@ -57,6 +59,7 @@ public class StyleAction extends AbstractNovelistAction {
 
         dialog.addWindowListener(new WindowAdapter() {
 
+            @Override
             public void windowClosed(WindowEvent e) {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
@@ -70,7 +73,14 @@ public class StyleAction extends AbstractNovelistAction {
                         if (frame.openFileName != null) {
                             Constants.PROPS.setProperty(Constants.PROP_LAST_OPEN_FILE, frame.openFileName);
                             frame.unloadNovel.doClick();
-                            frame.load();
+
+                            SwingUtilities.invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    frame.load();
+                                }
+                            });
+
                         }
                     }
                 });

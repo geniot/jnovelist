@@ -64,6 +64,7 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
         Dimension dim = new Dimension(frame.getWidth(), frame.getHeight());
         dialog.setPreferredSize(dim);
         dialog.setSize(dim);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 //        dialog.setMaximumSize(dim);
 //        dialog.setMinimumSize(dim);
 
@@ -105,7 +106,7 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        if (frame.dnDTabbedPane.getSelectedComponent() instanceof DnDTabbedPane) {
+                        if (frame.dnDTabbedPane!=null && frame.dnDTabbedPane.getSelectedComponent() instanceof DnDTabbedPane) {
                             DnDTabbedPane dnd = (DnDTabbedPane) frame.dnDTabbedPane.getSelectedComponent();
                             if (dnd.getSelectedComponent() instanceof ChapterEditor) {
                                 ChapterEditor chapterEditor = (ChapterEditor) dnd.getSelectedComponent();

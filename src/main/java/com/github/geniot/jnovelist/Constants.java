@@ -1,14 +1,10 @@
 package com.github.geniot.jnovelist;
 
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import static java.security.MessageDigest.getInstance;
 
 /**
  * Author: Vitaly Sazanovich
@@ -44,7 +40,14 @@ public class Constants {
     public static final String PROP_LAST_OPEN_DIR = "PROP_LAST_OPEN_DIR";
     public static final String PROP_STYLE = "PROP_STYLE";
 
-    public static String HTML_DOC_START = "<html><head><style>body {background-color: white; font-color: black; font-size:16pt; font-family:verdana; margin: 15px;}</style></head><body>";
+    public static String HTML_DOC_START = "<html><head><style>body {\n" +
+            "background-color: #EEEEEE; \n" +
+            "color: #696969; \n" +
+            "font-size:16pt; \n" +
+            "font-family:verdana; \n" +
+            "margin: 15px;\n" +
+            "/* http://www.w3schools.com/cssref/css_colors.asp */\n" +
+            "}</style></head><body>";
     public static final String HTML_DOC_END = "</body></html>";
     public static final String EMPTY_DOC = HTML_DOC_START + "<p></p>" + HTML_DOC_END;
 

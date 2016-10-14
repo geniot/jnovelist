@@ -31,6 +31,7 @@ public class ExportAction extends AbstractNovelistAction {
         dialog.setModal(true);
         dialog.getContentPane().setLayout(new BorderLayout());
         dialog.setTitle(frame.getNovelName());
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
         final String novelText = frame.getNovelText();
         dialog.getContentPane().add(new ChapterEditor(novelText,false), BorderLayout.CENTER);

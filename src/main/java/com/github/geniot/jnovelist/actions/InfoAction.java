@@ -32,6 +32,7 @@ public class InfoAction extends AbstractNovelistAction {
         dialog.setModal(true);
         dialog.setTitle(Constants.VARS.get(actionCommand));
         dialog.getContentPane().setLayout(new BorderLayout());
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
         StringBuilder sb = new StringBuilder();
 

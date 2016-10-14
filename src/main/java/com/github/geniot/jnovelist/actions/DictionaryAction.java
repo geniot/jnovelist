@@ -31,6 +31,7 @@ public class DictionaryAction extends AbstractNovelistAction implements ActionLi
         dialog = new JDialog(frame);
         dialog.setModal(true);
         dialog.setTitle(Constants.VARS.get(actionCommand));
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
         JPanel contentPane = new JPanel(new BorderLayout());
 
