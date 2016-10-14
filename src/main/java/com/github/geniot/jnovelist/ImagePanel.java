@@ -22,7 +22,7 @@ public class ImagePanel extends JPanel implements Serializable {
     public void paint(Graphics g) {
         super.paintComponent(g); //paint background
         if (image != null) { //there is a picture: draw it
-            g.drawImage(image.getScaledInstance(this.getWidth(), -1, Image.SCALE_SMOOTH), 0, 0, this);
+            g.drawImage(image.getScaledInstance(this.getWidth(), -1, Image.SCALE_SMOOTH), 0, 0, null);
         }
     }
 }
