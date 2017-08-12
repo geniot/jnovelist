@@ -37,8 +37,10 @@ public class Constants {
     public static final String PROP_HEIGHT = "PROP_HEIGHT";
     public static final String PROP_POS_X = "PROP_POS_X";
     public static final String PROP_POS_Y = "PROP_POS_Y";
+    public static final String PROP_DIVIDER_LOCATION = "PROP_DIVIDER_LOCATION";
     public static final String PROP_LAST_OPEN_DIR = "PROP_LAST_OPEN_DIR";
     public static final String PROP_STYLE = "PROP_STYLE";
+    public static final String PROP_SYNOPSIS_STYLE = "PROP_SYNOPSIS_STYLE";
 
     public static String HTML_DOC_START = "<html><head><style>body {\n" +
             "background-color: #EEEEEE; \n" +
@@ -49,7 +51,17 @@ public class Constants {
             "/* http://www.w3schools.com/cssref/css_colors.asp */\n" +
             "}</style></head><body>";
     public static final String HTML_DOC_END = "</body></html>";
-    public static final String EMPTY_DOC = HTML_DOC_START + "<p></p>" + HTML_DOC_END;
+
+    public static String HTML_SYN_DOC_START = "<html><head><style>body {\n" +
+            "background-color: #EEEEEE; \n" +
+            "color: #696969; \n" +
+            "font-size:16pt; \n" +
+            "font-family:verdana; \n" +
+            "margin: 15px;\n" +
+            "/* http://www.w3schools.com/cssref/css_colors.asp */\n" +
+            "}</style></head><body>";
+    public static final String HTML_SYN_DOC_END = "</body></html>";
+
 
     public static Properties PROPS = new Properties();
 

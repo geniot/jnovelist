@@ -1,15 +1,12 @@
 package com.github.geniot.jnovelist;
 
+import com.github.geniot.jnovelist.project.Scene;
 import com.inet.jortho.SpellChecker;
 import com.lightdev.app.shtm.SHTMLPanelSingleDocImpl;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.io.File;
 
 
 /**
@@ -26,29 +23,30 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
     public int words = 0;
 
 
-    public ChapterEditor(File file) {
+    public ChapterEditor(Scene scene, String docStart, String docEnd) {
 
 //        linePainter = new LinePainter(this.getDocumentPane().getEditor());
 
-        if (file != null) {
+        if (scene != null) {
             try {
-                String str = FileUtils.readFileToString(file, "UTF-8");
-                if (!str.contains(" ")){
-                    str = Utils.base64decode(str);
-                }
-                getDocumentPane().setDocumentText(Utils.text2html(str));
+                String str = scene.getContent();//FileUtils.readFileToString(file, "UTF-8");
+//                if (!str.contains(" ")){
+//                    str = Utils.base64decode(str);
+//                }
+                getDocumentPane().setDocumentText(Utils.text2html(str, docStart, docEnd));
 //                getDocumentPane().setDocumentText(Utils.text2html(FileUtils.readFileToString(file, "UTF-8")));
             } catch (Exception ex) {
                 getDocumentPane().setDocumentText(ExceptionUtils.getFullStackTrace(ex));
             }
 
-            int caretPos = 0;
-            if (Constants.PROPS.getProperty("caretPosition:" + file.getAbsolutePath()) != null) {
-                caretPos = Integer.parseInt(Constants.PROPS.getProperty("caretPosition:" + file.getAbsolutePath()));
-            }
+            int caretPos = scene.getCaretPos();
+//            if (Constants.PROPS.getProperty("caretPosition:" + file.getAbsolutePath()) != null) {
+//                caretPos = Integer.parseInt(Constants.PROPS.getProperty("caretPosition:" + file.getAbsolutePath()));
+//            }
             getDocumentPane().getEditor().setCaretPosition(caretPos > getDocument().getLength() ? getDocument().getLength() : caretPos);
+            getDocumentPane().getEditor().getCaret().setBlinkRate(0);
         } else {
-            getDocumentPane().setDocumentText(Constants.EMPTY_DOC);
+            getDocumentPane().setDocumentText(docStart + "<p></p>" + docEnd);
         }
 
         getDocument().addDocumentListener(new DocumentListener() {
@@ -74,9 +72,9 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
         updateStatus();
     }
 
-    public ChapterEditor(String file, boolean editable) {
+    public ChapterEditor(String file, boolean editable, String docStart, String docEnd) {
         try {
-            getDocumentPane().setDocumentText(Utils.text2html(file));
+            getDocumentPane().setDocumentText(Utils.text2html(file, docStart, docEnd));
         } catch (Exception ex) {
             getDocumentPane().setDocumentText(ExceptionUtils.getFullStackTrace(ex));
         }

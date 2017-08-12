@@ -1,16 +1,13 @@
 package com.github.geniot.jnovelist.actions;
 
 import com.github.geniot.jnovelist.*;
-import org.apache.commons.io.FileUtils;
+import com.github.geniot.jnovelist.project.Scene;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 
 /**
@@ -33,21 +30,19 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
     public void actionPerformed(ActionEvent e) {
         this.actionCommand = e.getActionCommand();
         dialog = new JDialog(frame);
-        dialog.setModal(actionCommand.equals(Constants.IMAGES_NOVEL_ACTION_COMMAND)?false:true);
+        dialog.setModal(actionCommand.equals(Constants.IMAGES_NOVEL_ACTION_COMMAND) ? false : true);
         dialog.setTitle(Constants.VARS.get(actionCommand));
 
-        dnd = new DnDTabbedPane(DnDTabbedPane.INDEX_TO_ALPHABET,actionCommand);
-        File f = new File(frame.openFileName + File.separator + Constants.HELP_FOLDER_NAME + File.separator + Constants.VARS.get(actionCommand));
-        if (f.exists() && f.isDirectory()) {
-            File[] ffs = f.listFiles();
-            Arrays.sort(ffs, Utils.FILE_NAME_NUMBER_COMPARATOR);
-            for (File note : ffs) {
-                dnd.addNewTab(note,actionCommand);
-            }
+        dnd = new DnDTabbedPane(DnDTabbedPane.INDEX_TO_ALPHABET, actionCommand);
+        Scene[] notes = frame.openNovel.getScenes(actionCommand);
+
+        for (Scene note : notes) {
+            dnd.addNewTab(note, actionCommand);
         }
-        if (dnd.getTabCount()==1){
+
+        if (dnd.getTabCount() == 1) {
             if (!actionCommand.equals(Constants.IMAGES_NOVEL_ACTION_COMMAND)) {
-                dnd.addNewTab(null,actionCommand);
+                dnd.addNewTab(null, actionCommand);
             }
         }
 
@@ -106,7 +101,7 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        if (frame.dnDTabbedPane!=null && frame.dnDTabbedPane.getSelectedComponent() instanceof DnDTabbedPane) {
+                        if (frame.dnDTabbedPane != null && frame.dnDTabbedPane.getSelectedComponent() instanceof DnDTabbedPane) {
                             DnDTabbedPane dnd = (DnDTabbedPane) frame.dnDTabbedPane.getSelectedComponent();
                             if (dnd.getSelectedComponent() instanceof ChapterEditor) {
                                 ChapterEditor chapterEditor = (ChapterEditor) dnd.getSelectedComponent();
@@ -125,60 +120,25 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
     }
 
     private void save() {
+        ArrayList<Scene> notes = new ArrayList<Scene>();
         for (int i = 0; i < dnd.getTabCount(); i++) {
             Component c = dnd.getComponentAt(i);
             if (c instanceof ChapterEditor) {
                 ChapterEditor editor = (ChapterEditor) c;
 
-                try {
-                    String fileName = frame.openFileName + File.separator + Constants.HELP_FOLDER_NAME + File.separator + Constants.VARS.get(actionCommand) + File.separator + (i + 1) + ".txt";
-                    File file = new File(fileName);
-                    file.getParentFile().mkdirs();
-
-                    Constants.PROPS.put("caretPosition:" + fileName, String.valueOf(editor.getCaretPosition()));
-                    Constants.PROPS.put("verticalScrollBar:" + fileName, String.valueOf(editor.getDocumentPane().getVerticalScrollBar().getValue()));
-
-                    String text = Utils.html2text(editor.getDocumentText());
-                    if (StringUtils.isBlank(text)){
-                        continue;
-                    }
-
-                    String newText = Utils.base64encode(text);
-                    if (file.exists()) {
-                        String oldText = FileUtils.readFileToString(file, "UTF-8");
-                        if (Utils.textsEqual(oldText, newText)) {
-                            continue;
-                        }
-                    }
-
-                    Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
-                    try {
-                        out.write(newText);
-                    } finally {
-                        out.close();
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                String text = Utils.html2text(editor.getDocumentText());
+                if (StringUtils.isBlank(text)) {
+                    continue;
+                } else {
+                    Scene scene = new Scene();
+                    scene.setContent(text);
+                    scene.setCaretPos(editor.getCaretPosition());
+                    scene.setViewPos(editor.getDocumentPane().getVerticalScrollBar().getValue());
+                    scene.setSelected(dnd.getSelectedIndex() == i);
+                    notes.add(scene);
                 }
             }
         }
-
-        //removing remaining files, obviously removed in UI
-        String fileDir = frame.openFileName + File.separator + Constants.HELP_FOLDER_NAME + File.separator + Constants.VARS.get(actionCommand);
-        File[] ffs = new File(fileDir).listFiles();
-        if (ffs != null) {
-            if (ffs.length > dnd.getTabCount() - 1) {
-                Arrays.sort(ffs, Utils.FILE_NAME_NUMBER_COMPARATOR);
-                for (int l = dnd.getTabCount() - 1; l < ffs.length; l++) {
-                    String fileName = fileDir + File.separator + (l + 1) + ".txt";
-                    File f = new File(fileName);
-                    if (f.exists()) {
-                        f.delete();
-                    }
-                }
-            }
-
-            Constants.PROPS.put("selectedChapter:" + actionCommand, String.valueOf(dnd.getSelectedIndex()));
-        }
+        frame.openNovel.setScenes(notes.toArray(new Scene[notes.size()]), actionCommand);
     }
 }

@@ -1,17 +1,11 @@
 package com.github.geniot.jnovelist.actions;
 
-import com.github.geniot.jnovelist.ChapterEditor;
 import com.github.geniot.jnovelist.Constants;
-import com.github.geniot.jnovelist.DnDTabbedPane;
 import com.github.geniot.jnovelist.JNovelistFrame;
-import com.github.geniot.jnovelist.actions.AbstractNovelistAction;
-import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
 /**
  * Author: Vitaly Sazanovich
@@ -22,6 +16,7 @@ public class StyleAction extends AbstractNovelistAction {
     JDialog dialog;
     String actionCommand;
     JTextArea editor;
+    JTextArea synopsisEditor;
 
     public StyleAction(JNovelistFrame f) {
         super(f);
@@ -39,7 +34,15 @@ public class StyleAction extends AbstractNovelistAction {
         editor.setLineWrap(true);
         editor.setWrapStyleWord(true);
         editor.setFont(editor.getFont().deriveFont(20f));
-        dialog.getContentPane().add(new JScrollPane(editor), BorderLayout.CENTER);
+
+        synopsisEditor = new JTextArea(Constants.HTML_SYN_DOC_START);
+        synopsisEditor.setLineWrap(true);
+        synopsisEditor.setWrapStyleWord(true);
+        synopsisEditor.setFont(synopsisEditor.getFont().deriveFont(20f));
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JScrollPane(editor), new JScrollPane(synopsisEditor));
+        splitPane.setDividerLocation(this.frame.getHeight()/2);
+        dialog.getContentPane().add(splitPane, BorderLayout.CENTER);
 
 
         Dimension dim = new Dimension(frame.getWidth(), frame.getHeight());
@@ -64,14 +67,13 @@ public class StyleAction extends AbstractNovelistAction {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        String newStyle = editor.getText();
-                        if (StringUtils.isNotBlank(newStyle)) {
-                            Constants.HTML_DOC_START = newStyle;
-                            Constants.PROPS.setProperty(Constants.PROP_STYLE, newStyle);
-                        }
+                        Constants.HTML_DOC_START = editor.getText();
+                        Constants.PROPS.setProperty(Constants.PROP_STYLE, editor.getText());
+
+                        Constants.HTML_SYN_DOC_START = synopsisEditor.getText();
+                        Constants.PROPS.setProperty(Constants.PROP_SYNOPSIS_STYLE, synopsisEditor.getText());
 
                         if (frame.openFileName != null) {
-                            Constants.PROPS.setProperty(Constants.PROP_LAST_OPEN_FILE, frame.openFileName);
                             frame.unloadNovel.doClick();
 
                             SwingUtilities.invokeLater(new Runnable() {

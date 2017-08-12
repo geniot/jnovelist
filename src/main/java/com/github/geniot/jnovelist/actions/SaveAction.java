@@ -1,17 +1,21 @@
 package com.github.geniot.jnovelist.actions;
 
 import com.github.geniot.jnovelist.*;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
+import com.github.geniot.jnovelist.project.Chapter;
+import com.github.geniot.jnovelist.project.JNovel;
+import com.github.geniot.jnovelist.project.Scene;
 
-import javax.swing.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.*;
-import java.util.Arrays;
-import java.util.logging.Level;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 
 /**
@@ -19,7 +23,7 @@ import java.util.logging.Logger;
  * Email: vitaly.sazanovich@gmail.com
  * Date: 25/06/15
  */
-public class SaveAction extends AbstractNovelistAction  {
+public class SaveAction extends AbstractNovelistAction {
     private static final Logger logger = Logger.getLogger(SaveAction.class.getName());
 
     public SaveAction(JNovelistFrame f) {
@@ -45,70 +49,77 @@ public class SaveAction extends AbstractNovelistAction  {
     }
 
     protected void save() {
+        Constants.PROPS.setProperty(Constants.PROP_DIVIDER_LOCATION, String.valueOf((int) frame.splitPane.getDividerLocation()));
+        ArrayList<Chapter> chapters = new ArrayList<Chapter>();
         for (int i = 0; i < frame.dnDTabbedPane.getTabCount(); i++) {
             Component c = frame.dnDTabbedPane.getComponentAt(i);
             if (c instanceof DnDTabbedPane) {
                 DnDTabbedPane dnd = (DnDTabbedPane) c;
-                if (frame.dnDTabbedPane.getSelectedComponent().equals(dnd)) {
-                    Constants.PROPS.put("selectedPart:" + frame.openFileName, String.valueOf(i));
-                }
+                ButtonTabComponent tabComponent = (ButtonTabComponent) frame.dnDTabbedPane.getTabComponentAt(i);
+                Chapter chapter = new Chapter();
+//                chapter.setDescription(tabComponent.getText());
+                chapter.setSelected(frame.dnDTabbedPane.getSelectedComponent().equals(dnd));
 
-                Constants.PROPS.put("selectedChapter:" + i + ":" + frame.openFileName, String.valueOf(dnd.getSelectedIndex()));
-
-
+                ArrayList<Scene> scenes = new ArrayList<Scene>();
                 for (int k = 0; k < dnd.getTabCount(); k++) {
                     Component o = dnd.getComponentAt(k);
+
                     if (o instanceof ChapterEditor) {
                         ChapterEditor editor = (ChapterEditor) o;
+                        ButtonTabComponent chapterTabComponent = (ButtonTabComponent) dnd.getTabComponentAt(k);
 
-                        try {
-                            String fileDir = frame.openFileName + File.separator + (i + 1);
-                            String fileName = fileDir + File.separator + (k + 1) + ".txt";
-                            File file = new File(fileName);
-                            file.getParentFile().mkdirs();
+                        Scene scene = new Scene();
+//                        scene.setDescription(chapterTabComponent.getText());
+                        scene.setCaretPos(editor.getCaretPosition());
+                        scene.setViewPos(editor.getDocumentPane().getVerticalScrollBar().getValue());
 
-                            Constants.PROPS.put("caretPosition:" + fileName, String.valueOf(editor.getCaretPosition()));
-                            Constants.PROPS.put("verticalScrollBar:" + fileName, String.valueOf(editor.getDocumentPane().getVerticalScrollBar().getValue()));
-
-                            String text = Utils.html2text(editor.getDocumentText());
-                            if (StringUtils.isBlank(text)){
-                                continue;
-                            }
-
-                            String newText = Utils.base64encode(text);
-                            if (file.exists()) {
-                                String oldText = FileUtils.readFileToString(file, "UTF-8");
-                                if (Utils.textsEqual(oldText,newText)) {
-                                    continue;
-                                }
-                            }
-
-                            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
-                            try {
-                                out.write(newText);
-                            } finally {
-                                out.close();
-                            }
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
+                        String text = Utils.html2text(editor.getDocumentText());
+                        scene.setContent(text);
+                        scenes.add(scene);
                     }
                 }
-
-                //removing remaining files, obviously removed in UI
-                String fileDir = frame.openFileName + File.separator + (i + 1);
-                File[] ffs = new File(fileDir).listFiles();
-                if (ffs.length > dnd.getTabCount()-1) {
-                    Arrays.sort(ffs, Utils.FILE_NAME_NUMBER_COMPARATOR);
-                    for (int l = dnd.getTabCount()-1; l < ffs.length; l++) {
-                        String fileName = fileDir + File.separator + (l + 1) + ".txt";
-                        File f = new File(fileName);
-                        if (f.exists()) {
-                            f.renameTo(new File(f.getPath()+"."+System.currentTimeMillis()));
-                        }
-                    }
-                }
+                chapter.setScenes(scenes.toArray(new Scene[scenes.size()]));
+                chapters.add(chapter);
             }
+
+        }
+
+        if (frame.openNovel == null) {
+            frame.openNovel = new JNovel();
+        }
+        frame.openNovel.setChapters(chapters.toArray(new Chapter[chapters.size()]));
+        frame.openNovel.setSynopsis(Utils.html2text(frame.synopsis.getDocumentText()));
+
+        try {
+            ByteArrayOutputStream fos = new ByteArrayOutputStream();
+            JAXBContext jaxbContext = JAXBContext.newInstance(JNovel.class);
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            jaxbMarshaller.marshal(frame.openNovel, fos);
+
+            String fileName = getFileName(frame.openFileName);
+            String newFileName = fileName + "." + System.currentTimeMillis() + ".zip";
+            ZipOutputStream out = new ZipOutputStream(new FileOutputStream(newFileName));
+            Constants.PROPS.setProperty(Constants.PROP_LAST_OPEN_FILE, newFileName);
+
+            ZipEntry e = new ZipEntry(new File(fileName).getName());
+            out.putNextEntry(e);
+            byte[] data = fos.toByteArray();
+            out.write(data, 0, data.length);
+            out.closeEntry();
+            out.close();
+
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private String getFileName(String openFileName) {
+        if (openFileName.endsWith(".zip")) {
+            return openFileName.split("\\.xml\\.")[0] + ".xml";
+        } else {
+            return openFileName;
         }
     }
 }

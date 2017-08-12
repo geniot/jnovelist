@@ -1,6 +1,8 @@
 package com.github.geniot.jnovelist;
 
 import com.github.geniot.jnovelist.actions.*;
+import com.github.geniot.jnovelist.project.JNovel;
+import com.github.geniot.jnovelist.project.Scene;
 import com.inet.jortho.FileUserDictionary;
 import com.inet.jortho.SpellChecker;
 import com.lightdev.app.shtm.SHTMLPanelImpl;
@@ -36,6 +38,8 @@ public class JNovelistFrame extends JFrame {
 
     public JButton dictionary;
 
+    public JSplitPane splitPane;
+    public ChapterEditor synopsis;
     public DnDTabbedPane dnDTabbedPane;
 
     public JLabel statusLabel;
@@ -43,6 +47,7 @@ public class JNovelistFrame extends JFrame {
     public JLabel allStatusLabel;
 
     public String openFileName;
+    public JNovel openNovel;
 
     public JNovelistFrame() {
         super("JNovelist");
@@ -53,6 +58,9 @@ public class JNovelistFrame extends JFrame {
             Constants.PROPS.load(new FileInputStream(System.getProperty("user.home") + File.separator + Constants.PROPS_FILE_NAME));
             if (Constants.PROPS.containsKey(Constants.PROP_STYLE)) {
                 Constants.HTML_DOC_START = Constants.PROPS.getProperty(Constants.PROP_STYLE);
+            }
+            if (Constants.PROPS.containsKey(Constants.PROP_SYNOPSIS_STYLE)) {
+                Constants.HTML_SYN_DOC_START = Constants.PROPS.getProperty(Constants.PROP_SYNOPSIS_STYLE);
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -67,6 +75,7 @@ public class JNovelistFrame extends JFrame {
         loadNovel = Utils.makeNavigationButton("Load", Constants.LOAD_NOVEL_ACTION_COMMAND, "Открыть", "Load");
         unloadNovel = Utils.makeNavigationButton("Eject", Constants.UNLOAD_NOVEL_ACTION_COMMAND, "Закрыть", "Unload");
         exportNovel = Utils.makeNavigationButton("Export", Constants.EXPORT_NOVEL_ACTION_COMMAND, "Экспорт", "Export");
+        saveNovel = Utils.makeNavigationButton("Save", Constants.SAVE_NOVEL_ACTION_COMMAND, "Сохранить", "Save");
 
         heroes = Utils.makeNavigationButton("Heros", Constants.HEROES_NOVEL_ACTION_COMMAND, "Люди", "Heroes");
         places = Utils.makeNavigationButton("Places", Constants.PLACES_NOVEL_ACTION_COMMAND, "Места", "Places");
@@ -78,8 +87,6 @@ public class JNovelistFrame extends JFrame {
 
         dictionary = Utils.makeNavigationButton("Dictionary", Constants.DICTIONARY_ACTION_COMMAND, "Синонимы", "Dictionary");
         info = Utils.makeNavigationButton("Info", Constants.INFO_ACTION_COMMAND, "Помощь", "Info");
-
-        saveNovel = Utils.makeNavigationButton("Save", Constants.SAVE_NOVEL_ACTION_COMMAND, "Сохранить", "Save");
 
         loadNovel.addActionListener(new LoadNovelAction(this));
         unloadNovel.addActionListener(new UnloadAction(this));
@@ -199,8 +206,12 @@ public class JNovelistFrame extends JFrame {
         if (openFileName == null) {
             if (dnDTabbedPane != null) {
                 dnDTabbedPane.removeAll();
-                getContentPane().remove(dnDTabbedPane);
+                getContentPane().remove(splitPane);
+
                 dnDTabbedPane = null;
+                splitPane = null;
+                synopsis = null;
+
                 validate();
                 repaint();
                 SHTMLPanelImpl.pluginManager = null;
@@ -300,15 +311,28 @@ public class JNovelistFrame extends JFrame {
         for (int i = 0; i < dnDTabbedPane.getTabCount(); i++) {
             Component c = dnDTabbedPane.getComponentAt(i);
             if (c instanceof DnDTabbedPane) {
+//                sb.append(i + 1);
+//                sb.append('\n');
                 DnDTabbedPane dnd = (DnDTabbedPane) c;
                 for (int k = 0; k < dnd.getTabCount(); k++) {
                     Component o = dnd.getComponentAt(k);
                     if (o instanceof ChapterEditor) {
                         ChapterEditor editor = (ChapterEditor) o;
+                        ButtonTabComponent sceneTabComponent = (ButtonTabComponent) dnd.getTabComponentAt(k);
+//                        String title = sceneTabComponent.getText().split("\\s")[0].trim();
+//                        try{
+//                            int chapterNum = Integer.parseInt(title);
+//                            sb.append(chapterNum);
+//
+//                        }catch (Exception ex){
+//                            sb.append("###");
+//                        }
+
+                        sb.append("###");
+                        sb.append('\n');
+
                         try {
                             String newText = Utils.html2text(editor.getDocumentText());
-                            sb.append(k + 1);
-                            sb.append('\n');
                             sb.append(newText);
                         } catch (Exception ex) {
                             ex.printStackTrace();

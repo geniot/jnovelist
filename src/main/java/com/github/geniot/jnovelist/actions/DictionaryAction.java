@@ -48,7 +48,7 @@ public class DictionaryAction extends AbstractNovelistAction implements ActionLi
 
         contentPane.add(searchTextField, BorderLayout.NORTH);
 
-        entryArea = new ChapterEditor("",false);
+        entryArea = new ChapterEditor("", false, Constants.HTML_DOC_START, Constants.HTML_DOC_END);
         contentPane.add(entryArea, BorderLayout.CENTER);
 
         dialog.getContentPane().add(contentPane, BorderLayout.CENTER);
@@ -79,7 +79,7 @@ public class DictionaryAction extends AbstractNovelistAction implements ActionLi
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        if (frame.dnDTabbedPane!=null && frame.dnDTabbedPane.getSelectedComponent() instanceof DnDTabbedPane) {
+                        if (frame.dnDTabbedPane != null && frame.dnDTabbedPane.getSelectedComponent() instanceof DnDTabbedPane) {
                             DnDTabbedPane dnd = (DnDTabbedPane) frame.dnDTabbedPane.getSelectedComponent();
                             if (dnd.getSelectedComponent() instanceof ChapterEditor) {
                                 ChapterEditor chapterEditor = (ChapterEditor) dnd.getSelectedComponent();

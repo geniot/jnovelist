@@ -1,7 +1,7 @@
 package com.github.geniot.jnovelist;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
+import com.github.geniot.jnovelist.project.Chapter;
+import com.github.geniot.jnovelist.project.Scene;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -9,8 +9,6 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.Arrays;
 
 public class DnDTabbedPane extends JTabbedPane {
     static public String DECIMAL_TO_ROMAN = "DECIMAL_TO_ROMAN";
@@ -26,6 +24,7 @@ public class DnDTabbedPane extends JTabbedPane {
     public JPanel plusPanel;
     private String tabContentClassName;
     private String boundModelClassName;
+    private String actionCommand;
 
     public String getBoundModelClassName() {
         return boundModelClassName;
@@ -51,9 +50,11 @@ public class DnDTabbedPane extends JTabbedPane {
         this.titleNamingType = titleNamingType;
     }
 
-    public DnDTabbedPane(String tnt, final String actionCommand) {
-        super();
+    public DnDTabbedPane(String tnt, final String ac) {
+//        super(ac.equals(Constants.LOAD_NOVEL_ACTION_COMMAND) ? JTabbedPane.LEFT : JTabbedPane.TOP);
+        super(JTabbedPane.TOP);
         this.titleNamingType = tnt;
+        this.actionCommand = ac;
         final DnDTabbedPane thisRef = this;
 
         addContainerListener(new ContainerAdapter() {
@@ -120,7 +121,7 @@ public class DnDTabbedPane extends JTabbedPane {
                         Component comp = getComponentAt(draggedTabIndex);
                         String title = getTitleAt(draggedTabIndex);
                         removeTabAt(draggedTabIndex);
-                        ButtonTabComponent tabTitle = new ButtonTabComponent(thisRef);
+                        ButtonTabComponent tabTitle = new ButtonTabComponent(thisRef, comp, DnDTabbedPane.this.actionCommand, null);
                         insertTab(title, null, comp, null, tabNumber);
                         thisRef.setTabComponentAt(tabNumber, tabTitle);
                         setSelectedComponent(comp);
@@ -146,7 +147,7 @@ public class DnDTabbedPane extends JTabbedPane {
             }
         });
 
-        if (!actionCommand.equals(Constants.IMAGES_NOVEL_ACTION_COMMAND)) {
+        if (!ac.equals(Constants.IMAGES_NOVEL_ACTION_COMMAND)) {
             plusPanel = new JPanel();
             addTab("+", plusPanel);
         }
@@ -155,56 +156,51 @@ public class DnDTabbedPane extends JTabbedPane {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (getSelectedComponent() != null
-                        && getSelectedComponent().equals(plusPanel)) {
+                    && getSelectedComponent().equals(plusPanel)) {
                     if (titleNamingType.equals(DECIMAL_TO_ROMAN)) {
-                        newProject(actionCommand);
+                        newProject(ac);
                     } else {
-                        addNewTab(null, actionCommand);
+                        addNewTab(null, ac);
                     }
                 }
             }
         });
     }
 
-    public void addNewTab(final File file, String actionCommand) {
+    public void addNewTab(final Scene file, String actionCommand) {
         //adding new tab
         try {
             int count = getTabCount();
-            ButtonTabComponent tabTitle = new ButtonTabComponent(this);
 
             final Component c;
 
             //defining component to add depending on the incoming parameter
             if (file == null) {
                 //creating empty tab (mouse click)
-                c = new ChapterEditor(file);
+                c = new ChapterEditor(new Scene(), Constants.HTML_DOC_START, Constants.HTML_DOC_END);
                 Utils.enableSave(this);
             } else {
-                if (file.isDirectory()) {
+                if (file instanceof Chapter) {
                     c = new DnDTabbedPane(DnDTabbedPane.INDEX_TO_DECIMAL, actionCommand);
-                    final File[] ffs = file.listFiles();
-                    Arrays.sort(ffs, Utils.FILE_NAME_NUMBER_COMPARATOR);
-                    for (File f : ffs) {
-                        if (StringUtils.isNumeric(FilenameUtils.getBaseName(f.getName()))) {
-                            ((DnDTabbedPane) c).addNewTab(f, actionCommand);
-                        }
+                    Chapter ch = (Chapter) file;
+                    for (Scene f : ch.getScenes()) {
+                        ((DnDTabbedPane) c).addNewTab(f, actionCommand);
                     }
                 } else {
-                    if (file.getName().endsWith(".txt")) {
-                        c = new ChapterEditor(file);
-                    } else {
-                        c = new ImageEditor(file);
-                    }
+                    c = new ChapterEditor(file, Constants.HTML_DOC_START, Constants.HTML_DOC_END);
+//                    } else {
+//                        c = new ImageEditor(file);
+//                    }
 
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
                             if (c instanceof ChapterEditor) {
                                 ((ChapterEditor) c).getDocumentPane().getEditor().requestFocus();
-                                int viewPos = 0;
-                                if (Constants.PROPS.getProperty("verticalScrollBar:" + file.getAbsolutePath()) != null) {
-                                    viewPos = Integer.parseInt(Constants.PROPS.getProperty("verticalScrollBar:" + file.getAbsolutePath()));
-                                }
+                                int viewPos = file.getViewPos();//0;
+//                                if (Constants.PROPS.getProperty("verticalScrollBar:" + file.getAbsolutePath()) != null) {
+//                                    viewPos = Integer.parseInt(Constants.PROPS.getProperty("verticalScrollBar:" + file.getAbsolutePath()));
+//                                }
                                 if (file != null) {
                                     ((ChapterEditor) c).getDocumentPane().getVerticalScrollBar().setValue(viewPos);
                                 }
@@ -220,6 +216,7 @@ public class DnDTabbedPane extends JTabbedPane {
             }
 
             insertTab(getLabelByIndex(count - extraTabsCount), null, c, null, count - extraTabsCount);
+            ButtonTabComponent tabTitle = new ButtonTabComponent(this, c, this.actionCommand, file);
             setTabComponentAt(count - extraTabsCount, tabTitle);
             setSelectedComponent(c);
 
@@ -231,12 +228,13 @@ public class DnDTabbedPane extends JTabbedPane {
     public void newProject(String actionCommand) {
         try {
             int count = getTabCount();
-            ButtonTabComponent tabTitle = new ButtonTabComponent(this);
 
             final Component c = new DnDTabbedPane(DnDTabbedPane.INDEX_TO_DECIMAL, actionCommand);
             ((DnDTabbedPane) c).addNewTab(null, actionCommand);
 
             insertTab(getLabelByIndex(count - 1), null, c, null, count - 1);
+
+            ButtonTabComponent tabTitle = new ButtonTabComponent(this, c, this.actionCommand, null);
             setTabComponentAt(count - 1, tabTitle);
             setSelectedComponent(c);
 

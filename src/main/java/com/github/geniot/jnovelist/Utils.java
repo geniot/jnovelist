@@ -37,7 +37,7 @@ public class Utils {
 
     private static final String ALGORITHM = "AES";
     private static final byte[] keyValue =
-            new byte[]{'T', 'h', 'i', 's', 'I', 's', 'A', 'S', 'e', 'c', 'r', 'e', 't', 'K', 'e', 'y'};
+        new byte[]{'T', 'h', 'i', 's', 'I', 's', 'A', 'S', 'e', 'c', 'r', 'e', 't', 'K', 'e', 'y'};
 
     public static String base64encode(String text) {
         try {
@@ -268,16 +268,16 @@ public class Utils {
         return sb.toString();
     }
 
-    public static String text2html(String text) {
+    public static String text2html(String text, String docStart, String docEnd) {
         StringBuilder sb = new StringBuilder();
-        sb.append(Constants.HTML_DOC_START);
+        sb.append(docStart);
         String[] pps = text.split("\\n");
         for (String p : pps) {
             sb.append("<p>");
             sb.append(p);
             sb.append("</p>");
         }
-        sb.append(Constants.HTML_DOC_END);
+        sb.append(docEnd);
         return sb.toString();
     }
 

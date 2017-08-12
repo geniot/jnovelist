@@ -1,13 +1,16 @@
 package com.github.geniot.jnovelist;
 
 
+import com.github.geniot.jnovelist.project.Chapter;
+import com.github.geniot.jnovelist.project.Scene;
+
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
+import java.io.File;
 
 /**
  * Component to be used as tabComponent;
@@ -17,31 +20,75 @@ import java.awt.event.MouseEvent;
 public class ButtonTabComponent extends JPanel {
     private final DnDTabbedPane pane;
     private final JButton removeButton;
+    private Component component;
+    private Scene file;
+//    private JTextArea textArea;
 
-    public ButtonTabComponent(final DnDTabbedPane pane) {
+    public ButtonTabComponent(final DnDTabbedPane pane, Component c, String actionCommand, Scene f) {
         //unset default FlowLayout' gaps
         super(new BorderLayout());
         if (pane == null) {
             throw new NullPointerException("TabbedPane is null");
         }
+        this.file = f;
+        this.component = c;
         this.pane = pane;
         setOpaque(false);
 
-        //make JLabel read titles from JTabbedPane
-        JLabel label = new JLabel() {
-            public String getText() {
-                int i = pane.indexOfTabComponent(ButtonTabComponent.this);
-                if (i != -1) {
-                    return pane.getTitleAt(i);
+//        if (actionCommand.equals(Constants.LOAD_NOVEL_ACTION_COMMAND)) {
+//            textArea = new JTextArea();
+//            textArea.setLineWrap(true);
+//            textArea.setWrapStyleWord(true);
+//            textArea.addFocusListener(new FocusAdapter() {
+//                @Override
+//                public void focusGained(FocusEvent e) {
+//                    pane.setSelectedComponent(ButtonTabComponent.this.component);
+//                }
+//            });
+//            textArea.getDocument().addDocumentListener(new DocumentListener() {
+//                @Override
+//                public void insertUpdate(DocumentEvent e) {
+//                    Utils.enableSave(ButtonTabComponent.this);
+//                }
+//
+//                @Override
+//                public void removeUpdate(DocumentEvent e) {
+//                    Utils.enableSave(ButtonTabComponent.this);
+//                }
+//
+//                @Override
+//                public void changedUpdate(DocumentEvent e) {
+//                    Utils.enableSave(ButtonTabComponent.this);
+//                }
+//            });
+//            if (file != null) {
+//                textArea.setText(file.getDescription());
+////                if (Constants.SYNOPSIS_PROPS.containsKey(file.getAbsolutePath())) {
+////                    textArea.setText(Constants.SYNOPSIS_PROPS.getProperty(file.getAbsolutePath()));
+////                }
+//            }
+//            //add more space between the label and the button
+//            textArea.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+//
+//            JScrollPane sp = new JScrollPane(textArea);
+//            sp.setPreferredSize(new Dimension(300, pane.getTitleNamingType().equals(DnDTabbedPane.DECIMAL_TO_ROMAN) ? 55 : 55));
+//
+//            add(sp, BorderLayout.CENTER);
+//        } else {
+            //make JLabel read titles from JTabbedPane
+            JLabel label = new JLabel() {
+                public String getText() {
+                    int i = pane.indexOfTabComponent(ButtonTabComponent.this);
+                    if (i != -1) {
+                        return pane.getTitleAt(i);
+                    }
+                    return null;
                 }
-                return null;
-            }
-        };
-        label.setSize(new Dimension(label.getPreferredSize().width * 2, label.getPreferredSize().height * 2));
+            };
+            label.setSize(new Dimension(label.getPreferredSize().width * 2, label.getPreferredSize().height * 2));
+            add(label, BorderLayout.CENTER);
+//        }
 
-        add(label, BorderLayout.CENTER);
-        //add more space between the label and the button
-        label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
         //tab button
         removeButton = new TabButton();
         add(removeButton, BorderLayout.EAST);
@@ -52,6 +99,10 @@ public class ButtonTabComponent extends JPanel {
         enableRemoval(false);
 
     }
+
+//    public String getText() {
+//        return textArea.getText();
+//    }
 
     public void enableRemoval(boolean enable) {
         removeButton.setEnabled(enable);

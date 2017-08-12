@@ -26,6 +26,7 @@ public class OnExitAction extends WindowAdapter {
         Constants.PROPS.setProperty(Constants.PROP_HEIGHT, String.valueOf(frame.getHeight()));
         Constants.PROPS.setProperty(Constants.PROP_POS_X, String.valueOf((int) frame.getLocation().getX()));
         Constants.PROPS.setProperty(Constants.PROP_POS_Y, String.valueOf((int) frame.getLocation().getY()));
+        Constants.PROPS.setProperty(Constants.PROP_DIVIDER_LOCATION, String.valueOf((int) frame.splitPane.getDividerLocation()));
 
         if (frame.openFileName != null) {
             Constants.PROPS.setProperty(Constants.PROP_LAST_OPEN_FILE, frame.openFileName);

@@ -40,7 +40,7 @@ public class InfoAction extends AbstractNovelistAction {
             BufferedReader in = new BufferedReader(new InputStreamReader(InfoAction.class.getClassLoader().getResourceAsStream("info.txt"), "UTF8"));
             String str;
             while ((str = in.readLine()) != null) {
-                if (StringUtils.isEmpty(str)){
+                if (StringUtils.isEmpty(str)) {
                     continue;
                 }
                 sb.append("<p>");
@@ -53,7 +53,7 @@ public class InfoAction extends AbstractNovelistAction {
             ex.printStackTrace();
         }
 
-        dialog.getContentPane().add(new ChapterEditor(sb.toString(),false), BorderLayout.CENTER);
+        dialog.getContentPane().add(new ChapterEditor(sb.toString(), false, Constants.HTML_DOC_START, Constants.HTML_DOC_END), BorderLayout.CENTER);
 
 
         Dimension dim = new Dimension(frame.getWidth(), frame.getHeight());
@@ -75,7 +75,7 @@ public class InfoAction extends AbstractNovelistAction {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        if (frame.dnDTabbedPane!=null && frame.dnDTabbedPane.getSelectedComponent() instanceof DnDTabbedPane) {
+                        if (frame.dnDTabbedPane != null && frame.dnDTabbedPane.getSelectedComponent() instanceof DnDTabbedPane) {
                             DnDTabbedPane dnd = (DnDTabbedPane) frame.dnDTabbedPane.getSelectedComponent();
                             if (dnd.getSelectedComponent() instanceof ChapterEditor) {
                                 ChapterEditor chapterEditor = (ChapterEditor) dnd.getSelectedComponent();

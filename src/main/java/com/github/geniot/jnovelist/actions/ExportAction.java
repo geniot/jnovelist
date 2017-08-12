@@ -34,7 +34,7 @@ public class ExportAction extends AbstractNovelistAction {
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
         final String novelText = frame.getNovelText();
-        dialog.getContentPane().add(new ChapterEditor(novelText,false), BorderLayout.CENTER);
+        dialog.getContentPane().add(new ChapterEditor(novelText, false, Constants.HTML_DOC_START, Constants.HTML_DOC_END), BorderLayout.CENTER);
         JToolBar toolbar = new JToolBar();
         toolbar.setFloatable(false);
         JButton copy2clipboard = new JButton("Copy to clipboard");
@@ -71,7 +71,7 @@ public class ExportAction extends AbstractNovelistAction {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        if (frame.dnDTabbedPane.getSelectedComponent() instanceof DnDTabbedPane) {
+                        if (frame.dnDTabbedPane != null && frame.dnDTabbedPane.getSelectedComponent() instanceof DnDTabbedPane) {
                             DnDTabbedPane dnd = (DnDTabbedPane) frame.dnDTabbedPane.getSelectedComponent();
                             if (dnd.getSelectedComponent() instanceof ChapterEditor) {
                                 ChapterEditor chapterEditor = (ChapterEditor) dnd.getSelectedComponent();
