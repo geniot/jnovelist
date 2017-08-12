@@ -13,6 +13,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -25,6 +28,8 @@ import java.util.zip.ZipOutputStream;
  */
 public class SaveAction extends AbstractNovelistAction {
     private static final Logger logger = Logger.getLogger(SaveAction.class.getName());
+
+    private FileComparator fileComparator = new FileComparator();
 
     public SaveAction(JNovelistFrame f) {
         super(f);
@@ -113,6 +118,28 @@ public class SaveAction extends AbstractNovelistAction {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
+        //removing
+        try {
+            String fileName = getFileName(frame.openFileName);
+            String folderName = frame.openFileName.substring(0, frame.openFileName.lastIndexOf(File.separator));
+            File[] files = new File(folderName).listFiles();
+            SortedSet<File> cachedFiles = new TreeSet<File>(fileComparator);
+            for (File f : files) {
+                if (f.getAbsolutePath().startsWith(fileName) && f.getName().endsWith(".zip")) {
+                    cachedFiles.add(f);
+                }
+            }
+            while (cachedFiles.size() > 5) {
+                File f = cachedFiles.iterator().next();
+                if (f.isFile()) {
+                    f.delete();
+                }
+                cachedFiles.remove(f);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private String getFileName(String openFileName) {
@@ -120,6 +147,19 @@ public class SaveAction extends AbstractNovelistAction {
             return openFileName.split("\\.xml\\.")[0] + ".xml";
         } else {
             return openFileName;
+        }
+    }
+
+    private class FileComparator implements Comparator<File> {
+
+
+        @Override
+        public int compare(File f1, File f2) {
+            String[] parts1 = f1.getAbsolutePath().split("\\.");
+            String[] parts2 = f2.getAbsolutePath().split("\\.");
+            Long ts1 = Long.parseLong(parts1[parts1.length - 2]);
+            Long ts2 = Long.parseLong(parts2[parts2.length - 2]);
+            return ts1.compareTo(ts2);
         }
     }
 }

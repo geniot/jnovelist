@@ -56,7 +56,8 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
             if (frame.openFileName != null) {
                 frame.unloadNovel.doClick();
             }
-
+            Constants.PROPS.setProperty(Constants.PROP_LAST_OPEN_DIR, fc.getCurrentDirectory().toString());
+            
             File selectedFile = fc.getSelectedFile();
 //            Constants.PROPS.setProperty(Constants.PROP_LAST_OPEN_DIR, fc.getCurrentDirectory().getPath());
 //            if (!selectedFile.exists()) {
