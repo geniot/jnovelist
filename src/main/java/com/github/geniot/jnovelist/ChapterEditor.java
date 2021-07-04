@@ -2,9 +2,11 @@ package com.github.geniot.jnovelist;
 
 import com.github.geniot.jnovelist.project.Scene;
 import com.inet.jortho.SpellChecker;
-import com.lightdev.app.shtm.SHTMLPanelSingleDocImpl;
+import io.github.geniot.shtml.SHTMLPanelSingleDocImpl;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -24,7 +26,9 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
 
 
     public ChapterEditor(Scene scene, String docStart, String docEnd) {
+        super(true);
 
+        fixBorder();
 //        linePainter = new LinePainter(this.getDocumentPane().getEditor());
 
         if (scene != null) {
@@ -73,12 +77,21 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
     }
 
     public ChapterEditor(String file, boolean editable, String docStart, String docEnd) {
+        super(true);
+        fixBorder();
         try {
             getDocumentPane().setDocumentText(Utils.text2html(file, docStart, docEnd));
         } catch (Exception ex) {
             getDocumentPane().setDocumentText(ExceptionUtils.getFullStackTrace(ex));
         }
         getEditorPane().setEditable(editable);
+    }
+
+    private void fixBorder() {
+        getDocumentPane().getEditor().setBorder(new EmptyBorder(0, 0, 0, 0));
+        JViewport viewport = (JViewport) getDocumentPane().getEditor().getParent();
+        JScrollPane scrollPane = (JScrollPane) viewport.getParent();
+        scrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
     }
 
     private void enableSave() {

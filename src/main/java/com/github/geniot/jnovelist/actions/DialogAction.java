@@ -133,7 +133,9 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
                     Scene scene = new Scene();
                     scene.setContent(text);
                     scene.setCaretPos(editor.getCaretPosition());
-                    scene.setViewPos(editor.getDocumentPane().getVerticalScrollBar().getValue());
+                    JViewport viewport = (JViewport) editor.getDocumentPane().getEditor().getParent();
+                    JScrollPane scrollPane = (JScrollPane) viewport.getParent();
+                    scene.setViewPos(scrollPane.getVerticalScrollBar().getValue());
                     scene.setSelected(dnd.getSelectedIndex() == i);
                     notes.add(scene);
                 }

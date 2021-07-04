@@ -202,7 +202,9 @@ public class DnDTabbedPane extends JTabbedPane {
 //                                    viewPos = Integer.parseInt(Constants.PROPS.getProperty("verticalScrollBar:" + file.getAbsolutePath()));
 //                                }
                                 if (file != null) {
-                                    ((ChapterEditor) c).getDocumentPane().getVerticalScrollBar().setValue(viewPos);
+                                    JViewport viewport = (JViewport) ((ChapterEditor) c).getDocumentPane().getEditor().getParent();
+                                    JScrollPane scrollPane = (JScrollPane) viewport.getParent();
+                                    scrollPane.getVerticalScrollBar().setValue(viewPos);
                                 }
                             }
                         }

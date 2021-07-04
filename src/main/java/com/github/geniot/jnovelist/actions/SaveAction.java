@@ -5,6 +5,7 @@ import com.github.geniot.jnovelist.project.Chapter;
 import com.github.geniot.jnovelist.project.JNovel;
 import com.github.geniot.jnovelist.project.Scene;
 
+import javax.swing.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import java.awt.*;
@@ -76,7 +77,9 @@ public class SaveAction extends AbstractNovelistAction {
                         Scene scene = new Scene();
 //                        scene.setDescription(chapterTabComponent.getText());
                         scene.setCaretPos(editor.getCaretPosition());
-                        scene.setViewPos(editor.getDocumentPane().getVerticalScrollBar().getValue());
+                        JViewport viewport = (JViewport) editor.getDocumentPane().getEditor().getParent();
+                        JScrollPane scrollPane = (JScrollPane) viewport.getParent();
+                        scene.setViewPos(scrollPane.getVerticalScrollBar().getValue());
 
                         String text = Utils.html2text(editor.getDocumentText());
                         scene.setContent(text);

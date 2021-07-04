@@ -5,7 +5,7 @@ import com.github.geniot.jnovelist.project.JNovel;
 import com.github.geniot.jnovelist.project.Scene;
 import com.inet.jortho.FileUserDictionary;
 import com.inet.jortho.SpellChecker;
-import com.lightdev.app.shtm.SHTMLPanelImpl;
+import io.github.geniot.shtml.SHTMLPanelImpl;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
