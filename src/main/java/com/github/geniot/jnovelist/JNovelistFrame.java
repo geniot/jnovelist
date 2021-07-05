@@ -3,8 +3,8 @@ package com.github.geniot.jnovelist;
 import com.github.geniot.jnovelist.actions.*;
 import com.github.geniot.jnovelist.project.JNovel;
 import com.github.geniot.jnovelist.project.Scene;
-import com.inet.jortho.FileUserDictionary;
-import com.inet.jortho.SpellChecker;
+import io.github.geniot.jortho.FileUserDictionary;
+import io.github.geniot.jortho.SpellChecker;
 import io.github.geniot.shtml.SHTMLPanelImpl;
 
 import javax.swing.*;

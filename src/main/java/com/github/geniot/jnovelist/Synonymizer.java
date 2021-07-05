@@ -3,6 +3,7 @@ package com.github.geniot.jnovelist;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +19,7 @@ public class Synonymizer {
 
     public static void init() {
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(Synonymizer.class.getClassLoader().getResourceAsStream("syn.txt"), "UTF8"));
+            BufferedReader in = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("synonyms" + File.separator + "syn_ru.txt"), "UTF8"));
 
             String str;
             StringBuilder sb = new StringBuilder();
@@ -29,7 +30,7 @@ public class Synonymizer {
                         //dumping entry
                         int indexOf = entry.indexOf('\n');
                         String hw = entry.substring(0, indexOf);
-                        String syn = entry.substring(indexOf+1, entry.length()-1);
+                        String syn = entry.substring(indexOf + 1, entry.length() - 1);
                         MAP_CONTENT.put(hw, syn);
                     }
                     sb = new StringBuilder();

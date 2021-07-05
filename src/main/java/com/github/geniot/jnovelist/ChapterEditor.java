@@ -1,7 +1,7 @@
 package com.github.geniot.jnovelist;
 
 import com.github.geniot.jnovelist.project.Scene;
-import com.inet.jortho.SpellChecker;
+import io.github.geniot.jortho.SpellChecker;
 import io.github.geniot.shtml.SHTMLPanelSingleDocImpl;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
