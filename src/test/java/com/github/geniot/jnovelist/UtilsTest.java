@@ -1,13 +1,17 @@
 package com.github.geniot.jnovelist;
 
-import junit.framework.TestCase;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Author: Vitaly Sazanovich
  * Email: vitaly.sazanovich@gmail.com
  * Date: 06/07/16
  */
-public class UtilsTest extends TestCase {
+public class UtilsTest {
+    @Test
     public void testEncrypt() {
         String str = "some string плюс русский текст";
         String code = Utils.base64encode(str);
@@ -15,6 +19,7 @@ public class UtilsTest extends TestCase {
         assertEquals(decode, str);
     }
 
+    @Test
     public void testByteEncrypt() {
         try {
             String str = "some string плюс русский текст";
