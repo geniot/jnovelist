@@ -9,6 +9,7 @@ import io.github.geniot.shtml.SHTMLPanelImpl;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,7 +53,7 @@ public class JNovelistFrame extends JFrame {
     public JNovelistFrame() {
         super("JNovelist");
 
-        setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/appicon.ico_32x32.png")).getImage());
+        setIconImage(new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("images/favicon/favicon-32x32.png")).getImage());
 
         try {
             Constants.PROPS.load(new FileInputStream(System.getProperty("user.home") + File.separator + Constants.PROPS_FILE_NAME));
@@ -71,6 +72,8 @@ public class JNovelistFrame extends JFrame {
 
         JToolBar toolBar = new JToolBar("Still draggable");
         toolBar.setFloatable(false);
+        int borderSize = 3;
+        toolBar.setBorder(new EmptyBorder(borderSize, borderSize, borderSize, borderSize));
 
         loadNovel = Utils.makeNavigationButton("Load", Constants.LOAD_NOVEL_ACTION_COMMAND, "Открыть", "Load");
         unloadNovel = Utils.makeNavigationButton("Eject", Constants.UNLOAD_NOVEL_ACTION_COMMAND, "Закрыть", "Unload");
@@ -109,15 +112,15 @@ public class JNovelistFrame extends JFrame {
         toolBar.add(unloadNovel);
         toolBar.add(saveNovel);
         toolBar.add(exportNovel);
-        toolBar.addSeparator(new Dimension(30, 10));
+//        toolBar.addSeparator(new Dimension(30, 10));
         toolBar.add(heroes);
         toolBar.add(places);
         toolBar.add(things);
         toolBar.add(notes);
         toolBar.add(images);
-        toolBar.addSeparator(new Dimension(30, 10));
-        toolBar.add(style);
+//        toolBar.addSeparator(new Dimension(30, 10));
         toolBar.add(Box.createHorizontalGlue());
+        toolBar.add(style);
         toolBar.add(info);
         toolBar.add(dictionary);
 
