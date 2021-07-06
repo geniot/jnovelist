@@ -1,6 +1,6 @@
 package com.github.geniot.jnovelist;
 
-import com.github.geniot.jnovelist.project.Scene;
+import com.github.geniot.jnovelist.model.Chapter;
 import io.github.geniot.jortho.SpellChecker;
 import io.github.geniot.shtml.SHTMLPanelSingleDocImpl;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -25,15 +25,15 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
     public int words = 0;
 
 
-    public ChapterEditor(Scene scene, String docStart, String docEnd) {
+    public ChapterEditor(Chapter chapter, String docStart, String docEnd) {
         super(true);
 
         fixBorder();
 //        linePainter = new LinePainter(this.getDocumentPane().getEditor());
 
-        if (scene != null) {
+        if (chapter != null) {
             try {
-                String str = scene.getContent();//FileUtils.readFileToString(file, "UTF-8");
+                String str = chapter.getContent();//FileUtils.readFileToString(file, "UTF-8");
 //                if (!str.contains(" ")){
 //                    str = Utils.base64decode(str);
 //                }
@@ -43,11 +43,11 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
                 getDocumentPane().setDocumentText(ExceptionUtils.getFullStackTrace(ex));
             }
 
-            int caretPos = scene.getCaretPos();
+//            int caretPos = chapter.getCaretPos();
 //            if (Constants.PROPS.getProperty("caretPosition:" + file.getAbsolutePath()) != null) {
 //                caretPos = Integer.parseInt(Constants.PROPS.getProperty("caretPosition:" + file.getAbsolutePath()));
 //            }
-            getDocumentPane().getEditor().setCaretPosition(caretPos > getDocument().getLength() ? getDocument().getLength() : caretPos);
+//            getDocumentPane().getEditor().setCaretPosition(caretPos > getDocument().getLength() ? getDocument().getLength() : caretPos);
             getDocumentPane().getEditor().getCaret().setBlinkRate(0);
         } else {
             getDocumentPane().setDocumentText(docStart + "<p></p>" + docEnd);

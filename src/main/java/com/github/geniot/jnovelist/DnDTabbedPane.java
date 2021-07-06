@@ -1,7 +1,7 @@
 package com.github.geniot.jnovelist;
 
-import com.github.geniot.jnovelist.project.Chapter;
-import com.github.geniot.jnovelist.project.Scene;
+import com.github.geniot.jnovelist.model.Part;
+import com.github.geniot.jnovelist.model.Chapter;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -9,6 +9,8 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+
+import static com.github.geniot.jnovelist.Utils.*;
 
 public class DnDTabbedPane extends JTabbedPane {
     static public String DECIMAL_TO_ROMAN = "DECIMAL_TO_ROMAN";
@@ -147,10 +149,10 @@ public class DnDTabbedPane extends JTabbedPane {
             }
         });
 
-        if (!ac.equals(Constants.IMAGES_NOVEL_ACTION_COMMAND)) {
+//        if (!ac.equals(Constants.IMAGES_NOVEL_ACTION_COMMAND)) {
             plusPanel = new JPanel();
             addTab("+", plusPanel);
-        }
+//        }
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -167,7 +169,7 @@ public class DnDTabbedPane extends JTabbedPane {
         });
     }
 
-    public void addNewTab(final Scene file, String actionCommand) {
+    public void addNewTab(final Chapter file, String actionCommand) {
         //adding new tab
         try {
             int count = getTabCount();
@@ -177,13 +179,13 @@ public class DnDTabbedPane extends JTabbedPane {
             //defining component to add depending on the incoming parameter
             if (file == null) {
                 //creating empty tab (mouse click)
-                c = new ChapterEditor(new Scene(), Constants.HTML_DOC_START, Constants.HTML_DOC_END);
+                c = new ChapterEditor(new Chapter(), Constants.HTML_DOC_START, Constants.HTML_DOC_END);
                 Utils.enableSave(this);
             } else {
-                if (file instanceof Chapter) {
+                if (file instanceof Part) {
                     c = new DnDTabbedPane(DnDTabbedPane.INDEX_TO_DECIMAL, actionCommand);
-                    Chapter ch = (Chapter) file;
-                    for (Scene f : ch.getScenes()) {
+                    Part ch = (Part) file;
+                    for (Chapter f : ch.getChapters()) {
                         ((DnDTabbedPane) c).addNewTab(f, actionCommand);
                     }
                 } else {
@@ -197,14 +199,14 @@ public class DnDTabbedPane extends JTabbedPane {
                         public void run() {
                             if (c instanceof ChapterEditor) {
                                 ((ChapterEditor) c).getDocumentPane().getEditor().requestFocus();
-                                int viewPos = file.getViewPos();//0;
+//                                int viewPos = file.getViewPos();//0;
 //                                if (Constants.PROPS.getProperty("verticalScrollBar:" + file.getAbsolutePath()) != null) {
 //                                    viewPos = Integer.parseInt(Constants.PROPS.getProperty("verticalScrollBar:" + file.getAbsolutePath()));
 //                                }
                                 if (file != null) {
-                                    JViewport viewport = (JViewport) ((ChapterEditor) c).getDocumentPane().getEditor().getParent();
-                                    JScrollPane scrollPane = (JScrollPane) viewport.getParent();
-                                    scrollPane.getVerticalScrollBar().setValue(viewPos);
+//                                    JViewport viewport = (JViewport) ((ChapterEditor) c).getDocumentPane().getEditor().getParent();
+//                                    JScrollPane scrollPane = (JScrollPane) viewport.getParent();
+//                                    scrollPane.getVerticalScrollBar().setValue(viewPos);
                                 }
                             }
                         }
@@ -213,9 +215,9 @@ public class DnDTabbedPane extends JTabbedPane {
             }
 
             int extraTabsCount = 1;
-            if (actionCommand.equals(Constants.IMAGES_NOVEL_ACTION_COMMAND)) {
-                extraTabsCount = 0;
-            }
+//            if (actionCommand.equals(Constants.IMAGES_NOVEL_ACTION_COMMAND)) {
+//                extraTabsCount = 0;
+//            }
 
             insertTab(getLabelByIndex(count - extraTabsCount), null, c, null, count - extraTabsCount);
             ButtonTabComponent tabTitle = new ButtonTabComponent(this, c, this.actionCommand, file);
@@ -255,7 +257,7 @@ public class DnDTabbedPane extends JTabbedPane {
 
     public String getLabelByIndex(int i) {
         if (titleNamingType.equals(DECIMAL_TO_ROMAN)) {
-            return decimalToRoman(i);
+            return decimalIndexToRoman(i);
         } else if (titleNamingType.equals(INDEX_TO_DECIMAL)) {
             return indexToDecimal(i);
         } else if (titleNamingType.equals(INDEX_TO_ALPHABET)) {
@@ -276,42 +278,5 @@ public class DnDTabbedPane extends JTabbedPane {
             g.drawImage(tabImage, currentMouseLocation.x, currentMouseLocation.y, this);
         }
     }
-
-
-    // Parallel arrays used in the conversion process.
-    private static String[] RCODE = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
-    private static int[] BVAL = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
-    private static String[] ALPHABET = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
-
-    private String decimalToRoman(int binary) {
-        binary += 1;//binary is index that starts from 0
-        if (binary <= 0 || binary >= 4000) {
-            return "I";
-        }
-        String roman = "";         // Roman notation will be accumualated here.
-
-        // Loop from biggest value to smallest, successively subtracting,
-        // from the binary value while adding to the roman representation.
-        for (int i = 0; i < RCODE.length; i++) {
-            while (binary >= BVAL[i]) {
-                binary -= BVAL[i];
-                roman += RCODE[i];
-            }
-        }
-        return roman;
-    }
-
-
-    private String indexToDecimal(int binary) {
-        return String.valueOf(binary + 1);
-    }
-
-    private String indexToAlphabet(int binary) {
-        if (binary < 0 || binary > ALPHABET.length - 1) {
-            return ALPHABET[0];
-        }
-        return ALPHABET[binary];
-    }
-
 
 }

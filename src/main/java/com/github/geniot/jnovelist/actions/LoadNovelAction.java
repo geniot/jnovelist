@@ -1,12 +1,15 @@
 package com.github.geniot.jnovelist.actions;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.geniot.jnovelist.*;
-import com.github.geniot.jnovelist.project.Chapter;
-import com.github.geniot.jnovelist.project.JNovel;
-import com.github.geniot.jnovelist.project.Scene;
+import com.github.geniot.jnovelist.model.Part;
+import com.github.geniot.jnovelist.model.JNovel;
+import com.github.geniot.jnovelist.model.Chapter;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.awt.*;
@@ -50,6 +53,17 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
         }
 
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                return f.getName().endsWith(".json");
+            }
+
+            @Override
+            public String getDescription() {
+                return "JNovelist project file in JSON format";
+            }
+        });
 
         int returnVal = fc.showOpenDialog(frame);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -85,52 +99,26 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
     public static void loadNovel(final JNovelistFrame frame, final File selectedFile) {
         try {
             frame.openFileName = selectedFile.getAbsolutePath();
-            frame.synopsis = new ChapterEditor(new Scene(), Constants.HTML_SYN_DOC_START, Constants.HTML_SYN_DOC_END);
             frame.dnDTabbedPane = new DnDTabbedPane(DnDTabbedPane.DECIMAL_TO_ROMAN, Constants.LOAD_NOVEL_ACTION_COMMAND);
 
-            frame.splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, frame.synopsis, frame.dnDTabbedPane);
-            frame.splitPane.setDividerLocation(Constants.PROPS.containsKey(Constants.PROP_DIVIDER_LOCATION) ? Integer.parseInt(Constants.PROPS.getProperty(Constants.PROP_DIVIDER_LOCATION)) : 150);
-            frame.getContentPane().add(frame.splitPane, BorderLayout.CENTER);
+            frame.getContentPane().add(frame.dnDTabbedPane, BorderLayout.CENTER);
 
 
             if (!selectedFile.exists()) {
                 //new project?
                 frame.dnDTabbedPane.newProject(Constants.LOAD_NOVEL_ACTION_COMMAND);
             } else {
-
-                JAXBContext jaxbContext = JAXBContext.newInstance(JNovel.class);
-
-                Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-
-                InputStream stream = null;
-
-                if (selectedFile.getName().endsWith(".zip")) {
-                    ZipFile zipFile = new ZipFile(selectedFile);
-                    Enumeration<? extends ZipEntry> entries = zipFile.entries();
-
-                    while (entries.hasMoreElements()) {
-                        ZipEntry entry = entries.nextElement();
-                        stream = zipFile.getInputStream(entry);
-                    }
-                } else {
-                    stream = new FileInputStream(selectedFile);
+                String projectJson = FileUtils.readFileToString(selectedFile);
+                frame.openNovel = (JNovel) new ObjectMapper().readValue(projectJson, JNovel.class);
+                
+                for (Part part : frame.openNovel.getParts()) {
+                    frame.dnDTabbedPane.addNewTab(part, Constants.LOAD_NOVEL_ACTION_COMMAND);
                 }
-
-                frame.openNovel = (JNovel) jaxbUnmarshaller.unmarshal(stream);
-
-                stream.close();
-
-                for (Chapter chapter : frame.openNovel.getChapters()) {
-                    frame.dnDTabbedPane.addNewTab(chapter, Constants.LOAD_NOVEL_ACTION_COMMAND);
-                }
-
-                frame.synopsis.getDocumentPane().setDocumentText(Utils.text2html(frame.openNovel.getSynopsis(), Constants.HTML_SYN_DOC_START, Constants.HTML_SYN_DOC_END));
-
 
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        for (int i = 0; i < frame.openNovel.getChapters().length; i++) {
+                        for (int i = 0; i < frame.openNovel.getParts().size(); i++) {
                             String selChapterS = Constants.PROPS.getProperty("selectedChapter:" + i + ":" + frame.openFileName);
                             if (!StringUtils.isEmpty(selChapterS)) {
                                 int selChapter = Integer.parseInt(selChapterS);

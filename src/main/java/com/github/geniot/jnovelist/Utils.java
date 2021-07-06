@@ -122,6 +122,7 @@ public class Utils {
         JButton button = new JButton();
         button.setActionCommand(actionCommand);
         button.setToolTipText(toolTipText);
+        button.setFocusPainted(false);
 
         if (imageURL != null) {                      //image found
             button.setIcon(new ImageIcon(imageURL, altText));
@@ -319,6 +320,42 @@ public class Utils {
         String tmp1 = s1.replaceAll("\n", "").replaceAll("\r", "");
         String tmp2 = s2.replaceAll("\n", "").replaceAll("\r", "");
         return tmp1.equals(tmp2);
+    }
+
+
+    // Parallel arrays used in the conversion process.
+    public static String[] RCODE = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+    public static int[] BVAL = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+    public static String[] ALPHABET = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+
+    public static String decimalIndexToRoman(int binary) {
+        binary += 1;//binary is index that starts from 0
+        if (binary <= 0 || binary >= 4000) {
+            return "I";
+        }
+        String roman = "";         // Roman notation will be accumualated here.
+
+        // Loop from biggest value to smallest, successively subtracting,
+        // from the binary value while adding to the roman representation.
+        for (int i = 0; i < RCODE.length; i++) {
+            while (binary >= BVAL[i]) {
+                binary -= BVAL[i];
+                roman += RCODE[i];
+            }
+        }
+        return roman;
+    }
+
+
+    public static String indexToDecimal(int binary) {
+        return String.valueOf(binary + 1);
+    }
+
+    public static String indexToAlphabet(int binary) {
+        if (binary < 0 || binary > ALPHABET.length - 1) {
+            return ALPHABET[0];
+        }
+        return ALPHABET[binary];
     }
 
 }

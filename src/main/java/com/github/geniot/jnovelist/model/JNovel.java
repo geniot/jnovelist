@@ -1,83 +1,76 @@
-package com.github.geniot.jnovelist.project;
+package com.github.geniot.jnovelist.model;
 
 import com.github.geniot.jnovelist.Constants;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author: Vitaly Sazanovich
  * Email: vitaly.sazanovich@gmail.com
  * Date: 15/06/17
  */
-@XmlRootElement
 public class JNovel implements Serializable {
-    private Chapter[] chapters = new Chapter[]{};
+    private List<Part> parts = new ArrayList<Part>();
 
-    private String synopsis = "";
+    private List<Chapter> heroes = new ArrayList<Chapter>();
+    private List<Chapter> places = new ArrayList<Chapter>();
+    private List<Chapter> things = new ArrayList<Chapter>();
+    private List<Chapter> notes = new ArrayList<Chapter>();
+    private List<Chapter> images = new ArrayList<Chapter>();
 
-    private Scene[] heroes = new Scene[]{};
-    private Scene[] places = new Scene[]{};
-    private Scene[] things = new Scene[]{};
-    private Scene[] notes = new Scene[]{};
-
-    public Chapter[] getChapters() {
-        return chapters;
+    public List<Chapter> getImages() {
+        return images;
     }
 
-    @XmlElement
-    public void setChapters(Chapter[] chapters) {
-        this.chapters = chapters;
+    public void setImages(List<Chapter> images) {
+        this.images = images;
     }
 
+    public List<Part> getParts() {
+        return parts;
+    }
 
-    public Scene[] getHeroes() {
+    public void setParts(List<Part> parts) {
+        this.parts = parts;
+    }
+
+    public List<Chapter> getHeroes() {
         return heroes;
     }
 
-    @XmlElement
-    public void setHeroes(Scene[] heroes) {
+    public void setHeroes(List<Chapter> heroes) {
         this.heroes = heroes;
     }
 
-    public Scene[] getPlaces() {
+    public List<Chapter> getPlaces() {
         return places;
     }
 
-    @XmlElement
-    public void setPlaces(Scene[] places) {
+    public void setPlaces(List<Chapter> places) {
         this.places = places;
     }
 
-    public Scene[] getThings() {
+    public List<Chapter> getThings() {
         return things;
     }
 
-    @XmlElement
-    public void setThings(Scene[] things) {
+    public void setThings(List<Chapter> things) {
         this.things = things;
     }
 
-    public Scene[] getNotes() {
+    public List<Chapter> getNotes() {
         return notes;
     }
 
-    @XmlElement
-    public void setNotes(Scene[] notes) {
+    public void setNotes(List<Chapter> notes) {
         this.notes = notes;
     }
 
-    public String getSynopsis() {
-        return synopsis;
-    }
-
-    @XmlElement
-    public void setSynopsis(String synopsis) {
-        this.synopsis = synopsis;
-    }
-
-    public Scene[] getScenes(String actionCommand) {
+    public List<Chapter> getChapters(String actionCommand) {
         if (actionCommand.equals(Constants.HEROES_NOVEL_ACTION_COMMAND)) {
             return this.heroes;
         }
@@ -90,24 +83,31 @@ public class JNovel implements Serializable {
         if (actionCommand.equals(Constants.NOTES_NOVEL_ACTION_COMMAND)) {
             return this.notes;
         }
+        if (actionCommand.equals(Constants.IMAGES_NOVEL_ACTION_COMMAND)) {
+            return this.images;
+        }
         throw new RuntimeException("Unidentified action command: " + actionCommand);
     }
 
-    public void setScenes(Scene[] scenes, String actionCommand) {
+    public void setChapters(List<Chapter> chapters, String actionCommand) {
         if (actionCommand.equals(Constants.HEROES_NOVEL_ACTION_COMMAND)) {
-            this.heroes = scenes;
+            this.heroes = chapters;
             return;
         }
         if (actionCommand.equals(Constants.PLACES_NOVEL_ACTION_COMMAND)) {
-            this.places = scenes;
+            this.places = chapters;
             return;
         }
         if (actionCommand.equals(Constants.THINGS_NOVEL_ACTION_COMMAND)) {
-            this.things = scenes;
+            this.things = chapters;
             return;
         }
         if (actionCommand.equals(Constants.NOTES_NOVEL_ACTION_COMMAND)) {
-            this.notes = scenes;
+            this.notes = chapters;
+            return;
+        }
+        if (actionCommand.equals(Constants.IMAGES_NOVEL_ACTION_COMMAND)) {
+            this.images = chapters;
             return;
         }
         throw new RuntimeException("Unidentified action command: " + actionCommand);

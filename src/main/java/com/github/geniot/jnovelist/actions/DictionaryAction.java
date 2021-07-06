@@ -4,6 +4,7 @@ import com.github.geniot.jnovelist.*;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -36,6 +37,7 @@ public class DictionaryAction extends AbstractNovelistAction implements ActionLi
         JPanel contentPane = new JPanel(new BorderLayout());
 
         searchTextField = new JTextField();
+        searchTextField.getCaret().setBlinkRate(0);
         searchTextField.setBorder(BorderFactory.createCompoundBorder(searchTextField.getBorder(), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         searchTextField.addKeyListener(new KeyAdapter() {
             @Override
@@ -46,9 +48,16 @@ public class DictionaryAction extends AbstractNovelistAction implements ActionLi
             }
         });
 
-        contentPane.add(searchTextField, BorderLayout.NORTH);
+        JPanel searchFieldWrapper = new JPanel();
+        searchFieldWrapper.setLayout(new BorderLayout(0, 0));
+        searchFieldWrapper.add(searchTextField, BorderLayout.CENTER);
+        int border = 6;
+        searchFieldWrapper.setBorder(new EmptyBorder(border,border,border,border));
+
+        contentPane.add(searchFieldWrapper, BorderLayout.NORTH);
 
         entryArea = new ChapterEditor("", false, Constants.HTML_DOC_START, Constants.HTML_DOC_END);
+        entryArea.setBorder(new EmptyBorder(0,border,border,border));
         contentPane.add(entryArea, BorderLayout.CENTER);
 
         dialog.getContentPane().add(contentPane, BorderLayout.CENTER);

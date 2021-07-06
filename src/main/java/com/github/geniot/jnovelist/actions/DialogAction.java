@@ -1,13 +1,14 @@
 package com.github.geniot.jnovelist.actions;
 
 import com.github.geniot.jnovelist.*;
-import com.github.geniot.jnovelist.project.Scene;
+import com.github.geniot.jnovelist.model.Chapter;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -30,20 +31,20 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
     public void actionPerformed(ActionEvent e) {
         this.actionCommand = e.getActionCommand();
         dialog = new JDialog(frame);
-        dialog.setModal(actionCommand.equals(Constants.IMAGES_NOVEL_ACTION_COMMAND) ? false : true);
+        dialog.setModal(true);
         dialog.setTitle(Constants.VARS.get(actionCommand));
 
         dnd = new DnDTabbedPane(DnDTabbedPane.INDEX_TO_ALPHABET, actionCommand);
-        Scene[] notes = frame.openNovel.getScenes(actionCommand);
+        List<Chapter> notes = frame.openNovel.getChapters(actionCommand);
 
-        for (Scene note : notes) {
+        for (Chapter note : notes) {
             dnd.addNewTab(note, actionCommand);
         }
 
         if (dnd.getTabCount() == 1) {
-            if (!actionCommand.equals(Constants.IMAGES_NOVEL_ACTION_COMMAND)) {
+//            if (!actionCommand.equals(Constants.IMAGES_NOVEL_ACTION_COMMAND)) {
                 dnd.addNewTab(null, actionCommand);
-            }
+//            }
         }
 
         String sel = Constants.PROPS.getProperty("selectedChapter:" + actionCommand);
@@ -120,7 +121,7 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
     }
 
     private void save() {
-        ArrayList<Scene> notes = new ArrayList<Scene>();
+        ArrayList<Chapter> notes = new ArrayList<Chapter>();
         for (int i = 0; i < dnd.getTabCount(); i++) {
             Component c = dnd.getComponentAt(i);
             if (c instanceof ChapterEditor) {
@@ -130,17 +131,17 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
                 if (StringUtils.isBlank(text)) {
                     continue;
                 } else {
-                    Scene scene = new Scene();
-                    scene.setContent(text);
-                    scene.setCaretPos(editor.getCaretPosition());
+                    Chapter chapter = new Chapter();
+                    chapter.setContent(text);
+//                    chapter.setCaretPos(editor.getCaretPosition());
                     JViewport viewport = (JViewport) editor.getDocumentPane().getEditor().getParent();
                     JScrollPane scrollPane = (JScrollPane) viewport.getParent();
-                    scene.setViewPos(scrollPane.getVerticalScrollBar().getValue());
-                    scene.setSelected(dnd.getSelectedIndex() == i);
-                    notes.add(scene);
+//                    chapter.setViewPos(scrollPane.getVerticalScrollBar().getValue());
+//                    chapter.setSelected(dnd.getSelectedIndex() == i);
+                    notes.add(chapter);
                 }
             }
         }
-        frame.openNovel.setScenes(notes.toArray(new Scene[notes.size()]), actionCommand);
+        frame.openNovel.setChapters(notes, actionCommand);
     }
 }

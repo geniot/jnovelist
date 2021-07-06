@@ -1,8 +1,7 @@
 package com.github.geniot.jnovelist;
 
 import com.github.geniot.jnovelist.actions.*;
-import com.github.geniot.jnovelist.project.JNovel;
-import com.github.geniot.jnovelist.project.Scene;
+import com.github.geniot.jnovelist.model.JNovel;
 import io.github.geniot.jortho.FileUserDictionary;
 import io.github.geniot.jortho.SpellChecker;
 import io.github.geniot.shtml.SHTMLPanelImpl;
@@ -13,6 +12,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
+
+import static com.github.geniot.jnovelist.Utils.decimalIndexToRoman;
 
 /**
  * Author: Vitaly Sazanovich
@@ -38,9 +39,6 @@ public class JNovelistFrame extends JFrame {
     public JButton info;
 
     public JButton dictionary;
-
-    public JSplitPane splitPane;
-    public ChapterEditor synopsis;
     public DnDTabbedPane dnDTabbedPane;
 
     public JLabel statusLabel;
@@ -121,9 +119,8 @@ public class JNovelistFrame extends JFrame {
 //        toolBar.addSeparator(new Dimension(30, 10));
         toolBar.add(Box.createHorizontalGlue());
         toolBar.add(style);
-        toolBar.add(info);
         toolBar.add(dictionary);
-
+        toolBar.add(info);
 
         getContentPane().add(toolBar, BorderLayout.PAGE_START);
 
@@ -133,15 +130,19 @@ public class JNovelistFrame extends JFrame {
         statusPanel.setPreferredSize(new Dimension(getWidth(), 30));
         statusPanel.setLayout(new BorderLayout());
 
+        int border = 3;
+        EmptyBorder emptyBorder = new EmptyBorder(border, border, border, border);
         statusLabel = new JLabel();
-        statusPanel.add(statusLabel, BorderLayout.WEST);
+        statusLabel.setBorder(emptyBorder);
+        statusPanel.add(statusLabel, BorderLayout.EAST);
 
-        partStatusLabel = new JLabel();
-        statusPanel.add(partStatusLabel, BorderLayout.CENTER);
-        partStatusLabel.setHorizontalAlignment(SwingConstants.CENTER);
+//        partStatusLabel = new JLabel();
+//        statusPanel.add(partStatusLabel, BorderLayout.CENTER);
+//        partStatusLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         allStatusLabel = new JLabel();
-        statusPanel.add(allStatusLabel, BorderLayout.EAST);
+        allStatusLabel.setBorder(emptyBorder);
+        statusPanel.add(allStatusLabel, BorderLayout.WEST);
 
 
         //Display the window.
@@ -179,7 +180,7 @@ public class JNovelistFrame extends JFrame {
 
     }
 
-    public void load(){
+    public void load() {
         if (Constants.PROPS.containsKey(Constants.PROP_LAST_OPEN_FILE)) {
             String lastOpenFile = Constants.PROPS.getProperty(Constants.PROP_LAST_OPEN_FILE);
             final File f = new File(lastOpenFile);
@@ -209,11 +210,9 @@ public class JNovelistFrame extends JFrame {
         if (openFileName == null) {
             if (dnDTabbedPane != null) {
                 dnDTabbedPane.removeAll();
-                getContentPane().remove(splitPane);
+                getContentPane().remove(dnDTabbedPane);
 
                 dnDTabbedPane = null;
-                splitPane = null;
-                synopsis = null;
 
                 validate();
                 repaint();
@@ -254,7 +253,7 @@ public class JNovelistFrame extends JFrame {
 
     public void updateStatus() {
         if (dnDTabbedPane == null) {
-            partStatusLabel.setText("");
+//            partStatusLabel.setText("");
             statusLabel.setText("");
             allStatusLabel.setText("");
             return;
@@ -314,24 +313,15 @@ public class JNovelistFrame extends JFrame {
         for (int i = 0; i < dnDTabbedPane.getTabCount(); i++) {
             Component c = dnDTabbedPane.getComponentAt(i);
             if (c instanceof DnDTabbedPane) {
-//                sb.append(i + 1);
-//                sb.append('\n');
+                sb.append(decimalIndexToRoman(i));
+                sb.append('\n');
                 DnDTabbedPane dnd = (DnDTabbedPane) c;
                 for (int k = 0; k < dnd.getTabCount(); k++) {
                     Component o = dnd.getComponentAt(k);
                     if (o instanceof ChapterEditor) {
                         ChapterEditor editor = (ChapterEditor) o;
-                        ButtonTabComponent sceneTabComponent = (ButtonTabComponent) dnd.getTabComponentAt(k);
-//                        String title = sceneTabComponent.getText().split("\\s")[0].trim();
-//                        try{
-//                            int chapterNum = Integer.parseInt(title);
-//                            sb.append(chapterNum);
-//
-//                        }catch (Exception ex){
-//                            sb.append("###");
-//                        }
 
-                        sb.append("###");
+                        sb.append(k + 1);
                         sb.append('\n');
 
                         try {

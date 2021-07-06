@@ -1,25 +1,19 @@
 package com.github.geniot.jnovelist.actions;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.geniot.jnovelist.*;
-import com.github.geniot.jnovelist.project.Chapter;
-import com.github.geniot.jnovelist.project.JNovel;
-import com.github.geniot.jnovelist.project.Scene;
+import com.github.geniot.jnovelist.model.Chapter;
+import com.github.geniot.jnovelist.model.JNovel;
+import com.github.geniot.jnovelist.model.Part;
+import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 
 /**
@@ -55,18 +49,17 @@ public class SaveAction extends AbstractNovelistAction {
     }
 
     protected void save() {
-        Constants.PROPS.setProperty(Constants.PROP_DIVIDER_LOCATION, String.valueOf((int) frame.splitPane.getDividerLocation()));
-        ArrayList<Chapter> chapters = new ArrayList<Chapter>();
+        ArrayList<Part> parts = new ArrayList<Part>();
         for (int i = 0; i < frame.dnDTabbedPane.getTabCount(); i++) {
             Component c = frame.dnDTabbedPane.getComponentAt(i);
             if (c instanceof DnDTabbedPane) {
                 DnDTabbedPane dnd = (DnDTabbedPane) c;
                 ButtonTabComponent tabComponent = (ButtonTabComponent) frame.dnDTabbedPane.getTabComponentAt(i);
-                Chapter chapter = new Chapter();
+                Part part = new Part();
 //                chapter.setDescription(tabComponent.getText());
-                chapter.setSelected(frame.dnDTabbedPane.getSelectedComponent().equals(dnd));
+//                part.setSelected(frame.dnDTabbedPane.getSelectedComponent().equals(dnd));
 
-                ArrayList<Scene> scenes = new ArrayList<Scene>();
+                ArrayList<Chapter> chapters = new ArrayList<Chapter>();
                 for (int k = 0; k < dnd.getTabCount(); k++) {
                     Component o = dnd.getComponentAt(k);
 
@@ -74,20 +67,20 @@ public class SaveAction extends AbstractNovelistAction {
                         ChapterEditor editor = (ChapterEditor) o;
                         ButtonTabComponent chapterTabComponent = (ButtonTabComponent) dnd.getTabComponentAt(k);
 
-                        Scene scene = new Scene();
+                        Chapter chapter = new Chapter();
 //                        scene.setDescription(chapterTabComponent.getText());
-                        scene.setCaretPos(editor.getCaretPosition());
+//                        chapter.setCaretPos(editor.getCaretPosition());
                         JViewport viewport = (JViewport) editor.getDocumentPane().getEditor().getParent();
                         JScrollPane scrollPane = (JScrollPane) viewport.getParent();
-                        scene.setViewPos(scrollPane.getVerticalScrollBar().getValue());
+//                        chapter.setViewPos(scrollPane.getVerticalScrollBar().getValue());
 
                         String text = Utils.html2text(editor.getDocumentText());
-                        scene.setContent(text);
-                        scenes.add(scene);
+                        chapter.setContent(text);
+                        chapters.add(chapter);
                     }
                 }
-                chapter.setScenes(scenes.toArray(new Scene[scenes.size()]));
-                chapters.add(chapter);
+                part.setChapters(chapters);
+                parts.add(part);
             }
 
         }
@@ -95,61 +88,13 @@ public class SaveAction extends AbstractNovelistAction {
         if (frame.openNovel == null) {
             frame.openNovel = new JNovel();
         }
-        frame.openNovel.setChapters(chapters.toArray(new Chapter[chapters.size()]));
-        frame.openNovel.setSynopsis(Utils.html2text(frame.synopsis.getDocumentText()));
+        frame.openNovel.setParts(parts);
 
         try {
-            ByteArrayOutputStream fos = new ByteArrayOutputStream();
-            JAXBContext jaxbContext = JAXBContext.newInstance(JNovel.class);
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            jaxbMarshaller.marshal(frame.openNovel, fos);
-
-            String fileName = getFileName(frame.openFileName);
-            String newFileName = fileName + "." + System.currentTimeMillis() + ".zip";
-            ZipOutputStream out = new ZipOutputStream(new FileOutputStream(newFileName));
-            Constants.PROPS.setProperty(Constants.PROP_LAST_OPEN_FILE, newFileName);
-
-            ZipEntry e = new ZipEntry(new File(fileName).getName());
-            out.putNextEntry(e);
-            byte[] data = fos.toByteArray();
-            out.write(data, 0, data.length);
-            out.closeEntry();
-            out.close();
-
-
+            String projectJSON = new ObjectMapper().writeValueAsString(frame.openNovel);
+            FileUtils.writeStringToFile(new File(frame.openFileName), projectJSON);
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
-
-        //removing
-        try {
-            String fileName = getFileName(frame.openFileName);
-            String folderName = frame.openFileName.substring(0, frame.openFileName.lastIndexOf(File.separator));
-            File[] files = new File(folderName).listFiles();
-            SortedSet<File> cachedFiles = new TreeSet<File>(fileComparator);
-            for (File f : files) {
-                if (f.getAbsolutePath().startsWith(fileName) && f.getName().endsWith(".zip")) {
-                    cachedFiles.add(f);
-                }
-            }
-            while (cachedFiles.size() > 5) {
-                File f = cachedFiles.iterator().next();
-                if (f.isFile()) {
-                    f.delete();
-                }
-                cachedFiles.remove(f);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    private String getFileName(String openFileName) {
-        if (openFileName.endsWith(".zip")) {
-            return openFileName.split("\\.xml\\.")[0] + ".xml";
-        } else {
-            return openFileName;
         }
     }
 

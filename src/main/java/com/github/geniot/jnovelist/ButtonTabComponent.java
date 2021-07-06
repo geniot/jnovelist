@@ -1,16 +1,12 @@
 package com.github.geniot.jnovelist;
 
 
-import com.github.geniot.jnovelist.project.Chapter;
-import com.github.geniot.jnovelist.project.Scene;
+import com.github.geniot.jnovelist.model.Chapter;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 
 /**
  * Component to be used as tabComponent;
@@ -21,10 +17,10 @@ public class ButtonTabComponent extends JPanel {
     private final DnDTabbedPane pane;
     private final JButton removeButton;
     private Component component;
-    private Scene file;
+    private Chapter file;
 //    private JTextArea textArea;
 
-    public ButtonTabComponent(final DnDTabbedPane pane, Component c, String actionCommand, Scene f) {
+    public ButtonTabComponent(final DnDTabbedPane pane, Component c, String actionCommand, Chapter f) {
         //unset default FlowLayout' gaps
         super(new BorderLayout());
         if (pane == null) {
