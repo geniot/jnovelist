@@ -1,28 +1,22 @@
 package com.github.geniot.jnovelist.actions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.geniot.jnovelist.*;
-import com.github.geniot.jnovelist.model.Part;
+import com.github.geniot.jnovelist.Constants;
+import com.github.geniot.jnovelist.DnDTabbedPane;
+import com.github.geniot.jnovelist.JNovelistFrame;
 import com.github.geniot.jnovelist.model.JNovel;
-import com.github.geniot.jnovelist.model.Chapter;
+import com.github.geniot.jnovelist.model.Part;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 
 /**
@@ -56,7 +50,7 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
         fc.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(File f) {
-                return f.getName().endsWith(".json");
+                return f.getName().endsWith(".json") || f.isDirectory();
             }
 
             @Override
@@ -71,7 +65,7 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
                 frame.unloadNovel.doClick();
             }
             Constants.PROPS.setProperty(Constants.PROP_LAST_OPEN_DIR, fc.getCurrentDirectory().toString());
-            
+
             File selectedFile = fc.getSelectedFile();
 //            Constants.PROPS.setProperty(Constants.PROP_LAST_OPEN_DIR, fc.getCurrentDirectory().getPath());
 //            if (!selectedFile.exists()) {
@@ -98,7 +92,8 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
     @SuppressWarnings("unchecked")
     public static void loadNovel(final JNovelistFrame frame, final File selectedFile) {
         try {
-            frame.openFileName = selectedFile.getAbsolutePath();
+            String suffix = selectedFile.getAbsolutePath().endsWith(".json") ? "" : ".json";
+            frame.openFileName = selectedFile.getAbsolutePath() + suffix;
             frame.dnDTabbedPane = new DnDTabbedPane(DnDTabbedPane.DECIMAL_TO_ROMAN, Constants.LOAD_NOVEL_ACTION_COMMAND);
 
             frame.getContentPane().add(frame.dnDTabbedPane, BorderLayout.CENTER);
@@ -110,7 +105,7 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
             } else {
                 String projectJson = FileUtils.readFileToString(selectedFile);
                 frame.openNovel = (JNovel) new ObjectMapper().readValue(projectJson, JNovel.class);
-                
+
                 for (Part part : frame.openNovel.getParts()) {
                     frame.dnDTabbedPane.addNewTab(part, Constants.LOAD_NOVEL_ACTION_COMMAND);
                 }

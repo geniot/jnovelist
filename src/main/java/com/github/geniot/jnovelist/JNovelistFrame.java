@@ -12,6 +12,9 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static com.github.geniot.jnovelist.Utils.decimalIndexToRoman;
 
@@ -21,6 +24,10 @@ import static com.github.geniot.jnovelist.Utils.decimalIndexToRoman;
  * Date: 23/06/15
  */
 public class JNovelistFrame extends JFrame {
+
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+    public SaveAction saveAction;
 
     protected JButton loadNovel;
     public JButton unloadNovel;
@@ -102,7 +109,8 @@ public class JNovelistFrame extends JFrame {
         dictionary.addActionListener(new DictionaryAction(this));
         info.addActionListener(new InfoAction(this));
 
-        saveNovel.addActionListener(new SaveAction(this));
+        saveAction = new SaveAction(this);
+        saveNovel.addActionListener(saveAction);
 
         saveNovel.setEnabled(false);
 
@@ -177,6 +185,8 @@ public class JNovelistFrame extends JFrame {
         // You can download the dictionary files from http://sourceforge.net/projects/jortho/files/Dictionaries/
         SpellChecker.registerDictionaries(null, "ru");
         Synonymizer.init();
+
+        scheduler.scheduleAtFixedRate(new CommitterTask(this), 5, 5, TimeUnit.SECONDS);
 
     }
 

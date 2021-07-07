@@ -33,7 +33,7 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
 
         if (chapter != null) {
             try {
-                String str = chapter.getContent();//FileUtils.readFileToString(file, "UTF-8");
+                String str = String.join("\n", chapter.getLines());//FileUtils.readFileToString(file, "UTF-8");
 //                if (!str.contains(" ")){
 //                    str = Utils.base64decode(str);
 //                }

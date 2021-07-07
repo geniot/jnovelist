@@ -37,7 +37,7 @@ public class Utils {
 
     private static final String ALGORITHM = "AES";
     private static final byte[] keyValue =
-        new byte[]{'T', 'h', 'i', 's', 'I', 's', 'A', 'S', 'e', 'c', 'r', 'e', 't', 'K', 'e', 'y'};
+            new byte[]{'T', 'h', 'i', 's', 'I', 's', 'A', 'S', 'e', 'c', 'r', 'e', 't', 'K', 'e', 'y'};
 
     public static String base64encode(String text) {
         try {
@@ -356,6 +356,49 @@ public class Utils {
             return ALPHABET[0];
         }
         return ALPHABET[binary];
+    }
+
+    public static File getGitRootDir(String projectFile) {
+        File f = new File(projectFile);
+        while (!isRepo(f) && f != null) {
+            f = f.getParentFile();
+        }
+        return f;
+    }
+
+    private static boolean isRepo(File file) {
+        File f = new File(file.getAbsolutePath() + File.separator + ".git");
+        return f.exists() && f.isDirectory();
+    }
+
+    public static String runCommand(String command, File f) {
+        StringBuffer stringBuffer = new StringBuffer();
+        try {
+            Runtime rt = Runtime.getRuntime();
+            Process proc = rt.exec(command.toString(), null, f);
+
+            InputStreamReader isr = new InputStreamReader(proc.getInputStream());
+            BufferedReader rdr = new BufferedReader(isr);
+            String line;
+            while ((line = rdr.readLine()) != null) {
+                stringBuffer.append(line);
+                stringBuffer.append("\n");
+            }
+
+            isr = new InputStreamReader(proc.getErrorStream());
+            rdr = new BufferedReader(isr);
+            while ((line = rdr.readLine()) != null) {
+                stringBuffer.append(line);
+                stringBuffer.append("\n");
+            }
+            int rc = proc.waitFor();  // Wait for the process to complete
+//            stringBuffer.append(rc);
+//            stringBuffer.append("\n");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            stringBuffer.append(ex.getMessage());
+        }
+        return stringBuffer.toString();
     }
 
 }

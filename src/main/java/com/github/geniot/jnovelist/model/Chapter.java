@@ -1,8 +1,8 @@
 package com.github.geniot.jnovelist.model;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author: Vitaly Sazanovich
@@ -10,13 +10,13 @@ import java.io.Serializable;
  * Date: 15/06/17
  */
 public class Chapter implements Serializable {
-    private String content = "";
+    private String[] lines = new String[]{};
 
-    public String getContent() {
-        return content;
+    public String[] getLines() {
+        return lines;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setLines(String[] lines) {
+        this.lines = lines;
     }
 }

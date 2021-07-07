@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -132,7 +133,7 @@ public class DialogAction extends AbstractNovelistAction implements ActionListen
                     continue;
                 } else {
                     Chapter chapter = new Chapter();
-                    chapter.setContent(text);
+                    chapter.setLines(text.split("\n"));
 //                    chapter.setCaretPos(editor.getCaretPosition());
                     JViewport viewport = (JViewport) editor.getDocumentPane().getEditor().getParent();
                     JScrollPane scrollPane = (JScrollPane) viewport.getParent();

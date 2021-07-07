@@ -1,5 +1,7 @@
 package com.github.geniot.jnovelist.actions;
 
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.geniot.jnovelist.*;
 import com.github.geniot.jnovelist.model.Chapter;
@@ -12,8 +14,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.logging.Logger;
+
+import static com.github.geniot.jnovelist.Utils.getGitRootDir;
+import static com.github.geniot.jnovelist.Utils.runCommand;
 
 
 /**
@@ -34,7 +40,23 @@ public class SaveAction extends AbstractNovelistAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         save();
-        frame.saveNovel.setEnabled(false);
+        try {
+            File f = getGitRootDir(frame.openFileName);
+            if (f != null) {
+                System.out.println(runCommand("git add -A", f));
+                System.out.println(runCommand("git commit -m \"" + System.currentTimeMillis() + "\"", f));
+                //quick squash
+//                System.out.println(runCommand("git checkout --orphan new-master master", f));
+//                System.out.println(runCommand("git commit -m \"" + System.currentTimeMillis() + "\"", f));
+//                System.out.println(runCommand("git branch -M new-master master", f));
+
+                System.out.println(runCommand("git rebase --root", f));
+                System.out.println(runCommand("git push", f));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+//        frame.saveNovel.setEnabled(false);
         frame.updateState();
 //        SwingUtilities.invokeLater(new Runnable() {
 //            @Override
@@ -75,7 +97,7 @@ public class SaveAction extends AbstractNovelistAction {
 //                        chapter.setViewPos(scrollPane.getVerticalScrollBar().getValue());
 
                         String text = Utils.html2text(editor.getDocumentText());
-                        chapter.setContent(text);
+                        chapter.setLines(text.split("\n"));
                         chapters.add(chapter);
                     }
                 }
@@ -91,7 +113,9 @@ public class SaveAction extends AbstractNovelistAction {
         frame.openNovel.setParts(parts);
 
         try {
-            String projectJSON = new ObjectMapper().writeValueAsString(frame.openNovel);
+            DefaultPrettyPrinter prettyPrinter = new DefaultPrettyPrinter();
+            prettyPrinter.indentArraysWith(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
+            String projectJSON = new ObjectMapper().writer(prettyPrinter).writeValueAsString(frame.openNovel);
             FileUtils.writeStringToFile(new File(frame.openFileName), projectJSON);
         } catch (Exception ex) {
             ex.printStackTrace();
