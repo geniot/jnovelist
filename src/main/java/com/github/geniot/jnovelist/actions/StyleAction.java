@@ -74,7 +74,7 @@ public class StyleAction extends AbstractNovelistAction {
                         Constants.PROPS.setProperty(Constants.PROP_SYNOPSIS_STYLE, synopsisEditor.getText());
 
                         if (frame.openFileName != null) {
-                            frame.unloadNovel.doClick();
+                            frame.loadNovel.doClick();
 
                             SwingUtilities.invokeLater(new Runnable() {
                                 @Override

@@ -29,8 +29,8 @@ public class JNovelistFrame extends JFrame {
 
     public SaveAction saveAction;
 
-    protected JButton loadNovel;
-    public JButton unloadNovel;
+    public JButton loadNovel;
+//    public JButton unloadNovel;
     public JButton saveNovel;
     public JButton exportNovel;
 
@@ -81,7 +81,7 @@ public class JNovelistFrame extends JFrame {
         toolBar.setBorder(new EmptyBorder(borderSize, borderSize, borderSize, borderSize));
 
         loadNovel = Utils.makeNavigationButton("Load", Constants.LOAD_NOVEL_ACTION_COMMAND, "Открыть", "Load");
-        unloadNovel = Utils.makeNavigationButton("Eject", Constants.UNLOAD_NOVEL_ACTION_COMMAND, "Закрыть", "Unload");
+//        unloadNovel = Utils.makeNavigationButton("Eject", Constants.UNLOAD_NOVEL_ACTION_COMMAND, "Закрыть", "Unload");
         exportNovel = Utils.makeNavigationButton("Export", Constants.EXPORT_NOVEL_ACTION_COMMAND, "Экспорт", "Export");
         saveNovel = Utils.makeNavigationButton("Save", Constants.SAVE_NOVEL_ACTION_COMMAND, "Сохранить", "Save");
 
@@ -97,7 +97,7 @@ public class JNovelistFrame extends JFrame {
         info = Utils.makeNavigationButton("Info", Constants.INFO_ACTION_COMMAND, "Помощь", "Info");
 
         loadNovel.addActionListener(new LoadNovelAction(this));
-        unloadNovel.addActionListener(new UnloadAction(this));
+//        unloadNovel.addActionListener(new UnloadAction(this));
         exportNovel.addActionListener(new ExportAction(this));
 
         heroes.addActionListener(new DialogAction(this));
@@ -115,7 +115,7 @@ public class JNovelistFrame extends JFrame {
         saveNovel.setEnabled(false);
 
         toolBar.add(loadNovel);
-        toolBar.add(unloadNovel);
+//        toolBar.add(unloadNovel);
         toolBar.add(saveNovel);
         toolBar.add(exportNovel);
 //        toolBar.addSeparator(new Dimension(30, 10));
@@ -208,7 +208,7 @@ public class JNovelistFrame extends JFrame {
 
     private String getDynTitle() {
 //        return "JNovelist" + (openFileName == null ? "" : " - " + getNovelName());
-        return openFileName == null ? "" : openFileName;
+        return openFileName == null ? "JNovelist" : openFileName;
     }
 
     public String getNovelName() {
@@ -238,7 +238,7 @@ public class JNovelistFrame extends JFrame {
                 }
 
             }
-            unloadNovel.setEnabled(false);
+//            unloadNovel.setEnabled(false);
             heroes.setEnabled(false);
             places.setEnabled(false);
             things.setEnabled(false);
@@ -249,7 +249,7 @@ public class JNovelistFrame extends JFrame {
             exportNovel.setEnabled(false);
         } else {
             exportNovel.setEnabled(true);
-            unloadNovel.setEnabled(true);
+//            unloadNovel.setEnabled(true);
             heroes.setEnabled(true);
             places.setEnabled(true);
             things.setEnabled(true);
