@@ -12,6 +12,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -30,7 +31,7 @@ public class JNovelistFrame extends JFrame {
     public SaveAction saveAction;
 
     public JButton loadNovel;
-//    public JButton unloadNovel;
+    public JButton unloadNovel;
     public JButton saveNovel;
     public JButton exportNovel;
 
@@ -54,10 +55,12 @@ public class JNovelistFrame extends JFrame {
 
     public String openFileName;
     public JNovel openNovel;
+    public ResourceBundle resourceBundle;
 
     public JNovelistFrame() {
         super("JNovelist");
 
+        resourceBundle = ResourceBundle.getBundle("ResourceBundle");
         setIconImage(new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("images/favicon/favicon-32x32.png")).getImage());
 
         try {
@@ -80,24 +83,24 @@ public class JNovelistFrame extends JFrame {
         int borderSize = 3;
         toolBar.setBorder(new EmptyBorder(borderSize, borderSize, borderSize, borderSize));
 
-        loadNovel = Utils.makeNavigationButton("Load", Constants.LOAD_NOVEL_ACTION_COMMAND, "Открыть", "Load");
-//        unloadNovel = Utils.makeNavigationButton("Eject", Constants.UNLOAD_NOVEL_ACTION_COMMAND, "Закрыть", "Unload");
-        exportNovel = Utils.makeNavigationButton("Export", Constants.EXPORT_NOVEL_ACTION_COMMAND, "Экспорт", "Export");
-        saveNovel = Utils.makeNavigationButton("Save", Constants.SAVE_NOVEL_ACTION_COMMAND, "Сохранить", "Save");
+        loadNovel = Utils.makeNavigationButton("Load", Constants.LOAD_NOVEL_ACTION_COMMAND, resourceBundle.getString("command.open"), "Load");
+        unloadNovel = Utils.makeNavigationButton("Unload", Constants.UNLOAD_NOVEL_ACTION_COMMAND, resourceBundle.getString("command.close"), "Unload");
+        exportNovel = Utils.makeNavigationButton("Export", Constants.EXPORT_NOVEL_ACTION_COMMAND, resourceBundle.getString("command.export"), "Export");
+        saveNovel = Utils.makeNavigationButton("Save", Constants.SAVE_NOVEL_ACTION_COMMAND, resourceBundle.getString("command.save"), "Save");
 
-        heroes = Utils.makeNavigationButton("Heros", Constants.HEROES_NOVEL_ACTION_COMMAND, "Люди", "Heroes");
-        places = Utils.makeNavigationButton("Places", Constants.PLACES_NOVEL_ACTION_COMMAND, "Места", "Places");
-        things = Utils.makeNavigationButton("Things", Constants.THINGS_NOVEL_ACTION_COMMAND, "Вещи", "Things");
-        notes = Utils.makeNavigationButton("Notes", Constants.NOTES_NOVEL_ACTION_COMMAND, "Записи", "Notes");
-        images = Utils.makeNavigationButton("Images", Constants.IMAGES_NOVEL_ACTION_COMMAND, "Картинки", "Images");
+        heroes = Utils.makeNavigationButton("Heros", Constants.HEROES_NOVEL_ACTION_COMMAND, resourceBundle.getString("command.characters"), "Heroes");
+        places = Utils.makeNavigationButton("Places", Constants.PLACES_NOVEL_ACTION_COMMAND, resourceBundle.getString("command.places"), "Places");
+        things = Utils.makeNavigationButton("Things", Constants.THINGS_NOVEL_ACTION_COMMAND, resourceBundle.getString("command.artifacts"), "Things");
+        notes = Utils.makeNavigationButton("Notes", Constants.NOTES_NOVEL_ACTION_COMMAND, resourceBundle.getString("command.notes"), "Notes");
+        images = Utils.makeNavigationButton("Images", Constants.IMAGES_NOVEL_ACTION_COMMAND, resourceBundle.getString("command.images"), "Images");
 
-        style = Utils.makeNavigationButton("Style", Constants.STYLE_NOVEL_ACTION_COMMAND, "Стиль", "Style");
+        style = Utils.makeNavigationButton("Style", Constants.STYLE_NOVEL_ACTION_COMMAND, resourceBundle.getString("command.preferences"), "Style");
 
-        dictionary = Utils.makeNavigationButton("Dictionary", Constants.DICTIONARY_ACTION_COMMAND, "Синонимы", "Dictionary");
-        info = Utils.makeNavigationButton("Info", Constants.INFO_ACTION_COMMAND, "Помощь", "Info");
+        dictionary = Utils.makeNavigationButton("Dictionary", Constants.DICTIONARY_ACTION_COMMAND, resourceBundle.getString("command.dictionary"), "Dictionary");
+        info = Utils.makeNavigationButton("Info", Constants.INFO_ACTION_COMMAND, resourceBundle.getString("command.help"), "Info");
 
         loadNovel.addActionListener(new LoadNovelAction(this));
-//        unloadNovel.addActionListener(new UnloadAction(this));
+        unloadNovel.addActionListener(new UnloadAction(this));
         exportNovel.addActionListener(new ExportAction(this));
 
         heroes.addActionListener(new DialogAction(this));
@@ -115,9 +118,13 @@ public class JNovelistFrame extends JFrame {
         saveNovel.setEnabled(false);
 
         toolBar.add(loadNovel);
-//        toolBar.add(unloadNovel);
         toolBar.add(saveNovel);
         toolBar.add(exportNovel);
+        toolBar.add(style);
+        toolBar.add(dictionary);
+        toolBar.add(info);
+        toolBar.add(unloadNovel);
+        toolBar.add(Box.createHorizontalGlue());
 //        toolBar.addSeparator(new Dimension(30, 10));
         toolBar.add(heroes);
         toolBar.add(places);
@@ -125,10 +132,7 @@ public class JNovelistFrame extends JFrame {
         toolBar.add(notes);
         toolBar.add(images);
 //        toolBar.addSeparator(new Dimension(30, 10));
-        toolBar.add(Box.createHorizontalGlue());
-        toolBar.add(style);
-        toolBar.add(dictionary);
-        toolBar.add(info);
+
 
         getContentPane().add(toolBar, BorderLayout.PAGE_START);
 
@@ -238,7 +242,7 @@ public class JNovelistFrame extends JFrame {
                 }
 
             }
-//            unloadNovel.setEnabled(false);
+            unloadNovel.setEnabled(false);
             heroes.setEnabled(false);
             places.setEnabled(false);
             things.setEnabled(false);
@@ -249,7 +253,8 @@ public class JNovelistFrame extends JFrame {
             exportNovel.setEnabled(false);
         } else {
             exportNovel.setEnabled(true);
-//            unloadNovel.setEnabled(true);
+            unloadNovel.setEnabled(true);
+            saveNovel.setEnabled(true);
             heroes.setEnabled(true);
             places.setEnabled(true);
             things.setEnabled(true);

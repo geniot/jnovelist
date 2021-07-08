@@ -114,23 +114,12 @@ public class Utils {
                                                String actionCommand,
                                                String toolTipText,
                                                String altText) {
-        //Look for the image.
-        String imgLocation = "/images/" + imageName + ".png";
-        URL imageURL = JNovelistLauncher.class.getResource(imgLocation);
-
-        //Create and initialize the button.
+        String imgLocation = "images/" + imageName + ".png";
         JButton button = new JButton();
         button.setActionCommand(actionCommand);
         button.setToolTipText(toolTipText);
         button.setFocusPainted(false);
-
-        if (imageURL != null) {                      //image found
-            button.setIcon(new ImageIcon(imageURL, altText));
-        } else {                                     //no image found
-            button.setText(altText);
-            System.err.println("Resource not found: " + imgLocation);
-        }
-
+        button.setIcon(new ImageIcon(Thread.currentThread().getContextClassLoader().getResource(imgLocation), altText));
         return button;
     }
 
