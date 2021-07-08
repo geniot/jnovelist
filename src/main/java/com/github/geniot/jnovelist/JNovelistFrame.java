@@ -11,12 +11,11 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
-import java.io.FileInputStream;
-import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static com.github.geniot.jnovelist.Constants.RES;
 import static com.github.geniot.jnovelist.Utils.decimalIndexToRoman;
 
 /**
@@ -55,25 +54,11 @@ public class JNovelistFrame extends JFrame {
 
     public String openFileName;
     public JNovel openNovel;
-    public ResourceBundle resourceBundle;
 
     public JNovelistFrame() {
         super("JNovelist");
 
-        resourceBundle = ResourceBundle.getBundle("ResourceBundle");
-        setIconImage(new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("images/favicon/favicon-32x32.png")).getImage());
-
-        try {
-            Constants.PROPS.load(new FileInputStream(System.getProperty("user.home") + File.separator + Constants.PROPS_FILE_NAME));
-            if (Constants.PROPS.containsKey(Constants.PROP_STYLE)) {
-                Constants.HTML_DOC_START = Constants.PROPS.getProperty(Constants.PROP_STYLE);
-            }
-            if (Constants.PROPS.containsKey(Constants.PROP_SYNOPSIS_STYLE)) {
-                Constants.HTML_SYN_DOC_START = Constants.PROPS.getProperty(Constants.PROP_SYNOPSIS_STYLE);
-            }
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
+        setIconImage(Constants.ICON);
 
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(new OnExitAction(this));
@@ -83,21 +68,21 @@ public class JNovelistFrame extends JFrame {
         int borderSize = 3;
         toolBar.setBorder(new EmptyBorder(borderSize, borderSize, borderSize, borderSize));
 
-        loadNovel = Utils.makeNavigationButton("Load", Constants.LOAD_NOVEL_ACTION_COMMAND, resourceBundle.getString("command.open"), "Load");
-        unloadNovel = Utils.makeNavigationButton("Unload", Constants.UNLOAD_NOVEL_ACTION_COMMAND, resourceBundle.getString("command.close"), "Unload");
-        exportNovel = Utils.makeNavigationButton("Export", Constants.EXPORT_NOVEL_ACTION_COMMAND, resourceBundle.getString("command.export"), "Export");
-        saveNovel = Utils.makeNavigationButton("Save", Constants.SAVE_NOVEL_ACTION_COMMAND, resourceBundle.getString("command.save"), "Save");
+        loadNovel = Utils.makeNavigationButton("Load", Constants.LOAD_NOVEL_ACTION_COMMAND, RES.getString("command.open"), "Load");
+        unloadNovel = Utils.makeNavigationButton("Unload", Constants.UNLOAD_NOVEL_ACTION_COMMAND, RES.getString("command.close"), "Unload");
+        exportNovel = Utils.makeNavigationButton("Export", Constants.EXPORT_NOVEL_ACTION_COMMAND, RES.getString("command.export"), "Export");
+        saveNovel = Utils.makeNavigationButton("Save", Constants.SAVE_NOVEL_ACTION_COMMAND, RES.getString("command.save"), "Save");
 
-        heroes = Utils.makeNavigationButton("Heros", Constants.HEROES_NOVEL_ACTION_COMMAND, resourceBundle.getString("command.characters"), "Heroes");
-        places = Utils.makeNavigationButton("Places", Constants.PLACES_NOVEL_ACTION_COMMAND, resourceBundle.getString("command.places"), "Places");
-        things = Utils.makeNavigationButton("Things", Constants.THINGS_NOVEL_ACTION_COMMAND, resourceBundle.getString("command.artifacts"), "Things");
-        notes = Utils.makeNavigationButton("Notes", Constants.NOTES_NOVEL_ACTION_COMMAND, resourceBundle.getString("command.notes"), "Notes");
-        images = Utils.makeNavigationButton("Images", Constants.IMAGES_NOVEL_ACTION_COMMAND, resourceBundle.getString("command.images"), "Images");
+        heroes = Utils.makeNavigationButton("Heros", Constants.HEROES_NOVEL_ACTION_COMMAND, RES.getString("command.characters"), "Heroes");
+        places = Utils.makeNavigationButton("Places", Constants.PLACES_NOVEL_ACTION_COMMAND, RES.getString("command.places"), "Places");
+        things = Utils.makeNavigationButton("Things", Constants.THINGS_NOVEL_ACTION_COMMAND, RES.getString("command.artifacts"), "Things");
+        notes = Utils.makeNavigationButton("Notes", Constants.NOTES_NOVEL_ACTION_COMMAND, RES.getString("command.notes"), "Notes");
+        images = Utils.makeNavigationButton("Images", Constants.IMAGES_NOVEL_ACTION_COMMAND, RES.getString("command.images"), "Images");
 
-        style = Utils.makeNavigationButton("Style", Constants.STYLE_NOVEL_ACTION_COMMAND, resourceBundle.getString("command.preferences"), "Style");
+        style = Utils.makeNavigationButton("Style", Constants.STYLE_NOVEL_ACTION_COMMAND, RES.getString("command.preferences"), "Style");
 
-        dictionary = Utils.makeNavigationButton("Dictionary", Constants.DICTIONARY_ACTION_COMMAND, resourceBundle.getString("command.dictionary"), "Dictionary");
-        info = Utils.makeNavigationButton("Info", Constants.INFO_ACTION_COMMAND, resourceBundle.getString("command.help"), "Info");
+        dictionary = Utils.makeNavigationButton("Dictionary", Constants.DICTIONARY_ACTION_COMMAND, RES.getString("command.dictionary"), "Dictionary");
+        info = Utils.makeNavigationButton("Info", Constants.INFO_ACTION_COMMAND, RES.getString("command.help"), "Info");
 
         loadNovel.addActionListener(new LoadNovelAction(this));
         unloadNovel.addActionListener(new UnloadAction(this));
@@ -159,16 +144,16 @@ public class JNovelistFrame extends JFrame {
 
         //Display the window.
         try {
-            int width = Constants.PROPS.containsKey(Constants.PROP_WIDTH) ? Integer.parseInt(Constants.PROPS.getProperty(Constants.PROP_WIDTH)) : 600;
-            int height = Constants.PROPS.containsKey(Constants.PROP_HEIGHT) ? Integer.parseInt(Constants.PROPS.getProperty(Constants.PROP_HEIGHT)) : 800;
+            int width = Integer.parseInt(Constants.PROPS.getProperty(Constants.PropKey.PROP_WIDTH.name()));
+            int height = Integer.parseInt(Constants.PROPS.getProperty(Constants.PropKey.PROP_HEIGHT.name()));
             setPreferredSize(new Dimension(width, height));
         } catch (Exception ex) {
             setPreferredSize(new Dimension(600, 800));
         }
 
         try {
-            int posX = Constants.PROPS.containsKey(Constants.PROP_POS_X) ? Integer.parseInt(Constants.PROPS.getProperty(Constants.PROP_POS_X)) : 0;
-            int posY = Constants.PROPS.containsKey(Constants.PROP_POS_Y) ? Integer.parseInt(Constants.PROPS.getProperty(Constants.PROP_POS_Y)) : 0;
+            int posX = Integer.parseInt(Constants.PROPS.getProperty(Constants.PropKey.PROP_POS_X.name()));
+            int posY = Integer.parseInt(Constants.PROPS.getProperty(Constants.PropKey.PROP_POS_Y.name()));
             setLocation(posX, posY);
         } catch (Exception ex) {
             setLocation(0, 0);
@@ -195,8 +180,8 @@ public class JNovelistFrame extends JFrame {
     }
 
     public void load() {
-        if (Constants.PROPS.containsKey(Constants.PROP_LAST_OPEN_FILE)) {
-            String lastOpenFile = Constants.PROPS.getProperty(Constants.PROP_LAST_OPEN_FILE);
+        if (Constants.PROPS.containsKey(Constants.PropKey.PROP_LAST_OPEN_FILE.name())) {
+            String lastOpenFile = Constants.PROPS.getProperty(Constants.PropKey.PROP_LAST_OPEN_FILE.name());
             final File f = new File(lastOpenFile);
             if (f.exists()) {
                 SwingUtilities.invokeLater(new Runnable() {

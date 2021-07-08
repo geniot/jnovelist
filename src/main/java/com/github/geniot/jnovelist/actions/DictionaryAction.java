@@ -56,7 +56,7 @@ public class DictionaryAction extends AbstractNovelistAction implements ActionLi
 
         contentPane.add(searchFieldWrapper, BorderLayout.NORTH);
 
-        entryArea = new ChapterEditor("", false, Constants.HTML_DOC_START, Constants.HTML_DOC_END);
+        entryArea = new ChapterEditor("", false, Constants.HTML_DOC_START(), Constants.HTML_DOC_END);
         entryArea.setBorder(new EmptyBorder(0,border,border,border));
         contentPane.add(entryArea, BorderLayout.CENTER);
 

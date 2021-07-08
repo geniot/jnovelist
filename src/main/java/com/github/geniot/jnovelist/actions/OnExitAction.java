@@ -22,16 +22,16 @@ public class OnExitAction extends WindowAdapter {
 
     @Override
     public void windowClosing(WindowEvent e) {
-        Constants.PROPS.setProperty(Constants.PROP_WIDTH, String.valueOf(frame.getWidth()));
-        Constants.PROPS.setProperty(Constants.PROP_HEIGHT, String.valueOf(frame.getHeight()));
-        Constants.PROPS.setProperty(Constants.PROP_POS_X, String.valueOf((int) frame.getLocation().getX()));
-        Constants.PROPS.setProperty(Constants.PROP_POS_Y, String.valueOf((int) frame.getLocation().getY()));
+        Constants.PROPS.setProperty(Constants.PropKey.PROP_WIDTH.name(), String.valueOf(frame.getWidth()));
+        Constants.PROPS.setProperty(Constants.PropKey.PROP_HEIGHT.name(), String.valueOf(frame.getHeight()));
+        Constants.PROPS.setProperty(Constants.PropKey.PROP_POS_X.name(), String.valueOf((int) frame.getLocation().getX()));
+        Constants.PROPS.setProperty(Constants.PropKey.PROP_POS_Y.name(), String.valueOf((int) frame.getLocation().getY()));
 
         if (frame.openFileName != null) {
-            Constants.PROPS.setProperty(Constants.PROP_LAST_OPEN_FILE, frame.openFileName);
+            Constants.PROPS.setProperty(Constants.PropKey.PROP_LAST_OPEN_FILE.name(), frame.openFileName);
             frame.loadNovel.doClick();
         } else {
-            Constants.PROPS.remove(Constants.PROP_LAST_OPEN_FILE);
+            Constants.PROPS.remove(Constants.PropKey.PROP_LAST_OPEN_FILE.name());
         }
         try {
             FileOutputStream fos = new FileOutputStream(System.getProperty("user.home") + File.separator + Constants.PROPS_FILE_NAME);

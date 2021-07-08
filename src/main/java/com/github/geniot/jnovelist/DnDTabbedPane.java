@@ -179,7 +179,7 @@ public class DnDTabbedPane extends JTabbedPane {
             //defining component to add depending on the incoming parameter
             if (file == null) {
                 //creating empty tab (mouse click)
-                c = new ChapterEditor(new Chapter(), Constants.HTML_DOC_START, Constants.HTML_DOC_END);
+                c = new ChapterEditor(new Chapter(), Constants.HTML_DOC_START(), Constants.HTML_DOC_END);
                 Utils.enableSave(this);
             } else {
                 if (file instanceof Part) {
@@ -189,7 +189,7 @@ public class DnDTabbedPane extends JTabbedPane {
                         ((DnDTabbedPane) c).addNewTab(f, actionCommand);
                     }
                 } else {
-                    c = new ChapterEditor(file, Constants.HTML_DOC_START, Constants.HTML_DOC_END);
+                    c = new ChapterEditor(file, Constants.HTML_DOC_START(), Constants.HTML_DOC_END);
 //                    } else {
 //                        c = new ImageEditor(file);
 //                    }

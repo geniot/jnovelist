@@ -15,11 +15,12 @@ import java.beans.PersistenceDelegate;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
-import java.net.URL;
 import java.security.Key;
 import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.github.geniot.jnovelist.Constants.DEFAULT_LAF;
 
 
 /**
@@ -390,4 +391,30 @@ public class Utils {
         return stringBuffer.toString();
     }
 
+    /**
+     * @param colorStr e.g. "#FFFFFF"
+     * @return
+     */
+    public static Color hex2Rgb(String colorStr) {
+        return new Color(
+                Integer.valueOf(colorStr.substring(1, 3), 16),
+                Integer.valueOf(colorStr.substring(3, 5), 16),
+                Integer.valueOf(colorStr.substring(5, 7), 16));
+    }
+
+    public static String color2hex(Color color) {
+        return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue()).toUpperCase();
+    }
+
+    public static void setLAF(String newLAF, Component component) {
+        try {
+            if (newLAF == null) {
+                newLAF = DEFAULT_LAF;
+            }
+            UIManager.setLookAndFeel(newLAF);
+            SwingUtilities.updateComponentTreeUI(component);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

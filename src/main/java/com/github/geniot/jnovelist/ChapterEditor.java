@@ -1,7 +1,6 @@
 package com.github.geniot.jnovelist;
 
 import com.github.geniot.jnovelist.model.Chapter;
-import io.github.geniot.jortho.SpellChecker;
 import io.github.geniot.shtml.SHTMLPanelSingleDocImpl;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
@@ -29,6 +28,7 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
         super(true);
 
         fixBorder();
+        getEditorPane().getCaret().setBlinkRate(0);
 //        linePainter = new LinePainter(this.getDocumentPane().getEditor());
 
         if (chapter != null) {
@@ -71,7 +71,8 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
         });
 
         // enable the spell checking on the text component with all features
-        SpellChecker.register(getDocumentPane().getEditor());
+//todo: enable and fix bugs
+//        SpellChecker.register(getDocumentPane().getEditor());
 
         updateStatus();
     }

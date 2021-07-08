@@ -35,9 +35,9 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
     @Override
     public void actionPerformed(ActionEvent e) {
         JFileChooser fc;
-        if (Constants.PROPS.containsKey(Constants.PROP_LAST_OPEN_DIR)) {
+        if (Constants.PROPS.containsKey(Constants.PropKey.PROP_LAST_OPEN_DIR.name())) {
             try {
-                fc = new JFileChooser(Constants.PROPS.getProperty(Constants.PROP_LAST_OPEN_DIR));
+                fc = new JFileChooser(Constants.PROPS.getProperty(Constants.PropKey.PROP_LAST_OPEN_DIR.name()));
             } catch (Exception ex) {
                 logger.log(Level.WARNING, ex.getMessage());
                 fc = new JFileChooser();
@@ -64,7 +64,7 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
             if (frame.openFileName != null) {
                 frame.loadNovel.doClick();
             }
-            Constants.PROPS.setProperty(Constants.PROP_LAST_OPEN_DIR, fc.getCurrentDirectory().toString());
+            Constants.PROPS.setProperty(Constants.PropKey.PROP_LAST_OPEN_DIR.name(), fc.getCurrentDirectory().toString());
 
             File selectedFile = fc.getSelectedFile();
 //            Constants.PROPS.setProperty(Constants.PROP_LAST_OPEN_DIR, fc.getCurrentDirectory().getPath());
@@ -85,7 +85,7 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
                 }
             });
         } else if (returnVal == JFileChooser.CANCEL_OPTION) {
-            Constants.PROPS.setProperty(Constants.PROP_LAST_OPEN_DIR, fc.getCurrentDirectory().toString());
+            Constants.PROPS.setProperty(Constants.PropKey.PROP_LAST_OPEN_DIR.name(), fc.getCurrentDirectory().toString());
         }
     }
 
