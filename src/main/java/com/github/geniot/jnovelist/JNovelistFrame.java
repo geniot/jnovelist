@@ -172,8 +172,10 @@ public class JNovelistFrame extends JFrame {
         // Load the configuration from the file dictionaries.cnf and
         // use the current locale or the first language as default
         // You can download the dictionary files from http://sourceforge.net/projects/jortho/files/Dictionaries/
-        SpellChecker.registerDictionaries(null, "ru");
+//        SpellChecker.registerDictionaries(null, "ru");
         Synonymizer.init();
+
+        Utils.setLAF(Constants.PROPS.getProperty(Constants.PropKey.PROP_LAF.name()), this);
 
         scheduler.scheduleAtFixedRate(new CommitterTask(this), 5, 5, TimeUnit.SECONDS);
 

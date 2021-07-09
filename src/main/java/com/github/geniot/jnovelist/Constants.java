@@ -47,7 +47,9 @@ public class Constants {
         PROP_TXT_COLOR,
         PROP_FONT_FACE,
         PROP_FONT_SIZE,
-        PROP_MARGIN
+        PROP_MARGIN,
+        PROP_LAF,
+        PROP_LANGUAGE,
     }
 
     public static String HTML_DOC_START() {
@@ -69,7 +71,7 @@ public class Constants {
     public static final String HTML_DOC_END = "</body></html>";
 
     public static Properties PROPS = new Properties();
-    public static ResourceBundle RES = getBundle("ResourceBundle");
+
 
     public static final String HELP_FOLDER_NAME = "help";
 
@@ -111,4 +113,6 @@ public class Constants {
             System.out.println(ex.getMessage());
         }
     }
+
+    public static ResourceBundle RES = getBundle("ResourceBundle", new Locale(PROPS.getProperty(PropKey.PROP_LANGUAGE.name())), new UTF8Control());
 }

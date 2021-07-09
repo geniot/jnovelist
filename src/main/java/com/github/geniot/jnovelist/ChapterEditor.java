@@ -29,6 +29,7 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
 
         fixBorder();
         getEditorPane().getCaret().setBlinkRate(0);
+
 //        linePainter = new LinePainter(this.getDocumentPane().getEditor());
 
         if (chapter != null) {

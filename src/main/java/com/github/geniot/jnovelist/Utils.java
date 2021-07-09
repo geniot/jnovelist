@@ -1,5 +1,6 @@
 package com.github.geniot.jnovelist;
 
+import com.github.geniot.jnovelist.model.LanguageElement;
 import org.apache.commons.io.FilenameUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -17,6 +18,8 @@ import java.beans.XMLEncoder;
 import java.io.*;
 import java.security.Key;
 import java.util.Comparator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -406,15 +409,39 @@ public class Utils {
         return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue()).toUpperCase();
     }
 
-    public static void setLAF(String newLAF, Component component) {
+    public static void setLAF(String lafName, Component component) {
+        String lafClassName = Constants.LAF_PREFIX + lafName.toLowerCase() + "." + lafName + Constants.LAF_SUFFIX;
         try {
-            if (newLAF == null) {
-                newLAF = DEFAULT_LAF;
+            if (lafClassName == null) {
+                lafClassName = DEFAULT_LAF;
             }
-            UIManager.setLookAndFeel(newLAF);
+            UIManager.setLookAndFeel(lafClassName);
             SwingUtilities.updateComponentTreeUI(component);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static SortedSet<LanguageElement> getLanguages() {
+        SortedSet<LanguageElement> s = new TreeSet<>();
+        for (String propertyName : Constants.PROPS.stringPropertyNames()) {
+            if (propertyName.startsWith("LANGUAGE_")) {
+                String languageCode = Constants.PROPS.getProperty(propertyName);
+                String displayText = Constants.RES.getString("language." + languageCode);
+                LanguageElement languageElement = new LanguageElement(displayText, languageCode);
+                s.add(languageElement);
+            }
+        }
+        return s;
+    }
+
+    public static LanguageElement findElementByCode(ComboBoxModel model, String code) {
+        for (int i = 0; i < model.getSize(); i++) {
+            LanguageElement languageElement = (LanguageElement) model.getElementAt(i);
+            if (languageElement.getCode().equalsIgnoreCase(code)) {
+                return languageElement;
+            }
+        }
+        return null;
     }
 }

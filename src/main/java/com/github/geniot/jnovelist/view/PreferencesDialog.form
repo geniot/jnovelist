@@ -207,7 +207,6 @@
                 <item value="70"/>
                 <item value="80"/>
                 <item value="90"/>
-                <item value="100"/>
               </model>
             </properties>
           </component>
@@ -238,13 +237,10 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="a6b7a" class="javax.swing.JComboBox" binding="comboBox2" default-binding="true">
+              <component id="a6b7a" class="javax.swing.JComboBox" binding="languageComboBox">
                 <constraints border-constraint="Center"/>
                 <properties>
-                  <model>
-                    <item value="English"/>
-                    <item value="Russian"/>
-                  </model>
+                  <model/>
                 </properties>
               </component>
               <grid id="abbcb" layout-manager="BorderLayout" hgap="0" vgap="0">
