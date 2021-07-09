@@ -70,7 +70,6 @@ public class PreferencesDialog extends JDialog {
                 Color newColor = JColorChooser.showDialog(PreferencesDialog.this, "Choose a color", Utils.hex2Rgb(backgroundColorButton.getText()));
                 if (newColor != null) {
                     String newColorStr = Utils.color2hex(newColor);
-                    Constants.PROPS.setProperty(Constants.PropKey.PROP_BG_COLOR.name(), newColorStr);
                     backgroundColorButton.setText(newColorStr);
                     updatePreview();
                 }
@@ -91,19 +90,12 @@ public class PreferencesDialog extends JDialog {
             }
         });
 
-        languageComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Constants.PROPS.setProperty(Constants.PropKey.PROP_LANGUAGE.name(), ((LanguageElement) languageComboBox.getSelectedItem()).getCode());
-            }
-        });
 
         textColorButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Color newColor = JColorChooser.showDialog(PreferencesDialog.this, "Choose a color", Utils.hex2Rgb(textColorButton.getText()));
                 if (newColor != null) {
                     String newColorStr = Utils.color2hex(newColor);
-                    Constants.PROPS.setProperty(Constants.PropKey.PROP_TXT_COLOR.name(), newColorStr);
                     textColorButton.setText(newColorStr);
                     chapterEditor.getEditorPane().setCaretColor(newColor);
                     updatePreview();
@@ -119,7 +111,6 @@ public class PreferencesDialog extends JDialog {
         fontComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Constants.PROPS.setProperty(Constants.PropKey.PROP_FONT_FACE.name(), fontComboBox.getSelectedItem().toString());
                 updatePreview();
             }
         });
@@ -128,7 +119,6 @@ public class PreferencesDialog extends JDialog {
         fontSizeComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Constants.PROPS.setProperty(Constants.PropKey.PROP_FONT_SIZE.name(), fontSizeComboBox.getSelectedItem().toString());
                 updatePreview();
             }
         });
@@ -137,7 +127,6 @@ public class PreferencesDialog extends JDialog {
         borderMarginComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Constants.PROPS.setProperty(Constants.PropKey.PROP_MARGIN.name(), borderMarginComboBox.getSelectedItem().toString());
                 updatePreview();
             }
         });
@@ -187,11 +176,29 @@ public class PreferencesDialog extends JDialog {
     }
 
     private void updatePreview() {
-        chapterEditor.getDocumentPane().setDocumentText(Utils.text2html(Utils.html2text(chapterEditor.getDocumentText()), Constants.HTML_DOC_START(), Constants.HTML_DOC_END));
+        Object[] args = new Object[]{
+                backgroundColorButton.getText(),
+                textColorButton.getText(),
+                fontComboBox.getSelectedItem().toString(),
+                Integer.parseInt(fontSizeComboBox.getSelectedItem().toString()),
+                Integer.parseInt(borderMarginComboBox.getSelectedItem().toString())
+        };
+        chapterEditor.getDocumentPane().setDocumentText(Utils.text2html(Utils.html2text(chapterEditor.getDocumentText()), Constants.HTML_DOC_START(args), Constants.HTML_DOC_END));
     }
 
     private void onOK() {
-        // add your code here
+        String oldLaf = Constants.PROPS.getProperty(Constants.PropKey.PROP_LAF.name());
+        String newLaf = themeComboBox.getSelectedItem().toString();
+        if (!oldLaf.equals(newLaf)) {
+            Constants.PROPS.setProperty(Constants.PropKey.PROP_LAF.name(), newLaf);
+            Utils.setLAF(newLaf, frame);
+        }
+        Constants.PROPS.setProperty(Constants.PropKey.PROP_LANGUAGE.name(), ((LanguageElement) languageComboBox.getSelectedItem()).getCode());
+        Constants.PROPS.setProperty(Constants.PropKey.PROP_BG_COLOR.name(), backgroundColorButton.getText());
+        Constants.PROPS.setProperty(Constants.PropKey.PROP_TXT_COLOR.name(), textColorButton.getText());
+        Constants.PROPS.setProperty(Constants.PropKey.PROP_FONT_FACE.name(), fontComboBox.getSelectedItem().toString());
+        Constants.PROPS.setProperty(Constants.PropKey.PROP_FONT_SIZE.name(), fontSizeComboBox.getSelectedItem().toString());
+        Constants.PROPS.setProperty(Constants.PropKey.PROP_MARGIN.name(), borderMarginComboBox.getSelectedItem().toString());
         dispose();
     }
 

@@ -52,12 +52,12 @@ public class Constants {
         PROP_LANGUAGE,
     }
 
-    public static String HTML_DOC_START() {
-        String bgColor = PROPS.getProperty(PropKey.PROP_BG_COLOR.name());
-        String txtColor = PROPS.getProperty(PropKey.PROP_TXT_COLOR.name());
-        String fontFace = PROPS.getProperty(PropKey.PROP_FONT_FACE.name());
-        int fontSize = Integer.parseInt(PROPS.getProperty(PropKey.PROP_FONT_SIZE.name()));
-        int margin = Integer.parseInt(PROPS.getProperty(PropKey.PROP_MARGIN.name()));
+    public static String HTML_DOC_START(Object... args) {
+        String bgColor = args.length == 0 ? PROPS.getProperty(PropKey.PROP_BG_COLOR.name()) : (String) args[0];
+        String txtColor = args.length == 0 ? PROPS.getProperty(PropKey.PROP_TXT_COLOR.name()) : (String) args[1];
+        String fontFace = args.length == 0 ? PROPS.getProperty(PropKey.PROP_FONT_FACE.name()) : (String) args[2];
+        Integer fontSize = args.length == 0 ? Integer.parseInt(PROPS.getProperty(PropKey.PROP_FONT_SIZE.name())) : (Integer) args[3];
+        Integer margin = args.length == 0 ? Integer.parseInt(PROPS.getProperty(PropKey.PROP_MARGIN.name())) : (Integer) args[4];
 
         return "<html><head><style>body {\n" +
                 "background-color: " + bgColor + "; \n" +
