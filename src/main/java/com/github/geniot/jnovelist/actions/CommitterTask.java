@@ -2,9 +2,7 @@ package com.github.geniot.jnovelist.actions;
 
 import com.github.geniot.jnovelist.JNovelistFrame;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 
 import static com.github.geniot.jnovelist.Utils.getGitRootDir;
 import static com.github.geniot.jnovelist.Utils.runCommand;
@@ -21,7 +19,7 @@ public class CommitterTask implements Runnable {
     @Override
     public void run() {
         try {
-            if (frame.openFileName != null && !this.isRunning) {
+            if (frame.openFileName != null && !this.isRunning && !frame.loadNovelAction.isLoading) {
                 isRunning = true;
                 int hash = frame.getNovelText().hashCode();
                 if (hash != projectHash) {

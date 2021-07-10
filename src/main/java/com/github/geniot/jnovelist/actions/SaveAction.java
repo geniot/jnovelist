@@ -71,46 +71,46 @@ public class SaveAction extends AbstractNovelistAction {
     }
 
     protected void save() {
-        ArrayList<Part> parts = new ArrayList<Part>();
-        for (int i = 0; i < frame.dnDTabbedPane.getTabCount(); i++) {
-            Component c = frame.dnDTabbedPane.getComponentAt(i);
-            if (c instanceof DnDTabbedPane) {
-                DnDTabbedPane dnd = (DnDTabbedPane) c;
-                ButtonTabComponent tabComponent = (ButtonTabComponent) frame.dnDTabbedPane.getTabComponentAt(i);
-                Part part = new Part();
-//                chapter.setDescription(tabComponent.getText());
-//                part.setSelected(frame.dnDTabbedPane.getSelectedComponent().equals(dnd));
-
-                ArrayList<Chapter> chapters = new ArrayList<Chapter>();
-                for (int k = 0; k < dnd.getTabCount(); k++) {
-                    Component o = dnd.getComponentAt(k);
-
-                    if (o instanceof ChapterEditor) {
-                        ChapterEditor editor = (ChapterEditor) o;
-                        ButtonTabComponent chapterTabComponent = (ButtonTabComponent) dnd.getTabComponentAt(k);
-
-                        Chapter chapter = new Chapter();
-//                        scene.setDescription(chapterTabComponent.getText());
-//                        chapter.setCaretPos(editor.getCaretPosition());
-                        JViewport viewport = (JViewport) editor.getDocumentPane().getEditor().getParent();
-                        JScrollPane scrollPane = (JScrollPane) viewport.getParent();
-//                        chapter.setViewPos(scrollPane.getVerticalScrollBar().getValue());
-
-                        String text = Utils.html2text(editor.getDocumentText());
-                        chapter.setLines(text.split("\n"));
-                        chapters.add(chapter);
-                    }
-                }
-                part.setChapters(chapters);
-                parts.add(part);
-            }
-
-        }
+//        ArrayList<Part> parts = new ArrayList<Part>();
+//        for (int i = 0; i < frame.dnDTabbedPane.getTabCount(); i++) {
+//            Component c = frame.dnDTabbedPane.getComponentAt(i);
+//            if (c instanceof DnDTabbedPane) {
+//                DnDTabbedPane dnd = (DnDTabbedPane) c;
+//                ButtonTabComponent tabComponent = (ButtonTabComponent) frame.dnDTabbedPane.getTabComponentAt(i);
+//                Part part = new Part();
+////                chapter.setDescription(tabComponent.getText());
+////                part.setSelected(frame.dnDTabbedPane.getSelectedComponent().equals(dnd));
+//
+//                ArrayList<Chapter> chapters = new ArrayList<Chapter>();
+//                for (int k = 0; k < dnd.getTabCount(); k++) {
+//                    Component o = dnd.getComponentAt(k);
+//
+//                    if (o instanceof ChapterEditor) {
+//                        ChapterEditor editor = (ChapterEditor) o;
+//                        ButtonTabComponent chapterTabComponent = (ButtonTabComponent) dnd.getTabComponentAt(k);
+//
+//                        Chapter chapter = new Chapter();
+////                        scene.setDescription(chapterTabComponent.getText());
+////                        chapter.setCaretPos(editor.getCaretPosition());
+//                        JViewport viewport = (JViewport) editor.getDocumentPane().getEditor().getParent();
+//                        JScrollPane scrollPane = (JScrollPane) viewport.getParent();
+////                        chapter.setViewPos(scrollPane.getVerticalScrollBar().getValue());
+//
+//                        String text = Utils.html2text(editor.getDocumentText());
+//                        chapter.setLines(text.split("\n"));
+//                        chapters.add(chapter);
+//                    }
+//                }
+//                part.setChapters(chapters);
+//                parts.add(part);
+//            }
+//
+//        }
 
         if (frame.openNovel == null) {
             frame.openNovel = new JNovel();
         }
-        frame.openNovel.setParts(parts);
+//        frame.openNovel.setParts(parts);
 
         try {
             DefaultPrettyPrinter prettyPrinter = new DefaultPrettyPrinter();

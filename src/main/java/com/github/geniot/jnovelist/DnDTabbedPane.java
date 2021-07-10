@@ -169,7 +169,7 @@ public class DnDTabbedPane extends JTabbedPane {
         });
     }
 
-    public void addNewTab(final Chapter file, String actionCommand) {
+    public void addNewTab(final Chapter chapter, String actionCommand) {
         //adding new tab
         try {
             int count = getTabCount();
@@ -177,19 +177,19 @@ public class DnDTabbedPane extends JTabbedPane {
             final Component c;
 
             //defining component to add depending on the incoming parameter
-            if (file == null) {
+            if (chapter == null) {
                 //creating empty tab (mouse click)
                 c = new ChapterEditor(new Chapter(), Constants.HTML_DOC_START(), Constants.HTML_DOC_END);
                 Utils.enableSave(this);
             } else {
-                if (file instanceof Part) {
+                if (chapter instanceof Part) {
                     c = new DnDTabbedPane(DnDTabbedPane.INDEX_TO_DECIMAL, actionCommand);
-                    Part ch = (Part) file;
+                    Part ch = (Part) chapter;
                     for (Chapter f : ch.getChapters()) {
                         ((DnDTabbedPane) c).addNewTab(f, actionCommand);
                     }
                 } else {
-                    c = new ChapterEditor(file, Constants.HTML_DOC_START(), Constants.HTML_DOC_END);
+                    c = new ChapterEditor(chapter, Constants.HTML_DOC_START(), Constants.HTML_DOC_END);
 //                    } else {
 //                        c = new ImageEditor(file);
 //                    }
@@ -203,7 +203,7 @@ public class DnDTabbedPane extends JTabbedPane {
 //                                if (Constants.PROPS.getProperty("verticalScrollBar:" + file.getAbsolutePath()) != null) {
 //                                    viewPos = Integer.parseInt(Constants.PROPS.getProperty("verticalScrollBar:" + file.getAbsolutePath()));
 //                                }
-                                if (file != null) {
+                                if (chapter != null) {
 //                                    JViewport viewport = (JViewport) ((ChapterEditor) c).getDocumentPane().getEditor().getParent();
 //                                    JScrollPane scrollPane = (JScrollPane) viewport.getParent();
 //                                    scrollPane.getVerticalScrollBar().setValue(viewPos);
@@ -220,7 +220,7 @@ public class DnDTabbedPane extends JTabbedPane {
 //            }
 
             insertTab(getLabelByIndex(count - extraTabsCount), null, c, null, count - extraTabsCount);
-            ButtonTabComponent tabTitle = new ButtonTabComponent(this, c, this.actionCommand, file);
+            ButtonTabComponent tabTitle = new ButtonTabComponent(this, c, this.actionCommand, chapter);
             setTabComponentAt(count - extraTabsCount, tabTitle);
             setSelectedComponent(c);
 

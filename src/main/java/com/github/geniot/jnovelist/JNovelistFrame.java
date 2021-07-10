@@ -28,6 +28,7 @@ public class JNovelistFrame extends JFrame {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     public SaveAction saveAction;
+    public LoadNovelAction loadNovelAction;
 
     public JButton loadNovel;
     public JButton unloadNovel;
@@ -84,7 +85,8 @@ public class JNovelistFrame extends JFrame {
         dictionary = Utils.makeNavigationButton("Dictionary", Constants.DICTIONARY_ACTION_COMMAND, RES.getString("command.dictionary"), "Dictionary");
         info = Utils.makeNavigationButton("Info", Constants.INFO_ACTION_COMMAND, RES.getString("command.help"), "Info");
 
-        loadNovel.addActionListener(new LoadNovelAction(this));
+        loadNovelAction = new LoadNovelAction(this);
+        loadNovel.addActionListener(loadNovelAction);
         unloadNovel.addActionListener(new UnloadAction(this));
         exportNovel.addActionListener(new ExportAction(this));
 
@@ -133,9 +135,9 @@ public class JNovelistFrame extends JFrame {
         statusLabel.setBorder(emptyBorder);
         statusPanel.add(statusLabel, BorderLayout.EAST);
 
-//        partStatusLabel = new JLabel();
-//        statusPanel.add(partStatusLabel, BorderLayout.CENTER);
-//        partStatusLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        partStatusLabel = new JLabel();
+        statusPanel.add(partStatusLabel, BorderLayout.CENTER);
+        partStatusLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         allStatusLabel = new JLabel();
         allStatusLabel.setBorder(emptyBorder);
@@ -189,7 +191,7 @@ public class JNovelistFrame extends JFrame {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        LoadNovelAction.loadNovel(JNovelistFrame.this, f);
+                        loadNovelAction.loadNovel(JNovelistFrame.this, f);
                     }
                 });
             }

@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.*;
 
 
 /**
@@ -76,6 +77,17 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
 //        SpellChecker.register(getDocumentPane().getEditor());
 
         updateStatus();
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                Color txtColor = Utils.hex2Rgb(Constants.PROPS.getProperty(Constants.PropKey.PROP_TXT_COLOR.name()));
+                getEditorPane().setCaretColor(txtColor);
+                getEditorPane().getCaret().setBlinkRate(0);
+                getSHTMLEditorPane().setCaretPosition(getDocument().getLength() - 1);
+                getEditorPane().requestFocus();
+            }
+        });
     }
 
     public ChapterEditor(String file, boolean editable, String docStart, String docEnd) {

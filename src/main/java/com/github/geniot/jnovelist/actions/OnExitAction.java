@@ -29,7 +29,7 @@ public class OnExitAction extends WindowAdapter {
 
         if (frame.openFileName != null) {
             Constants.PROPS.setProperty(Constants.PropKey.PROP_LAST_OPEN_FILE.name(), frame.openFileName);
-            frame.loadNovel.doClick();
+            frame.unloadNovel.doClick();
         } else {
             Constants.PROPS.remove(Constants.PropKey.PROP_LAST_OPEN_FILE.name());
         }

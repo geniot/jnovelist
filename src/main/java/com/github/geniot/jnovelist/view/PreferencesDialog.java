@@ -10,6 +10,7 @@ import com.github.geniot.jnovelist.model.LanguageElement;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.util.SortedSet;
 
 public class PreferencesDialog extends JDialog {
@@ -161,18 +162,11 @@ public class PreferencesDialog extends JDialog {
 
         themeComboBox.setSelectedItem(Constants.PROPS.getProperty(Constants.PropKey.PROP_LAF.name()));
 
-        chapterEditor.getEditorPane().getCaret().setBlinkRate(0);
+
         pack();
         if (frame != null) {
             setLocationRelativeTo(frame);
         }
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                chapterEditor.getSHTMLEditorPane().setCaretPosition(chapterEditor.getDocument().getLength() - 1);
-                chapterEditor.getEditorPane().requestFocus();
-            }
-        });
     }
 
     private void updatePreview() {
@@ -187,18 +181,29 @@ public class PreferencesDialog extends JDialog {
     }
 
     private void onOK() {
-        String oldLaf = Constants.PROPS.getProperty(Constants.PropKey.PROP_LAF.name());
-        String newLaf = themeComboBox.getSelectedItem().toString();
-        if (!oldLaf.equals(newLaf)) {
-            Constants.PROPS.setProperty(Constants.PropKey.PROP_LAF.name(), newLaf);
-            Utils.setLAF(newLaf, frame);
-        }
+
+
         Constants.PROPS.setProperty(Constants.PropKey.PROP_LANGUAGE.name(), ((LanguageElement) languageComboBox.getSelectedItem()).getCode());
         Constants.PROPS.setProperty(Constants.PropKey.PROP_BG_COLOR.name(), backgroundColorButton.getText());
         Constants.PROPS.setProperty(Constants.PropKey.PROP_TXT_COLOR.name(), textColorButton.getText());
         Constants.PROPS.setProperty(Constants.PropKey.PROP_FONT_FACE.name(), fontComboBox.getSelectedItem().toString());
         Constants.PROPS.setProperty(Constants.PropKey.PROP_FONT_SIZE.name(), fontSizeComboBox.getSelectedItem().toString());
         Constants.PROPS.setProperty(Constants.PropKey.PROP_MARGIN.name(), borderMarginComboBox.getSelectedItem().toString());
+
+        String oldLaf = Constants.PROPS.getProperty(Constants.PropKey.PROP_LAF.name());
+        String newLaf = themeComboBox.getSelectedItem().toString();
+        String projectFile = null;
+        if (frame.openFileName != null) {
+            projectFile = frame.openFileName;
+            frame.unloadNovel.doClick();
+        }
+        if (!oldLaf.equals(newLaf)) {
+            Constants.PROPS.setProperty(Constants.PropKey.PROP_LAF.name(), newLaf);
+            Utils.setLAF(newLaf, frame);
+        }
+        if (projectFile != null) {
+            frame.loadNovelAction.loadNovel(frame, new File(projectFile));
+        }
         dispose();
     }
 

@@ -27,6 +27,8 @@ import java.util.logging.Logger;
 public class LoadNovelAction extends AbstractNovelistAction implements ActionListener {
     private static final Logger logger = Logger.getLogger(LoadNovelAction.class.getName());
 
+    public boolean isLoading = false;
+
     public LoadNovelAction(JNovelistFrame f) {
         super(f);
     }
@@ -62,7 +64,7 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
         int returnVal = fc.showOpenDialog(frame);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             if (frame.openFileName != null) {
-                frame.loadNovel.doClick();
+                frame.unloadNovel.doClick();
             }
             Constants.PROPS.setProperty(Constants.PropKey.PROP_LAST_OPEN_DIR.name(), fc.getCurrentDirectory().toString());
 
@@ -73,25 +75,15 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
 //            }
             loadNovel(frame, selectedFile);
 
-
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    String selPartS = Constants.PROPS.getProperty("selectedPart:" + frame.openFileName);
-                    if (!StringUtils.isEmpty(selPartS)) {
-                        int selPart = Integer.parseInt(selPartS);
-                        frame.dnDTabbedPane.setSelectedIndex(selPart);
-                    }
-                }
-            });
         } else if (returnVal == JFileChooser.CANCEL_OPTION) {
             Constants.PROPS.setProperty(Constants.PropKey.PROP_LAST_OPEN_DIR.name(), fc.getCurrentDirectory().toString());
         }
     }
 
     @SuppressWarnings("unchecked")
-    public static void loadNovel(final JNovelistFrame frame, final File selectedFile) {
+    public void loadNovel(final JNovelistFrame frame, final File selectedFile) {
         try {
+            isLoading = true;
             String suffix = selectedFile.getAbsolutePath().endsWith(".json") ? "" : ".json";
             frame.openFileName = selectedFile.getAbsolutePath() + suffix;
             frame.dnDTabbedPane = new DnDTabbedPane(DnDTabbedPane.DECIMAL_TO_ROMAN, Constants.LOAD_NOVEL_ACTION_COMMAND);
@@ -113,6 +105,12 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
+                        String selPartS = Constants.PROPS.getProperty("selectedPart:" + frame.openFileName);
+                        if (!StringUtils.isEmpty(selPartS)) {
+                            int selPart = Integer.parseInt(selPartS);
+                            frame.dnDTabbedPane.setSelectedIndex(selPart);
+                        }
+
                         for (int i = 0; i < frame.openNovel.getParts().size(); i++) {
                             String selChapterS = Constants.PROPS.getProperty("selectedChapter:" + i + ":" + frame.openFileName);
                             if (!StringUtils.isEmpty(selChapterS)) {
@@ -138,6 +136,8 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
 
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            isLoading = false;
         }
     }
 }
