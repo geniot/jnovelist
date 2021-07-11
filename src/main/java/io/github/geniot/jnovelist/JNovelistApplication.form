@@ -24,6 +24,19 @@
               <text value=""/>
             </properties>
           </component>
+          <component id="41fb3" class="javax.swing.JButton" binding="gitButton">
+            <constraints/>
+            <properties>
+              <enabled value="false"/>
+              <focusPainted value="false"/>
+              <focusable value="false"/>
+              <icon value="images/Save.png"/>
+              <maximumSize width="40" height="40"/>
+              <minimumSize width="40" height="40"/>
+              <preferredSize width="40" height="40"/>
+              <text value=""/>
+            </properties>
+          </component>
           <component id="9261c" class="javax.swing.JButton" binding="unloadButton">
             <constraints/>
             <properties>

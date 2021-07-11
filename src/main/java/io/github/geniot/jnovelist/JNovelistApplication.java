@@ -22,8 +22,12 @@ public class JNovelistApplication extends DesktopApplication {
     private JPanel editorPanel;
     private JPanel tabsPanel;
     private JButton unloadButton;
+    private JButton gitButton;
 
     public JNovel novel;
+    public String path;
+    public CommitterTask committerTask;
+
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     enum Prop {
@@ -35,7 +39,8 @@ public class JNovelistApplication extends DesktopApplication {
 
     public JNovelistApplication() {
         super();
-        scheduler.scheduleAtFixedRate(new CommitterTask(this), 5, 5, TimeUnit.SECONDS);
+        committerTask = new CommitterTask(this);
+        scheduler.scheduleAtFixedRate(committerTask, 5, 5, TimeUnit.SECONDS);
         getContentPane().add(contentPanel, BorderLayout.CENTER);
 
         chaptersPanel.setLayout(new WrapLayout());
@@ -49,7 +54,14 @@ public class JNovelistApplication extends DesktopApplication {
         unloadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setNovel(null, null);
+                committerTask.save(true, true);
+            }
+        });
+
+        gitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                committerTask.save(true, false);
             }
         });
 
@@ -63,8 +75,14 @@ public class JNovelistApplication extends DesktopApplication {
         });
     }
 
-    public void setNovel(JNovel n, String path) {
+    @Override
+    public void onWindowClosing() {
+        committerTask.save(true, true);
+    }
+
+    public void setNovel(JNovel n, String p) {
         this.novel = n;
+        this.path = p;
 
         partsPanel.removeAll();
         chaptersPanel.removeAll();
@@ -73,13 +91,19 @@ public class JNovelistApplication extends DesktopApplication {
         if (novel == null) {
             setTitle("JNovelist");
             preferences.remove(LoadNovelAction.Prop.LAST_OPEN_FILE.name());
+
             tabsPanel.setVisible(false);
             unloadButton.setEnabled(false);
+            gitButton.setEnabled(false);
+
         } else {
             setTitle(path);
             preferences.put(LoadNovelAction.Prop.LAST_OPEN_FILE.name(), path);
+
             tabsPanel.setVisible(true);
             unloadButton.setEnabled(true);
+            gitButton.setEnabled(true);
+
             int partCounter = 1;
             ButtonGroup partsButtonGroup = new ButtonGroup();
             for (Part part : novel.getParts()) {

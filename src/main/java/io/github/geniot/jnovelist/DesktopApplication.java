@@ -39,6 +39,7 @@ public abstract class DesktopApplication extends JFrame {
             @Override
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
+                onWindowClosing();
                 preferences.putInt(Prop.WIDTH.name(), e.getWindow().getWidth());
                 preferences.putInt(Prop.HEIGHT.name(), e.getWindow().getHeight());
                 preferences.putInt(Prop.POS_X.name(), (int) e.getWindow().getLocation().getX());
@@ -48,5 +49,7 @@ public abstract class DesktopApplication extends JFrame {
             }
         });
     }
+
+    abstract public void onWindowClosing();
 
 }
