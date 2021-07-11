@@ -17,14 +17,16 @@ public class CommitterTask implements Runnable {
     @Override
     public void run() {
         try {
+            long t1 = System.currentTimeMillis();
             DefaultPrettyPrinter prettyPrinter = new DefaultPrettyPrinter();
             prettyPrinter.indentArraysWith(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
             String projectJSON = new ObjectMapper().writer(prettyPrinter).writeValueAsString(frame.novel);
             int hash = projectJSON.hashCode();
             if (hash != projectHash) {
-                System.out.println(projectJSON);
                 projectHash = hash;
+                System.out.println("New hash: " + hash);
             }
+            System.out.println(System.currentTimeMillis() - t1);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

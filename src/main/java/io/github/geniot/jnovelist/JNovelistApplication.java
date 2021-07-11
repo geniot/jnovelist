@@ -17,8 +17,8 @@ import java.util.concurrent.TimeUnit;
 public class JNovelistApplication extends DesktopApplication {
     private JPanel contentPanel;
     private JButton loadButton;
-    private JPanel partsPanel;
-    private JPanel chaptersPanel;
+    public JPanel partsPanel;
+    public JPanel chaptersPanel;
     private JPanel editorPanel;
     private JPanel tabsPanel;
     private JButton unloadButton;
@@ -83,7 +83,7 @@ public class JNovelistApplication extends DesktopApplication {
             int partCounter = 1;
             ButtonGroup partsButtonGroup = new ButtonGroup();
             for (Part part : novel.getParts()) {
-                PartButton partButton = new PartButton(partCounter, part, this);
+                PartButton partButton = new PartButton(partCounter, part, novel, this);
                 ++partCounter;
                 partsButtonGroup.add(partButton);
                 partsPanel.add(partButton);
@@ -93,17 +93,12 @@ public class JNovelistApplication extends DesktopApplication {
             partPlusButton.addActionListener(e -> {
                 Part newPart = new Part();
                 novel.getParts().add(newPart);
-                PartButton partButton = new PartButton(partsPanel.getComponentCount(), newPart, JNovelistApplication.this);
+                PartButton partButton = new PartButton(partsPanel.getComponentCount(), newPart, novel, JNovelistApplication.this);
                 partsButtonGroup.add(partButton);
                 partsPanel.add(partButton, partsPanel.getComponentCount() - 1);
                 partButton.doClick();
             });
-
-            int selectedPart = preferences.getInt(Prop.SELECTED_PART.name(), 1);
-            if (selectedPart > partsPanel.getComponentCount() - 1) {
-                selectedPart = partsPanel.getComponentCount() - 1;
-            }
-            ((PartButton) partsPanel.getComponent(selectedPart - 1)).doClick();
+            selectPart();
         }
     }
 
@@ -112,7 +107,7 @@ public class JNovelistApplication extends DesktopApplication {
         int chapterCounter = 1;
         ButtonGroup chaptersButtonGroup = new ButtonGroup();
         for (Chapter chapter : part.getChapters()) {
-            ChapterButton chapterButton = new ChapterButton(chapterCounter, chapter, this);
+            ChapterButton chapterButton = new ChapterButton(chapterCounter, chapter, part, this);
             ++chapterCounter;
             chaptersButtonGroup.add(chapterButton);
             chaptersPanel.add(chapterButton);
@@ -121,18 +116,14 @@ public class JNovelistApplication extends DesktopApplication {
         chapterPlusButton.addActionListener(e -> {
             Chapter newChapter = new Chapter();
             part.getChapters().add(newChapter);
-            ChapterButton chapterButton = new ChapterButton(chaptersPanel.getComponentCount(), newChapter, JNovelistApplication.this);
+            ChapterButton chapterButton = new ChapterButton(chaptersPanel.getComponentCount(), newChapter, part, JNovelistApplication.this);
             chaptersButtonGroup.add(chapterButton);
             chaptersPanel.add(chapterButton, chaptersPanel.getComponentCount() - 1);
             chapterButton.doClick();
         });
         chaptersPanel.add(chapterPlusButton);
 
-        int selectedChapter = preferences.getInt(Prop.SELECTED_CHAPTER.name(), 1);
-        if (selectedChapter > chaptersPanel.getComponentCount() - 1) {
-            selectedChapter = chaptersPanel.getComponentCount() - 1;
-        }
-        ((ChapterButton) chaptersPanel.getComponent(selectedChapter - 1)).doClick();
+        selectChapter();
     }
 
     public void setChapter(Chapter chapter) {
@@ -145,5 +136,21 @@ public class JNovelistApplication extends DesktopApplication {
         invalidate();
         validate();
         repaint();
+    }
+
+    public void selectChapter() {
+        int selectedChapter = preferences.getInt(Prop.SELECTED_CHAPTER.name(), 1);
+        if (selectedChapter > chaptersPanel.getComponentCount() - 1) {
+            selectedChapter = chaptersPanel.getComponentCount() - 1;
+        }
+        ((ChapterButton) chaptersPanel.getComponent(selectedChapter - 1)).doClick();
+    }
+
+    public void selectPart() {
+        int selectedPart = preferences.getInt(Prop.SELECTED_PART.name(), 1);
+        if (selectedPart > partsPanel.getComponentCount() - 1) {
+            selectedPart = partsPanel.getComponentCount() - 1;
+        }
+        ((PartButton) partsPanel.getComponent(selectedPart - 1)).doClick();
     }
 }
