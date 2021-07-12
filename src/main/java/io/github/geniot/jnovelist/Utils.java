@@ -6,10 +6,10 @@ import org.jsoup.select.Elements;
 
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
-import java.util.concurrent.TimeUnit;
 
 public class Utils {
     // Parallel arrays used in the conversion process.
@@ -72,35 +72,6 @@ public class Utils {
         return sb.toString();
     }
 
-    public static String runCommand(String command, File f) {
-        StringBuffer stringBuffer = new StringBuffer();
-        try {
-            Runtime rt = Runtime.getRuntime();
-            Process proc = rt.exec(command.toString(), null, f);
-
-            InputStreamReader isr = new InputStreamReader(proc.getInputStream());
-            BufferedReader rdr = new BufferedReader(isr);
-            String line;
-            while ((line = rdr.readLine()) != null) {
-                stringBuffer.append(line);
-                stringBuffer.append("\n");
-            }
-
-            isr = new InputStreamReader(proc.getErrorStream());
-            rdr = new BufferedReader(isr);
-            while ((line = rdr.readLine()) != null) {
-                stringBuffer.append(line);
-                stringBuffer.append("\n");
-            }
-            boolean rc = proc.waitFor(1, TimeUnit.SECONDS);  // Wait for the process to complete
-//            stringBuffer.append(rc);
-//            stringBuffer.append("\n");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            stringBuffer.append(ex.getMessage());
-        }
-        return stringBuffer.toString();
-    }
 
     public static File getGitRootDir(String projectFile) {
         File f = new File(projectFile);

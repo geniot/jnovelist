@@ -5,12 +5,10 @@ import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.geniot.jnovelist.JNovelistApplication;
+import io.github.geniot.jnovelist.SyncDialog;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-
-import static io.github.geniot.jnovelist.Utils.getGitRootDir;
-import static io.github.geniot.jnovelist.Utils.runCommand;
 
 public class CommitterTask implements Runnable {
 
@@ -38,11 +36,11 @@ public class CommitterTask implements Runnable {
                     System.out.println("Saved in: " + (System.currentTimeMillis() - t1) + "ms");
                 }
                 if (push) {
-                    File f = getGitRootDir(frame.path);
-                    System.out.println(runCommand("git add -A", f));
-                    System.out.println(runCommand("git commit -m \"" + System.currentTimeMillis() + "\"", f));
-                    System.out.println(runCommand("git push", f));
-                    System.out.println("Pushed in: " + (System.currentTimeMillis() - t1) + "ms");
+                    SyncDialog syncDialog = new SyncDialog(frame);
+                    PushTask task = new PushTask(frame);
+                    task.addPropertyChangeListener(syncDialog);
+                    task.execute();
+                    syncDialog.setVisible(true);
                 }
                 if (nullify) {
                     frame.setNovel(null, null);
