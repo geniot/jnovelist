@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URI;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -19,15 +20,18 @@ public class JNovelistApplication extends DesktopApplication {
     private JButton loadButton;
     public JPanel partsPanel;
     public JPanel chaptersPanel;
-    private JPanel editorPanel;
+    public JPanel editorPanel;
     private JPanel tabsPanel;
-    private JButton unloadButton;
+    public JButton unloadButton;
     private JButton gitButton;
     private JButton preferencesButton;
+    private JButton infoButton;
+    private JPanel toolbarPanel;
 
     public JNovel novel;
     public String path;
     public CommitterTask committerTask;
+    public ChapterEditor chapterEditor;
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
@@ -44,6 +48,7 @@ public class JNovelistApplication extends DesktopApplication {
         scheduler.scheduleAtFixedRate(committerTask, 5, 5, TimeUnit.SECONDS);
         getContentPane().add(contentPanel, BorderLayout.CENTER);
 
+        toolbarPanel.setLayout(new WrapLayout());
         chaptersPanel.setLayout(new WrapLayout());
         partsPanel.setLayout(new WrapLayout());
 
@@ -52,17 +57,21 @@ public class JNovelistApplication extends DesktopApplication {
         loadNovelAction = new LoadNovelAction(this);
         loadButton.addActionListener(loadNovelAction);
 
-        unloadButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                committerTask.save(true, true);
-            }
+        unloadButton.addActionListener(e -> {
+            chapterEditor = null;
+            preferences.remove(LoadNovelAction.Prop.LAST_OPEN_FILE.name());
+            committerTask.save(true, true);
         });
 
-        gitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                committerTask.save(true, false);
+        gitButton.addActionListener(e -> committerTask.save(true, false));
+
+        preferencesButton.addActionListener(e -> new PreferencesDialog(JNovelistApplication.this).setVisible(true));
+
+        infoButton.addActionListener(e -> {
+            try {
+                Desktop.getDesktop().browse(URI.create("https://github.com/geniot/jnovelist"));
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         });
 
@@ -91,7 +100,6 @@ public class JNovelistApplication extends DesktopApplication {
 
         if (novel == null) {
             setTitle("JNovelist");
-            preferences.remove(LoadNovelAction.Prop.LAST_OPEN_FILE.name());
 
             tabsPanel.setVisible(false);
             unloadButton.setEnabled(false);
@@ -152,10 +160,10 @@ public class JNovelistApplication extends DesktopApplication {
     }
 
     public void setChapter(Chapter chapter) {
-        if (editorPanel.getComponentCount() == 0) {
-            editorPanel.add(new ChapterEditor(chapter, this), BorderLayout.CENTER);
+        if (chapterEditor == null) {
+            chapterEditor = new ChapterEditor(chapter, this);
+            editorPanel.add(chapterEditor, BorderLayout.CENTER);
         } else {
-            ChapterEditor chapterEditor = (ChapterEditor) editorPanel.getComponent(0);
             chapterEditor.setChapter(chapter);
         }
         invalidate();

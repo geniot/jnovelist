@@ -37,10 +37,11 @@ public class Utils {
     public static void stylizeButton(AbstractButton button) {
         button.setFocusPainted(false);
         button.setFocusable(false);
-        Dimension dim = new Dimension(30, 30);
+        Dimension dim = new Dimension(35, 35);
         button.setPreferredSize(dim);
         button.setMinimumSize(dim);
         button.setMaximumSize(dim);
+//        button.setBorder(null);
         button.setMargin(new Insets(0, 0, 0, 0));
     }
 

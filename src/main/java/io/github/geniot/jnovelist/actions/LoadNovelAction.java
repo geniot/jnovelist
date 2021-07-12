@@ -46,9 +46,12 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
 
         int returnVal = fc.showOpenDialog(frame);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            frame.preferences.put(Prop.LAST_OPEN_DIR.name(), fc.getCurrentDirectory().toString());
             File selectedFile = fc.getSelectedFile();
-            loadNovel(selectedFile);
+            if (!selectedFile.getAbsolutePath().equals(frame.path)) {
+                frame.unloadButton.doClick();
+                frame.preferences.put(Prop.LAST_OPEN_DIR.name(), fc.getCurrentDirectory().toString());
+                loadNovel(selectedFile);
+            }
 
         } else if (returnVal == JFileChooser.CANCEL_OPTION) {
             frame.preferences.put(Prop.LAST_OPEN_DIR.name(), fc.getCurrentDirectory().toString());

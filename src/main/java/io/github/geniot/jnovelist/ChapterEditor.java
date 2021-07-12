@@ -73,17 +73,30 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
             }
         });
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                getEditorPane().requestFocus();
-            }
-        });
+        focus();
     }
 
     private void updateChapter() {
         String text = Utils.html2text(getDocumentText());
         chapter.setLines(text.split("\n"));
+    }
+
+    public void reset() {
+        String str = String.join("\n", chapter.getLines());
+        getDocumentPane().setDocumentText(Utils.text2html(str, docStart(), docEnd()));
+        focus();
+    }
+
+    private void focus() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                String txtColor = frame.preferences.get(Prop.PROP_TXT_COLOR.name(), "#000000");
+                getEditorPane().setCaretColor(Utils.hex2Rgb(txtColor));
+                getEditorPane().getCaret().setBlinkRate(0);
+                getEditorPane().requestFocus();
+            }
+        });
     }
 
 

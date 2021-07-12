@@ -7,7 +7,7 @@
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="9c47b" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+      <grid id="9c47b" binding="toolbarPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
         <constraints border-constraint="North"/>
         <properties/>
         <border type="none"/>
@@ -53,13 +53,30 @@
           <component id="61f16" class="javax.swing.JButton" binding="preferencesButton">
             <constraints/>
             <properties>
-              <enabled value="false"/>
+              <borderPainted value="true"/>
+              <enabled value="true"/>
               <focusPainted value="false"/>
               <focusable value="false"/>
               <icon value="images/Style.png"/>
               <maximumSize width="40" height="40"/>
               <minimumSize width="40" height="40"/>
               <preferredSize width="40" height="40"/>
+              <requestFocusEnabled value="false"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="cbc4e" class="javax.swing.JButton" binding="infoButton">
+            <constraints/>
+            <properties>
+              <borderPainted value="true"/>
+              <enabled value="true"/>
+              <focusPainted value="false"/>
+              <focusable value="false"/>
+              <icon value="images/Info.png"/>
+              <maximumSize width="40" height="40"/>
+              <minimumSize width="40" height="40"/>
+              <preferredSize width="40" height="40"/>
+              <requestFocusEnabled value="false"/>
               <text value=""/>
             </properties>
           </component>
@@ -94,7 +111,9 @@
           <grid id="8b323" binding="editorPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints border-constraint="Center"/>
             <properties/>
-            <border type="none"/>
+            <border type="empty">
+              <size top="0" left="5" bottom="5" right="5"/>
+            </border>
             <children/>
           </grid>
         </children>

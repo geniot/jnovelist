@@ -117,7 +117,7 @@ public class PreferencesDialog extends JDialog {
                 updatePreview();
             }
         });
-        fontSizeComboBox.setSelectedItem(frame.preferences.getInt(ChapterEditor.Prop.PROP_FONT_SIZE.name(), 12));
+        fontSizeComboBox.setSelectedItem(String.valueOf(frame.preferences.getInt(ChapterEditor.Prop.PROP_FONT_SIZE.name(), 12)));
 
         borderMarginComboBox.addActionListener(new ActionListener() {
             @Override
@@ -125,7 +125,7 @@ public class PreferencesDialog extends JDialog {
                 updatePreview();
             }
         });
-        borderMarginComboBox.setSelectedItem(frame.preferences.getInt(ChapterEditor.Prop.PROP_MARGIN.name(), 10));
+        borderMarginComboBox.setSelectedItem(String.valueOf(frame.preferences.getInt(ChapterEditor.Prop.PROP_MARGIN.name(), 10)));
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -174,6 +174,12 @@ public class PreferencesDialog extends JDialog {
         String docEnd = ChapterEditor.docEnd();
         String txt = Utils.html2text(chapterEditor.getDocumentText());
         chapterEditor.getDocumentPane().setDocumentText(Utils.text2html(txt, docStart, docEnd));
+        SwingUtilities.invokeLater(() -> {
+            chapterEditor.getEditorPane().requestFocus();
+            chapterEditor.getEditorPane().setCaretColor(Utils.hex2Rgb(txtColor));
+            chapterEditor.getEditorPane().getCaret().setBlinkRate(0);
+        });
+
     }
 
     private void onOK() {
@@ -189,6 +195,9 @@ public class PreferencesDialog extends JDialog {
         if (!newLaf.equals(oldLaf)) {
             frame.preferences.put(ChapterEditor.Prop.PROP_LAF.name(), newLaf);
             Utils.setLAF(newLaf, frame);
+        }
+        if (frame.chapterEditor != null) {
+            frame.chapterEditor.reset();
         }
         dispose();
     }
