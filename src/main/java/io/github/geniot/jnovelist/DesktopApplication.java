@@ -1,5 +1,7 @@
 package io.github.geniot.jnovelist;
 
+import io.github.geniot.jnovelist.view.JNovelistApplication;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;

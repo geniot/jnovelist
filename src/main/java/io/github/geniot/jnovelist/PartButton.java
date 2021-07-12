@@ -2,6 +2,7 @@ package io.github.geniot.jnovelist;
 
 import io.github.geniot.jnovelist.model.JNovel;
 import io.github.geniot.jnovelist.model.Part;
+import io.github.geniot.jnovelist.view.JNovelistApplication;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

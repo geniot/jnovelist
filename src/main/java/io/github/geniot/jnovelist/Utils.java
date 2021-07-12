@@ -37,16 +37,17 @@ public class Utils {
     public static void stylizeButton(AbstractButton button) {
         button.setFocusPainted(false);
         button.setFocusable(false);
-        Dimension dim = new Dimension(35, 35);
+        Dimension dim = new Dimension(40, 40);
         button.setPreferredSize(dim);
         button.setMinimumSize(dim);
         button.setMaximumSize(dim);
+        button.setFont(new Font("Arial", Font.BOLD, 10));
 //        button.setBorder(null);
         button.setMargin(new Insets(0, 0, 0, 0));
     }
 
     public static String text2html(String text, String docStart, String docEnd) {
-        StringBuilder sb = new StringBuilder();
+        StringBuffer sb = new StringBuffer();
         sb.append(docStart);
         String[] pps = text.split("\\n");
         for (String p : pps) {

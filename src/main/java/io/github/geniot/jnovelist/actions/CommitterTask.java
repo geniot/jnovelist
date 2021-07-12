@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.geniot.jnovelist.JNovelistApplication;
-import io.github.geniot.jnovelist.SyncDialog;
+import io.github.geniot.jnovelist.view.JNovelistApplication;
+import io.github.geniot.jnovelist.view.SyncDialog;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;

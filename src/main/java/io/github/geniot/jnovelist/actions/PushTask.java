@@ -1,6 +1,6 @@
 package io.github.geniot.jnovelist.actions;
 
-import io.github.geniot.jnovelist.JNovelistApplication;
+import io.github.geniot.jnovelist.view.JNovelistApplication;
 
 import javax.swing.*;
 import java.io.BufferedReader;

@@ -1,6 +1,7 @@
 package io.github.geniot.jnovelist;
 
 import io.github.geniot.jnovelist.model.Chapter;
+import io.github.geniot.jnovelist.view.JNovelistApplication;
 import io.github.geniot.shtml.SHTMLPanelSingleDocImpl;
 
 import javax.swing.*;
@@ -12,7 +13,7 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
     private JNovelistApplication frame;
     private Chapter chapter;
 
-    enum Prop {
+    public enum Prop {
         PROP_BG_COLOR,
         PROP_TXT_COLOR,
         PROP_FONT_FACE,

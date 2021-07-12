@@ -1,7 +1,7 @@
 package io.github.geniot.jnovelist.actions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.geniot.jnovelist.JNovelistApplication;
+import io.github.geniot.jnovelist.view.JNovelistApplication;
 import io.github.geniot.jnovelist.model.JNovel;
 import org.apache.commons.io.FileUtils;
 

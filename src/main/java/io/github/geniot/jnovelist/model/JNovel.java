@@ -1,8 +1,11 @@
 package io.github.geniot.jnovelist.model;
 
 
+import io.github.geniot.jnovelist.Utils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -19,7 +22,7 @@ public class JNovel implements Serializable {
     private List<Chapter> notes = new ArrayList<Chapter>();
     private List<Chapter> images = new ArrayList<Chapter>();
 
-    public JNovel(){
+    public JNovel() {
         parts.add(new Part());
     }
 
@@ -72,4 +75,18 @@ public class JNovel implements Serializable {
     }
 
 
+    public List<String> exportNovel() {
+        List<String> novelLines = new ArrayList<>();
+        int partsCounter = 1;
+        for (Part part : parts) {
+            novelLines.add(Utils.decimalIndexToRoman(partsCounter++));
+            int chapterCounter = 1;
+            for (Chapter chapter : part.getChapters()) {
+                novelLines.add(String.valueOf(chapterCounter++));
+                novelLines.addAll(Arrays.asList(chapter.getLines()));
+
+            }
+        }
+        return novelLines;
+    }
 }
