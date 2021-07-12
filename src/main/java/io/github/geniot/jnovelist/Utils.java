@@ -6,15 +6,16 @@ import org.jsoup.select.Elements;
 
 import javax.swing.*;
 import java.awt.*;
-import java.beans.PropertyChangeListener;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 
 public class Utils {
     // Parallel arrays used in the conversion process.
     public static String[] RCODE = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
     public static int[] BVAL = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+    public static final String DEFAULT_LAF = "com.jtattoo.plaf.smart.SmartLookAndFeel";
+    public static String LAF_PREFIX = "com.jtattoo.plaf.";
+    public static String LAF_SUFFIX = "LookAndFeel";
+
 
     public static String decimalIndexToRoman(int binary) {
         if (binary <= 0 || binary >= 4000) {
@@ -85,4 +86,30 @@ public class Utils {
         File f = new File(file.getAbsolutePath() + File.separator + ".git");
         return f.exists() && f.isDirectory();
     }
+
+    public static Color hex2Rgb(String colorStr) {
+        return new Color(
+                Integer.valueOf(colorStr.substring(1, 3), 16),
+                Integer.valueOf(colorStr.substring(3, 5), 16),
+                Integer.valueOf(colorStr.substring(5, 7), 16));
+    }
+
+    public static String color2hex(Color color) {
+        return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue()).toUpperCase();
+    }
+
+    public static void setLAF(String lafName, Component component) {
+        String lafClassName = LAF_PREFIX + lafName.toLowerCase() + "." + lafName + LAF_SUFFIX;
+        try {
+            if (lafClassName == null) {
+                lafClassName = DEFAULT_LAF;
+            }
+            UIManager.setLookAndFeel(lafClassName);
+            SwingUtilities.updateComponentTreeUI(component);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

@@ -23,6 +23,7 @@ public class JNovelistApplication extends DesktopApplication {
     private JPanel tabsPanel;
     private JButton unloadButton;
     private JButton gitButton;
+    private JButton preferencesButton;
 
     public JNovel novel;
     public String path;

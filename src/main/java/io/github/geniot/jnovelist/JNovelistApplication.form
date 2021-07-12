@@ -50,6 +50,19 @@
               <text value=""/>
             </properties>
           </component>
+          <component id="61f16" class="javax.swing.JButton" binding="preferencesButton">
+            <constraints/>
+            <properties>
+              <enabled value="false"/>
+              <focusPainted value="false"/>
+              <focusable value="false"/>
+              <icon value="images/Style.png"/>
+              <maximumSize width="40" height="40"/>
+              <minimumSize width="40" height="40"/>
+              <preferredSize width="40" height="40"/>
+              <text value=""/>
+            </properties>
+          </component>
         </children>
       </grid>
       <grid id="6ce1e" layout-manager="BorderLayout" hgap="0" vgap="0">

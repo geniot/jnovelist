@@ -17,7 +17,8 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
         PROP_TXT_COLOR,
         PROP_FONT_FACE,
         PROP_FONT_SIZE,
-        PROP_MARGIN
+        PROP_MARGIN,
+        PROP_LAF
     }
 
     public String docStart() {
@@ -26,7 +27,10 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
         String fontFace = frame.preferences.get(Prop.PROP_FONT_FACE.name(), "Arial");
         int fontSize = frame.preferences.getInt(Prop.PROP_FONT_SIZE.name(), 12);
         int margin = frame.preferences.getInt(Prop.PROP_MARGIN.name(), 10);
+        return docStart(bgColor, txtColor, fontFace, fontSize, margin);
+    }
 
+    public static String docStart(String bgColor, String txtColor, String fontFace, int fontSize, int margin) {
         return "<html><head><style>body {\n" +
                 "background-color: " + bgColor + "; \n" +
                 "color: " + txtColor + "; \n" +
@@ -36,7 +40,7 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
                 "}</style></head><body>";
     }
 
-    public String docEnd() {
+    public static String docEnd() {
         return "</body></html>";
     }
 
