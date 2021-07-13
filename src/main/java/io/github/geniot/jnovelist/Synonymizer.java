@@ -3,7 +3,7 @@ package io.github.geniot.jnovelist;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +20,8 @@ public class Synonymizer {
 
     public static void init() {
         try {
-            List<String> lines = IOUtils.readLines(Thread.currentThread().getContextClassLoader().getResourceAsStream("synonyms" + File.separator + "syn_ru.txt"), StandardCharsets.UTF_8.name());
+            InputStream stream = Thread.currentThread().getContextClassLoader().getResource("synonyms/syn_ru.txt").openStream();
+            List<String> lines = IOUtils.readLines(stream, StandardCharsets.UTF_8.name());
 
             StringBuilder sb = new StringBuilder();
             for (String str : lines) {

@@ -55,7 +55,11 @@
            <artifactId>JTattoo</artifactId>
            <version>1.6.13</version>
        </dependency>
-
+       <dependency>
+           <groupId>com.intellij</groupId>
+           <artifactId>forms_rt</artifactId>
+           <version>7.0.3</version>
+       </dependency>
    </dependencies>
 
 
@@ -75,7 +79,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.github.geniot.jnovelist.JNovelistLauncher</mainClass>
+                            <mainClass>io.github.geniot.jnovelist.JNovelistLauncher</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

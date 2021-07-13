@@ -1,8 +1,8 @@
 package io.github.geniot.jnovelist.actions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.geniot.jnovelist.view.JNovelistApplication;
 import io.github.geniot.jnovelist.model.JNovel;
+import io.github.geniot.jnovelist.view.JNovelistApplication;
 import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
@@ -10,6 +10,7 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
 public class LoadNovelAction extends AbstractNovelistAction implements ActionListener {
 
@@ -66,7 +67,7 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
                 String path = selectedFile.getAbsolutePath() + suffix;
                 frame.setNovel(new JNovel(), path);
             } else {
-                String projectJson = FileUtils.readFileToString(selectedFile);
+                String projectJson = FileUtils.readFileToString(selectedFile, StandardCharsets.UTF_8.name());
                 novel = new ObjectMapper().readValue(projectJson, JNovel.class);
                 frame.setNovel(novel, selectedFile.getAbsolutePath());
             }

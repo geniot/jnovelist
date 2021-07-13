@@ -9,6 +9,7 @@ import io.github.geniot.jnovelist.view.SyncDialog;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
 public class CommitterTask implements Runnable {
 
@@ -32,7 +33,7 @@ public class CommitterTask implements Runnable {
                 int hash = projectJSON.hashCode();
                 if (hash != projectHash) {
                     projectHash = hash;
-                    FileUtils.writeStringToFile(new File(frame.path), projectJSON);
+                    FileUtils.writeStringToFile(new File(frame.path), projectJSON, StandardCharsets.UTF_8.name());
                     System.out.println("Saved in: " + (System.currentTimeMillis() - t1) + "ms");
                 }
                 if (push) {
