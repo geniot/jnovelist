@@ -126,15 +126,19 @@ public class DictionaryDialog extends JDialog {
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new BorderLayout(0, 0));
         contentPane.add(panel3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final JPanel panel4 = new JPanel();
-        panel4.setLayout(new BorderLayout(0, 0));
-        panel3.add(panel4, BorderLayout.NORTH);
-        panel4.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 0, 10, 0), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-        searchTextField = new JTextField();
-        panel4.add(searchTextField, BorderLayout.CENTER);
         viewerPanel = new JPanel();
         viewerPanel.setLayout(new BorderLayout(0, 0));
         panel3.add(viewerPanel, BorderLayout.CENTER);
+        final JPanel panel4 = new JPanel();
+        panel4.setLayout(new BorderLayout(0, 0));
+        panel3.add(panel4, BorderLayout.NORTH);
+        panel4.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        final JPanel panel5 = new JPanel();
+        panel5.setLayout(new BorderLayout(0, 0));
+        panel4.add(panel5, BorderLayout.CENTER);
+        panel5.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        searchTextField = new JTextField();
+        panel5.add(searchTextField, BorderLayout.CENTER);
     }
 
     /**

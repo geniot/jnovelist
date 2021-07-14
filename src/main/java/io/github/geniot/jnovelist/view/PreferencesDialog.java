@@ -10,6 +10,7 @@ import io.github.geniot.jnovelist.model.Chapter;
 import org.apache.commons.io.IOUtils;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
@@ -54,6 +55,7 @@ public class PreferencesDialog extends JDialog {
         Chapter chapter = new Chapter();
         chapter.setLines(new String[]{LOREM_IPSUM});
         chapterEditor = new ChapterEditor(chapter, frame);
+        chapterEditor.setBorder(new LineBorder(Color.BLACK));
 //        chapterEditor.getEditorPane().setEditable(false);
         previewPanel.add(chapterEditor, BorderLayout.CENTER);
 

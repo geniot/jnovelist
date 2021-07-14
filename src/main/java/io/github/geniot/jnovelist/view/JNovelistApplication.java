@@ -8,6 +8,7 @@ import io.github.geniot.jnovelist.model.JNovel;
 import io.github.geniot.jnovelist.model.Part;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -59,7 +60,6 @@ public class JNovelistApplication extends DesktopApplication {
         toolbarPanel = new JPanel();
         toolbarPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
         contentPanel.add(toolbarPanel, BorderLayout.NORTH);
-        toolbarPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         loadButton = new JButton();
         loadButton.setFocusPainted(false);
         loadButton.setFocusable(false);
@@ -143,17 +143,19 @@ public class JNovelistApplication extends DesktopApplication {
         tabsPanel = new JPanel();
         tabsPanel.setLayout(new BorderLayout(0, 0));
         panel1.add(tabsPanel, BorderLayout.NORTH);
-        tabsPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         partsPanel = new JPanel();
-        partsPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        partsPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         tabsPanel.add(partsPanel, BorderLayout.NORTH);
         chaptersPanel = new JPanel();
         chaptersPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
         tabsPanel.add(chaptersPanel, BorderLayout.SOUTH);
+        final JPanel panel2 = new JPanel();
+        panel2.setLayout(new BorderLayout(0, 0));
+        panel1.add(panel2, BorderLayout.CENTER);
+        panel2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         editorPanel = new JPanel();
         editorPanel.setLayout(new BorderLayout(0, 0));
-        panel1.add(editorPanel, BorderLayout.CENTER);
-        editorPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        panel2.add(editorPanel, BorderLayout.CENTER);
     }
 
     /**
@@ -176,9 +178,9 @@ public class JNovelistApplication extends DesktopApplication {
         scheduler.scheduleAtFixedRate(committerTask, 5, 5, TimeUnit.SECONDS);
         getContentPane().add(contentPanel, BorderLayout.CENTER);
 
-        toolbarPanel.setLayout(new WrapLayout());
-        chaptersPanel.setLayout(new WrapLayout());
-        partsPanel.setLayout(new WrapLayout());
+        toolbarPanel.setLayout(new WrapLayout(WrapLayout.LEFT, 5, 5));
+        chaptersPanel.setLayout(new WrapLayout(WrapLayout.LEFT, 5, 5));
+        partsPanel.setLayout(new WrapLayout(WrapLayout.LEFT, 5, 5));
 
         tabsPanel.setVisible(false);
 
@@ -306,6 +308,7 @@ public class JNovelistApplication extends DesktopApplication {
     public void setChapter(Chapter chapter) {
         if (chapterEditor == null) {
             chapterEditor = new ChapterEditor(chapter, this);
+            chapterEditor.setBorder(new LineBorder(Color.BLACK));
             editorPanel.add(chapterEditor, BorderLayout.CENTER);
         } else {
             chapterEditor.setChapter(chapter);

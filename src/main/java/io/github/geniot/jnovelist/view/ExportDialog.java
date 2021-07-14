@@ -7,6 +7,8 @@ import io.github.geniot.jnovelist.ChapterEditor;
 import io.github.geniot.jnovelist.model.Chapter;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -32,6 +34,7 @@ public class ExportDialog extends JDialog {
         Chapter chapter = new Chapter();
         chapter.setLines(novelTextArray);
         ChapterEditor chapterEditor = new ChapterEditor(chapter, frame);
+        chapterEditor.setBorder(new LineBorder(Color.BLACK));
         chapterEditor.getEditorPane().setEditable(false);
         viewerPanel.add(chapterEditor, BorderLayout.CENTER);
 
@@ -106,6 +109,7 @@ public class ExportDialog extends JDialog {
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
+        panel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         final Spacer spacer1 = new Spacer();
         panel1.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final JPanel panel2 = new JPanel();

@@ -48,24 +48,33 @@
         <properties/>
         <border type="none"/>
         <children>
-          <grid id="1d70f" layout-manager="BorderLayout" hgap="0" vgap="0">
-            <constraints border-constraint="North"/>
-            <properties/>
-            <border type="empty">
-              <size top="5" left="0" bottom="10" right="0"/>
-            </border>
-            <children>
-              <component id="d3e12" class="javax.swing.JTextField" binding="searchTextField">
-                <constraints border-constraint="Center"/>
-                <properties/>
-              </component>
-            </children>
-          </grid>
           <grid id="c3b15" binding="viewerPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints border-constraint="Center"/>
             <properties/>
             <border type="none"/>
             <children/>
+          </grid>
+          <grid id="c9de7" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints border-constraint="North"/>
+            <properties/>
+            <border type="empty">
+              <size top="0" left="0" bottom="5" right="0"/>
+            </border>
+            <children>
+              <grid id="1d70f" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints border-constraint="Center"/>
+                <properties/>
+                <border type="line">
+                  <size top="5" left="5" bottom="10" right="5"/>
+                </border>
+                <children>
+                  <component id="d3e12" class="javax.swing.JTextField" binding="searchTextField">
+                    <constraints border-constraint="Center"/>
+                    <properties/>
+                  </component>
+                </children>
+              </grid>
+            </children>
           </grid>
         </children>
       </grid>
