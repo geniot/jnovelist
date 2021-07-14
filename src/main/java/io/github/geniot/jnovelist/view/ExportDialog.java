@@ -33,7 +33,7 @@ public class ExportDialog extends JDialog {
 
         Chapter chapter = new Chapter();
         chapter.setLines(novelTextArray);
-        ChapterEditor chapterEditor = new ChapterEditor(chapter, frame);
+        ChapterEditor chapterEditor = new ChapterEditor(chapter);
         chapterEditor.setBorder(new LineBorder(Color.BLACK));
         chapterEditor.getEditorPane().setEditable(false);
         viewerPanel.add(chapterEditor, BorderLayout.CENTER);

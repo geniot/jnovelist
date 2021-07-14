@@ -8,9 +8,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.util.prefs.Preferences;
 
 public class ChapterEditor extends SHTMLPanelSingleDocImpl {
-    private JNovelistApplication frame;
     private Chapter chapter;
 
     public enum Prop {
@@ -23,11 +23,11 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
     }
 
     public String docStart() {
-        String bgColor = frame.preferences.get(Prop.PROP_BG_COLOR.name(), "#FFFFFF");
-        String txtColor = frame.preferences.get(Prop.PROP_TXT_COLOR.name(), "#000000");
-        String fontFace = frame.preferences.get(Prop.PROP_FONT_FACE.name(), "Arial");
-        int fontSize = frame.preferences.getInt(Prop.PROP_FONT_SIZE.name(), 12);
-        int margin = frame.preferences.getInt(Prop.PROP_MARGIN.name(), 10);
+        String bgColor = Preferences.userRoot().get(Prop.PROP_BG_COLOR.name(), "#FFFFFF");
+        String txtColor = Preferences.userRoot().get(Prop.PROP_TXT_COLOR.name(), "#000000");
+        String fontFace = Preferences.userRoot().get(Prop.PROP_FONT_FACE.name(), "Arial");
+        int fontSize = Preferences.userRoot().getInt(Prop.PROP_FONT_SIZE.name(), 12);
+        int margin = Preferences.userRoot().getInt(Prop.PROP_MARGIN.name(), 10);
         return docStart(bgColor, txtColor, fontFace, fontSize, margin);
     }
 
@@ -45,9 +45,8 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
         return "</body></html>";
     }
 
-    public ChapterEditor(Chapter c, JNovelistApplication f) {
+    public ChapterEditor(Chapter c) {
         super(true);
-        this.frame = f;
         this.chapter = c;
         fixBorder();
         getEditorPane().getCaret().setBlinkRate(0);
@@ -92,7 +91,7 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                String txtColor = frame.preferences.get(Prop.PROP_TXT_COLOR.name(), "#000000");
+                String txtColor = Preferences.userRoot().get(Prop.PROP_TXT_COLOR.name(), "#000000");
                 getEditorPane().setCaretColor(Utils.hex2Rgb(txtColor));
                 getEditorPane().getCaret().setBlinkRate(0);
                 getEditorPane().requestFocus();

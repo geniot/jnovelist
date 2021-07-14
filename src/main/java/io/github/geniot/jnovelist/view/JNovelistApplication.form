@@ -7,113 +7,6 @@
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="9c47b" binding="toolbarPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
-        <constraints border-constraint="North"/>
-        <properties/>
-        <border type="none">
-          <size top="5" left="0" bottom="5" right="5"/>
-        </border>
-        <children>
-          <component id="281e" class="javax.swing.JButton" binding="loadButton">
-            <constraints/>
-            <properties>
-              <focusPainted value="false"/>
-              <focusable value="false"/>
-              <icon value="images/Load.png"/>
-              <maximumSize width="40" height="40"/>
-              <minimumSize width="40" height="40"/>
-              <preferredSize width="40" height="40"/>
-              <text value=""/>
-            </properties>
-          </component>
-          <component id="41fb3" class="javax.swing.JButton" binding="gitButton">
-            <constraints/>
-            <properties>
-              <enabled value="false"/>
-              <focusPainted value="false"/>
-              <focusable value="false"/>
-              <icon value="images/Save.png"/>
-              <maximumSize width="40" height="40"/>
-              <minimumSize width="40" height="40"/>
-              <preferredSize width="40" height="40"/>
-              <text value=""/>
-            </properties>
-          </component>
-          <component id="f1d2e" class="javax.swing.JButton" binding="exportButton">
-            <constraints/>
-            <properties>
-              <borderPainted value="true"/>
-              <enabled value="true"/>
-              <focusPainted value="false"/>
-              <focusable value="false"/>
-              <icon value="images/Export.png"/>
-              <maximumSize width="40" height="40"/>
-              <minimumSize width="40" height="40"/>
-              <preferredSize width="40" height="40"/>
-              <requestFocusEnabled value="false"/>
-              <text value=""/>
-            </properties>
-          </component>
-          <component id="9261c" class="javax.swing.JButton" binding="unloadButton">
-            <constraints/>
-            <properties>
-              <enabled value="false"/>
-              <focusPainted value="false"/>
-              <focusable value="false"/>
-              <icon value="images/Unload.png"/>
-              <maximumSize width="40" height="40"/>
-              <minimumSize width="40" height="40"/>
-              <preferredSize width="40" height="40"/>
-              <text value=""/>
-            </properties>
-          </component>
-          <component id="61f16" class="javax.swing.JButton" binding="preferencesButton">
-            <constraints/>
-            <properties>
-              <borderPainted value="true"/>
-              <enabled value="true"/>
-              <focusPainted value="false"/>
-              <focusable value="false"/>
-              <icon value="images/Style.png"/>
-              <maximumSize width="40" height="40"/>
-              <minimumSize width="40" height="40"/>
-              <preferredSize width="40" height="40"/>
-              <requestFocusEnabled value="false"/>
-              <text value=""/>
-            </properties>
-          </component>
-          <component id="cbc4e" class="javax.swing.JButton" binding="infoButton">
-            <constraints/>
-            <properties>
-              <borderPainted value="true"/>
-              <enabled value="true"/>
-              <focusPainted value="false"/>
-              <focusable value="false"/>
-              <icon value="images/Info.png"/>
-              <maximumSize width="40" height="40"/>
-              <minimumSize width="40" height="40"/>
-              <preferredSize width="40" height="40"/>
-              <requestFocusEnabled value="false"/>
-              <text value=""/>
-            </properties>
-          </component>
-          <component id="f42fa" class="javax.swing.JButton" binding="dictionaryButton">
-            <constraints/>
-            <properties>
-              <borderPainted value="true"/>
-              <enabled value="true"/>
-              <focusPainted value="false"/>
-              <focusable value="false"/>
-              <icon value="images/Dictionary.png"/>
-              <maximumSize width="40" height="40"/>
-              <minimumSize width="40" height="40"/>
-              <preferredSize width="40" height="40"/>
-              <requestFocusEnabled value="false"/>
-              <text value=""/>
-            </properties>
-          </component>
-        </children>
-      </grid>
       <grid id="6ce1e" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints border-constraint="Center"/>
         <properties/>
@@ -155,6 +48,232 @@
                 </border>
                 <children/>
               </grid>
+            </children>
+          </grid>
+        </children>
+      </grid>
+      <grid id="ecfe4" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints border-constraint="South"/>
+        <properties/>
+        <border type="empty">
+          <size top="0" left="5" bottom="5" right="5"/>
+        </border>
+        <children>
+          <component id="c123c" class="javax.swing.JLabel" binding="leftStatus">
+            <constraints border-constraint="West"/>
+            <properties>
+              <horizontalAlignment value="2"/>
+              <text value=" "/>
+            </properties>
+          </component>
+          <component id="6c366" class="javax.swing.JLabel" binding="centerStatus">
+            <constraints border-constraint="Center"/>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <text value=" "/>
+            </properties>
+          </component>
+          <component id="20db8" class="javax.swing.JLabel" binding="rightStatus">
+            <constraints border-constraint="East"/>
+            <properties>
+              <horizontalAlignment value="4"/>
+              <text value=" "/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="e6d7d" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints border-constraint="North"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <grid id="9c47b" binding="toolbarPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+            <constraints border-constraint="West"/>
+            <properties/>
+            <border type="none">
+              <size top="5" left="0" bottom="5" right="5"/>
+            </border>
+            <children>
+              <component id="281e" class="javax.swing.JButton" binding="loadButton">
+                <constraints/>
+                <properties>
+                  <focusPainted value="false"/>
+                  <focusable value="false"/>
+                  <icon value="images/Load.png"/>
+                  <maximumSize width="40" height="40"/>
+                  <minimumSize width="40" height="40"/>
+                  <preferredSize width="40" height="40"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="41fb3" class="javax.swing.JButton" binding="gitButton">
+                <constraints/>
+                <properties>
+                  <enabled value="false"/>
+                  <focusPainted value="false"/>
+                  <focusable value="false"/>
+                  <icon value="images/Save.png"/>
+                  <maximumSize width="40" height="40"/>
+                  <minimumSize width="40" height="40"/>
+                  <preferredSize width="40" height="40"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="f1d2e" class="javax.swing.JButton" binding="exportButton">
+                <constraints/>
+                <properties>
+                  <borderPainted value="true"/>
+                  <enabled value="true"/>
+                  <focusPainted value="false"/>
+                  <focusable value="false"/>
+                  <icon value="images/Export.png"/>
+                  <maximumSize width="40" height="40"/>
+                  <minimumSize width="40" height="40"/>
+                  <preferredSize width="40" height="40"/>
+                  <requestFocusEnabled value="false"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="9261c" class="javax.swing.JButton" binding="unloadButton">
+                <constraints/>
+                <properties>
+                  <enabled value="false"/>
+                  <focusPainted value="false"/>
+                  <focusable value="false"/>
+                  <icon value="images/Unload.png"/>
+                  <maximumSize width="40" height="40"/>
+                  <minimumSize width="40" height="40"/>
+                  <preferredSize width="40" height="40"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="61f16" class="javax.swing.JButton" binding="preferencesButton">
+                <constraints/>
+                <properties>
+                  <borderPainted value="true"/>
+                  <enabled value="true"/>
+                  <focusPainted value="false"/>
+                  <focusable value="false"/>
+                  <icon value="images/Style.png"/>
+                  <maximumSize width="40" height="40"/>
+                  <minimumSize width="40" height="40"/>
+                  <preferredSize width="40" height="40"/>
+                  <requestFocusEnabled value="false"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="cbc4e" class="javax.swing.JButton" binding="infoButton">
+                <constraints/>
+                <properties>
+                  <borderPainted value="true"/>
+                  <enabled value="true"/>
+                  <focusPainted value="false"/>
+                  <focusable value="false"/>
+                  <icon value="images/Info.png"/>
+                  <maximumSize width="40" height="40"/>
+                  <minimumSize width="40" height="40"/>
+                  <preferredSize width="40" height="40"/>
+                  <requestFocusEnabled value="false"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="f42fa" class="javax.swing.JButton" binding="dictionaryButton">
+                <constraints/>
+                <properties>
+                  <borderPainted value="true"/>
+                  <enabled value="true"/>
+                  <focusPainted value="false"/>
+                  <focusable value="false"/>
+                  <icon value="images/Dictionary.png"/>
+                  <maximumSize width="40" height="40"/>
+                  <minimumSize width="40" height="40"/>
+                  <preferredSize width="40" height="40"/>
+                  <requestFocusEnabled value="false"/>
+                  <text value=""/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="2c74" binding="novelbarPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+            <constraints border-constraint="East"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="ea489" class="javax.swing.JButton" binding="heroesButton">
+                <constraints/>
+                <properties>
+                  <borderPainted value="true"/>
+                  <enabled value="true"/>
+                  <focusPainted value="false"/>
+                  <focusable value="false"/>
+                  <icon value="images/Heros.png"/>
+                  <maximumSize width="40" height="40"/>
+                  <minimumSize width="40" height="40"/>
+                  <preferredSize width="40" height="40"/>
+                  <requestFocusEnabled value="false"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="d5df" class="javax.swing.JButton" binding="placesButton">
+                <constraints/>
+                <properties>
+                  <borderPainted value="true"/>
+                  <enabled value="true"/>
+                  <focusPainted value="false"/>
+                  <focusable value="false"/>
+                  <icon value="images/Places.png"/>
+                  <maximumSize width="40" height="40"/>
+                  <minimumSize width="40" height="40"/>
+                  <preferredSize width="40" height="40"/>
+                  <requestFocusEnabled value="false"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="6cf86" class="javax.swing.JButton" binding="thingsButton">
+                <constraints/>
+                <properties>
+                  <borderPainted value="true"/>
+                  <enabled value="true"/>
+                  <focusPainted value="false"/>
+                  <focusable value="false"/>
+                  <icon value="images/Things.png"/>
+                  <maximumSize width="40" height="40"/>
+                  <minimumSize width="40" height="40"/>
+                  <preferredSize width="40" height="40"/>
+                  <requestFocusEnabled value="false"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="962fa" class="javax.swing.JButton" binding="notesButton">
+                <constraints/>
+                <properties>
+                  <borderPainted value="true"/>
+                  <enabled value="true"/>
+                  <focusPainted value="false"/>
+                  <focusable value="false"/>
+                  <icon value="images/Notes.png"/>
+                  <maximumSize width="40" height="40"/>
+                  <minimumSize width="40" height="40"/>
+                  <preferredSize width="40" height="40"/>
+                  <requestFocusEnabled value="false"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="471a" class="javax.swing.JButton" binding="imagesButton">
+                <constraints/>
+                <properties>
+                  <borderPainted value="true"/>
+                  <enabled value="true"/>
+                  <focusPainted value="false"/>
+                  <focusable value="false"/>
+                  <icon value="images/Images.png"/>
+                  <maximumSize width="40" height="40"/>
+                  <minimumSize width="40" height="40"/>
+                  <preferredSize width="40" height="40"/>
+                  <requestFocusEnabled value="false"/>
+                  <text value=""/>
+                </properties>
+              </component>
             </children>
           </grid>
         </children>

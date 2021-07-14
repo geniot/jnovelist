@@ -3,6 +3,7 @@ package io.github.geniot.jnovelist.view;
 import io.github.geniot.jnovelist.*;
 import io.github.geniot.jnovelist.actions.CommitterTask;
 import io.github.geniot.jnovelist.actions.LoadNovelAction;
+import io.github.geniot.jnovelist.actions.NovelAction;
 import io.github.geniot.jnovelist.model.Chapter;
 import io.github.geniot.jnovelist.model.JNovel;
 import io.github.geniot.jnovelist.model.Part;
@@ -32,11 +33,21 @@ public class JNovelistApplication extends DesktopApplication {
     private JPanel toolbarPanel;
     private JButton exportButton;
     private JButton dictionaryButton;
+    private JLabel leftStatus;
+    private JLabel centerStatus;
+    private JLabel rightStatus;
+    private JButton heroesButton;
+    private JButton placesButton;
+    private JButton thingsButton;
+    private JButton notesButton;
+    private JButton imagesButton;
+    private JPanel novelbarPanel;
 
     public JNovel novel;
     public String path;
     public CommitterTask committerTask;
     public ChapterEditor chapterEditor;
+    private NovelAction novelAction;
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
@@ -57,9 +68,47 @@ public class JNovelistApplication extends DesktopApplication {
     private void $$$setupUI$$$() {
         contentPanel = new JPanel();
         contentPanel.setLayout(new BorderLayout(0, 0));
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new BorderLayout(0, 0));
+        contentPanel.add(panel1, BorderLayout.CENTER);
+        tabsPanel = new JPanel();
+        tabsPanel.setLayout(new BorderLayout(0, 0));
+        panel1.add(tabsPanel, BorderLayout.NORTH);
+        partsPanel = new JPanel();
+        partsPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        tabsPanel.add(partsPanel, BorderLayout.NORTH);
+        chaptersPanel = new JPanel();
+        chaptersPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        tabsPanel.add(chaptersPanel, BorderLayout.SOUTH);
+        final JPanel panel2 = new JPanel();
+        panel2.setLayout(new BorderLayout(0, 0));
+        panel1.add(panel2, BorderLayout.CENTER);
+        panel2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        editorPanel = new JPanel();
+        editorPanel.setLayout(new BorderLayout(0, 0));
+        panel2.add(editorPanel, BorderLayout.CENTER);
+        final JPanel panel3 = new JPanel();
+        panel3.setLayout(new BorderLayout(0, 0));
+        contentPanel.add(panel3, BorderLayout.SOUTH);
+        panel3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        leftStatus = new JLabel();
+        leftStatus.setHorizontalAlignment(2);
+        leftStatus.setText(" ");
+        panel3.add(leftStatus, BorderLayout.WEST);
+        centerStatus = new JLabel();
+        centerStatus.setHorizontalAlignment(0);
+        centerStatus.setText(" ");
+        panel3.add(centerStatus, BorderLayout.CENTER);
+        rightStatus = new JLabel();
+        rightStatus.setHorizontalAlignment(4);
+        rightStatus.setText(" ");
+        panel3.add(rightStatus, BorderLayout.EAST);
+        final JPanel panel4 = new JPanel();
+        panel4.setLayout(new BorderLayout(0, 0));
+        contentPanel.add(panel4, BorderLayout.NORTH);
         toolbarPanel = new JPanel();
         toolbarPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-        contentPanel.add(toolbarPanel, BorderLayout.NORTH);
+        panel4.add(toolbarPanel, BorderLayout.WEST);
         loadButton = new JButton();
         loadButton.setFocusPainted(false);
         loadButton.setFocusable(false);
@@ -137,25 +186,69 @@ public class JNovelistApplication extends DesktopApplication {
         dictionaryButton.setRequestFocusEnabled(false);
         dictionaryButton.setText("");
         toolbarPanel.add(dictionaryButton);
-        final JPanel panel1 = new JPanel();
-        panel1.setLayout(new BorderLayout(0, 0));
-        contentPanel.add(panel1, BorderLayout.CENTER);
-        tabsPanel = new JPanel();
-        tabsPanel.setLayout(new BorderLayout(0, 0));
-        panel1.add(tabsPanel, BorderLayout.NORTH);
-        partsPanel = new JPanel();
-        partsPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        tabsPanel.add(partsPanel, BorderLayout.NORTH);
-        chaptersPanel = new JPanel();
-        chaptersPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-        tabsPanel.add(chaptersPanel, BorderLayout.SOUTH);
-        final JPanel panel2 = new JPanel();
-        panel2.setLayout(new BorderLayout(0, 0));
-        panel1.add(panel2, BorderLayout.CENTER);
-        panel2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-        editorPanel = new JPanel();
-        editorPanel.setLayout(new BorderLayout(0, 0));
-        panel2.add(editorPanel, BorderLayout.CENTER);
+        novelbarPanel = new JPanel();
+        novelbarPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        panel4.add(novelbarPanel, BorderLayout.EAST);
+        heroesButton = new JButton();
+        heroesButton.setBorderPainted(true);
+        heroesButton.setEnabled(true);
+        heroesButton.setFocusPainted(false);
+        heroesButton.setFocusable(false);
+        heroesButton.setIcon(new ImageIcon(getClass().getResource("/images/Heros.png")));
+        heroesButton.setMaximumSize(new Dimension(40, 40));
+        heroesButton.setMinimumSize(new Dimension(40, 40));
+        heroesButton.setPreferredSize(new Dimension(40, 40));
+        heroesButton.setRequestFocusEnabled(false);
+        heroesButton.setText("");
+        novelbarPanel.add(heroesButton);
+        placesButton = new JButton();
+        placesButton.setBorderPainted(true);
+        placesButton.setEnabled(true);
+        placesButton.setFocusPainted(false);
+        placesButton.setFocusable(false);
+        placesButton.setIcon(new ImageIcon(getClass().getResource("/images/Places.png")));
+        placesButton.setMaximumSize(new Dimension(40, 40));
+        placesButton.setMinimumSize(new Dimension(40, 40));
+        placesButton.setPreferredSize(new Dimension(40, 40));
+        placesButton.setRequestFocusEnabled(false);
+        placesButton.setText("");
+        novelbarPanel.add(placesButton);
+        thingsButton = new JButton();
+        thingsButton.setBorderPainted(true);
+        thingsButton.setEnabled(true);
+        thingsButton.setFocusPainted(false);
+        thingsButton.setFocusable(false);
+        thingsButton.setIcon(new ImageIcon(getClass().getResource("/images/Things.png")));
+        thingsButton.setMaximumSize(new Dimension(40, 40));
+        thingsButton.setMinimumSize(new Dimension(40, 40));
+        thingsButton.setPreferredSize(new Dimension(40, 40));
+        thingsButton.setRequestFocusEnabled(false);
+        thingsButton.setText("");
+        novelbarPanel.add(thingsButton);
+        notesButton = new JButton();
+        notesButton.setBorderPainted(true);
+        notesButton.setEnabled(true);
+        notesButton.setFocusPainted(false);
+        notesButton.setFocusable(false);
+        notesButton.setIcon(new ImageIcon(getClass().getResource("/images/Notes.png")));
+        notesButton.setMaximumSize(new Dimension(40, 40));
+        notesButton.setMinimumSize(new Dimension(40, 40));
+        notesButton.setPreferredSize(new Dimension(40, 40));
+        notesButton.setRequestFocusEnabled(false);
+        notesButton.setText("");
+        novelbarPanel.add(notesButton);
+        imagesButton = new JButton();
+        imagesButton.setBorderPainted(true);
+        imagesButton.setEnabled(true);
+        imagesButton.setFocusPainted(false);
+        imagesButton.setFocusable(false);
+        imagesButton.setIcon(new ImageIcon(getClass().getResource("/images/Images.png")));
+        imagesButton.setMaximumSize(new Dimension(40, 40));
+        imagesButton.setMinimumSize(new Dimension(40, 40));
+        imagesButton.setPreferredSize(new Dimension(40, 40));
+        imagesButton.setRequestFocusEnabled(false);
+        imagesButton.setText("");
+        novelbarPanel.add(imagesButton);
     }
 
     /**
@@ -179,6 +272,7 @@ public class JNovelistApplication extends DesktopApplication {
         getContentPane().add(contentPanel, BorderLayout.CENTER);
 
         toolbarPanel.setLayout(new WrapLayout(WrapLayout.LEFT, 5, 5));
+        novelbarPanel.setLayout(new WrapLayout(WrapLayout.LEFT, 5, 5));
         chaptersPanel.setLayout(new WrapLayout(WrapLayout.LEFT, 5, 5));
         partsPanel.setLayout(new WrapLayout(WrapLayout.LEFT, 5, 5));
 
@@ -219,6 +313,13 @@ public class JNovelistApplication extends DesktopApplication {
             }
         });
 
+        novelAction = new NovelAction(this);
+        heroesButton.addActionListener(novelAction);
+        placesButton.addActionListener(novelAction);
+        thingsButton.addActionListener(novelAction);
+        notesButton.addActionListener(novelAction);
+        imagesButton.addActionListener(novelAction);
+
         pack();
 
         SwingUtilities.invokeLater(new Runnable() {
@@ -250,6 +351,12 @@ public class JNovelistApplication extends DesktopApplication {
             gitButton.setEnabled(false);
             exportButton.setEnabled(false);
 
+            heroesButton.setEnabled(false);
+            placesButton.setEnabled(false);
+            thingsButton.setEnabled(false);
+            notesButton.setEnabled(false);
+            imagesButton.setEnabled(false);
+
         } else {
             setTitle(path);
             preferences.put(LoadNovelAction.Prop.LAST_OPEN_FILE.name(), path);
@@ -258,6 +365,12 @@ public class JNovelistApplication extends DesktopApplication {
             unloadButton.setEnabled(true);
             gitButton.setEnabled(true);
             exportButton.setEnabled(true);
+
+            heroesButton.setEnabled(true);
+            placesButton.setEnabled(true);
+            thingsButton.setEnabled(true);
+            notesButton.setEnabled(true);
+            imagesButton.setEnabled(true);
 
             int partCounter = 1;
             ButtonGroup partsButtonGroup = new ButtonGroup();
@@ -307,7 +420,7 @@ public class JNovelistApplication extends DesktopApplication {
 
     public void setChapter(Chapter chapter) {
         if (chapterEditor == null) {
-            chapterEditor = new ChapterEditor(chapter, this);
+            chapterEditor = new ChapterEditor(chapter);
             chapterEditor.setBorder(new LineBorder(Color.BLACK));
             editorPanel.add(chapterEditor, BorderLayout.CENTER);
         } else {
