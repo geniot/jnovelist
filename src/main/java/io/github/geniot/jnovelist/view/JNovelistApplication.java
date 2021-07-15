@@ -9,7 +9,6 @@ import io.github.geniot.jnovelist.model.JNovel;
 import io.github.geniot.jnovelist.model.Part;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -33,15 +32,16 @@ public class JNovelistApplication extends DesktopApplication {
     private JPanel toolbarPanel;
     private JButton exportButton;
     private JButton dictionaryButton;
-    private JLabel leftStatus;
-    private JLabel centerStatus;
-    private JLabel rightStatus;
+    public JLabel leftStatus;
+    public JLabel centerStatus;
+    public JLabel rightStatus;
     private JButton heroesButton;
     private JButton placesButton;
     private JButton thingsButton;
     private JButton notesButton;
     private JButton imagesButton;
     private JPanel novelbarPanel;
+    private JPanel statusPanel;
 
     public JNovel novel;
     public String path;
@@ -86,28 +86,28 @@ public class JNovelistApplication extends DesktopApplication {
         editorPanel = new JPanel();
         editorPanel.setLayout(new BorderLayout(0, 0));
         panel2.add(editorPanel, BorderLayout.CENTER);
-        final JPanel panel3 = new JPanel();
-        panel3.setLayout(new BorderLayout(0, 0));
-        contentPanel.add(panel3, BorderLayout.SOUTH);
-        panel3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        statusPanel = new JPanel();
+        statusPanel.setLayout(new BorderLayout(0, 0));
+        contentPanel.add(statusPanel, BorderLayout.SOUTH);
+        statusPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         leftStatus = new JLabel();
         leftStatus.setHorizontalAlignment(2);
         leftStatus.setText(" ");
-        panel3.add(leftStatus, BorderLayout.WEST);
+        statusPanel.add(leftStatus, BorderLayout.WEST);
         centerStatus = new JLabel();
         centerStatus.setHorizontalAlignment(0);
         centerStatus.setText(" ");
-        panel3.add(centerStatus, BorderLayout.CENTER);
+        statusPanel.add(centerStatus, BorderLayout.CENTER);
         rightStatus = new JLabel();
         rightStatus.setHorizontalAlignment(4);
         rightStatus.setText(" ");
-        panel3.add(rightStatus, BorderLayout.EAST);
-        final JPanel panel4 = new JPanel();
-        panel4.setLayout(new BorderLayout(0, 0));
-        contentPanel.add(panel4, BorderLayout.NORTH);
+        statusPanel.add(rightStatus, BorderLayout.EAST);
+        final JPanel panel3 = new JPanel();
+        panel3.setLayout(new BorderLayout(0, 0));
+        contentPanel.add(panel3, BorderLayout.NORTH);
         toolbarPanel = new JPanel();
         toolbarPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-        panel4.add(toolbarPanel, BorderLayout.WEST);
+        panel3.add(toolbarPanel, BorderLayout.WEST);
         loadButton = new JButton();
         loadButton.setFocusPainted(false);
         loadButton.setFocusable(false);
@@ -187,7 +187,7 @@ public class JNovelistApplication extends DesktopApplication {
         toolbarPanel.add(dictionaryButton);
         novelbarPanel = new JPanel();
         novelbarPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        panel4.add(novelbarPanel, BorderLayout.EAST);
+        panel3.add(novelbarPanel, BorderLayout.EAST);
         heroesButton = new JButton();
         heroesButton.setBorderPainted(true);
         heroesButton.setEnabled(true);
@@ -282,6 +282,7 @@ public class JNovelistApplication extends DesktopApplication {
 
         unloadButton.addActionListener(e -> {
             chapterEditor = null;
+            updateStatus();
             preferences.remove(LoadNovelAction.Prop.LAST_OPEN_FILE.name());
             committerTask.save(true, true);
         });
@@ -419,14 +420,40 @@ public class JNovelistApplication extends DesktopApplication {
     public void setChapter(Chapter chapter) {
         if (chapterEditor == null) {
             chapterEditor = new ChapterEditor(chapter);
-            chapterEditor.setBorder(new LineBorder(Color.BLACK));
+            chapterEditor.getDocument().addDocumentListener(new StatusUpdater(this));
+            editorPanel.removeAll();
             editorPanel.add(chapterEditor, BorderLayout.CENTER);
         } else {
             chapterEditor.setChapter(chapter);
         }
+        updateStatus();
         invalidate();
         validate();
         repaint();
+    }
+
+
+    public void updateStatus() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                String displayType = preferences.get(ChapterEditor.Prop.PROP_STATS.name(), PreferencesDialog.Stats.CHARACTERS.label);
+                if (displayType.equals(PreferencesDialog.Stats.NONE.label)) {
+                    statusPanel.setVisible(false);
+                } else {
+                    statusPanel.setVisible(true);
+                    if (chapterEditor == null) {
+                        rightStatus.setText("");
+                    } else {
+                        if (displayType.equals(PreferencesDialog.Stats.CHARACTERS.label)) {
+                            rightStatus.setText(String.valueOf(chapterEditor.chapter.sizeCharacters()));
+                        } else if (displayType.equals(PreferencesDialog.Stats.WORDS.label)) {
+                            rightStatus.setText(String.valueOf(chapterEditor.chapter.sizeWords()));
+                        }
+                    }
+                }
+            }
+        });
     }
 
     public void selectChapter() {

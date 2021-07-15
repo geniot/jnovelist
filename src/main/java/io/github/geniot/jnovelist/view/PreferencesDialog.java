@@ -28,6 +28,7 @@ public class PreferencesDialog extends JDialog {
     private JComboBox fontSizeComboBox;
     private JComboBox borderMarginComboBox;
     private JPanel previewPanel;
+    private JComboBox statsComboBox;
     private JNovelistApplication frame;
     private ChapterEditor chapterEditor;
 
@@ -38,6 +39,17 @@ public class PreferencesDialog extends JDialog {
             LOREM_IPSUM = IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream("lorem_ipsum.txt"), StandardCharsets.UTF_8.name());
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public enum Stats {
+        NONE("none"),
+        CHARACTERS("characters"),
+        WORDS("words");
+        public final String label;
+
+        private Stats(String label) {
+            this.label = label;
         }
     }
 
@@ -165,6 +177,7 @@ public class PreferencesDialog extends JDialog {
 
         themeComboBox.setSelectedItem(frame.preferences.get(ChapterEditor.Prop.PROP_LAF.name(), "Luna"));
 
+        statsComboBox.setSelectedItem(frame.preferences.get(ChapterEditor.Prop.PROP_STATS.name(), Stats.CHARACTERS.label));
 
         pack();
         if (frame != null) {
@@ -197,6 +210,7 @@ public class PreferencesDialog extends JDialog {
         frame.preferences.put(ChapterEditor.Prop.PROP_FONT_FACE.name(), fontComboBox.getSelectedItem().toString());
         frame.preferences.put(ChapterEditor.Prop.PROP_FONT_SIZE.name(), fontSizeComboBox.getSelectedItem().toString());
         frame.preferences.put(ChapterEditor.Prop.PROP_MARGIN.name(), borderMarginComboBox.getSelectedItem().toString());
+        frame.preferences.put(ChapterEditor.Prop.PROP_STATS.name(), statsComboBox.getSelectedItem().toString());
 
         String oldLaf = frame.preferences.get(ChapterEditor.Prop.PROP_LAF.name(), null);
         String newLaf = themeComboBox.getSelectedItem().toString();
@@ -206,6 +220,7 @@ public class PreferencesDialog extends JDialog {
             Utils.setLAF(newLaf, frame);
         }
         if (frame.chapterEditor != null) {
+            frame.updateStatus();
             frame.chapterEditor.reset();
         }
         dispose();
@@ -257,7 +272,7 @@ public class PreferencesDialog extends JDialog {
         buttonCancel.setText("Cancel");
         panel2.add(buttonCancel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayoutManager(7, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel3.setLayout(new GridLayoutManager(8, 2, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JLabel label1 = new JLabel();
         label1.setText("Theme:");
@@ -345,12 +360,22 @@ public class PreferencesDialog extends JDialog {
         panel3.add(borderMarginComboBox, new GridConstraints(5, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        panel3.add(panel4, new GridConstraints(6, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel3.add(panel4, new GridConstraints(7, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         panel4.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Editor Preview", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         previewPanel = new JPanel();
         previewPanel.setLayout(new BorderLayout(0, 0));
         panel4.add(previewPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         previewPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        final JLabel label7 = new JLabel();
+        label7.setText("Status bar stats:");
+        panel3.add(label7, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        statsComboBox = new JComboBox();
+        final DefaultComboBoxModel defaultComboBoxModel4 = new DefaultComboBoxModel();
+        defaultComboBoxModel4.addElement("none");
+        defaultComboBoxModel4.addElement("characters");
+        defaultComboBoxModel4.addElement("words");
+        statsComboBox.setModel(defaultComboBoxModel4);
+        panel3.add(statsComboBox, new GridConstraints(6, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**

@@ -1,6 +1,7 @@
 package io.github.geniot.jnovelist.model;
 
 import java.io.Serializable;
+import java.util.StringTokenizer;
 
 /**
  * Author: Vitaly Sazanovich
@@ -16,5 +17,21 @@ public class Chapter implements Serializable {
 
     public void setLines(String[] lines) {
         this.lines = lines;
+    }
+
+    public int sizeCharacters() {
+        int sum = 0;
+        for (String line : getLines()) {
+            sum += line.length();
+        }
+        return sum;
+    }
+
+    public int sizeWords() {
+        int sum = 0;
+        for (String line : getLines()) {
+            sum += new StringTokenizer(line).countTokens();
+        }
+        return sum;
     }
 }

@@ -1,13 +1,9 @@
 package io.github.geniot.jnovelist;
 
 import io.github.geniot.jnovelist.model.Chapter;
-import io.github.geniot.jnovelist.model.Part;
 import io.github.geniot.jnovelist.view.ExtrasDialog;
-import io.github.geniot.jnovelist.view.JNovelistApplication;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 public class ExtrasContextPopupMenu extends JPopupMenu {

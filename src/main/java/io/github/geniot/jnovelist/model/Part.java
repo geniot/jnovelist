@@ -23,4 +23,14 @@ public class Part implements Serializable {
     public void setChapters(List<Chapter> chapters) {
         this.chapters = chapters;
     }
+
+    public int size() {
+        int sum = 0;
+        for (Chapter chapter : getChapters()) {
+            for (String line : chapter.getLines()) {
+                sum += line.length();
+            }
+        }
+        return sum;
+    }
 }

@@ -6,12 +6,14 @@ import io.github.geniot.shtml.SHTMLPanelSingleDocImpl;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.*;
 import java.util.prefs.Preferences;
 
 public class ChapterEditor extends SHTMLPanelSingleDocImpl {
-    private Chapter chapter;
+    public Chapter chapter;
 
     public enum Prop {
         PROP_BG_COLOR,
@@ -19,7 +21,8 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
         PROP_FONT_FACE,
         PROP_FONT_SIZE,
         PROP_MARGIN,
-        PROP_LAF
+        PROP_LAF,
+        PROP_STATS
     }
 
     public String docStart() {
@@ -113,5 +116,6 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
         JViewport viewport = (JViewport) getDocumentPane().getEditor().getParent();
         JScrollPane scrollPane = (JScrollPane) viewport.getParent();
         scrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
+        setBorder(new LineBorder(Color.BLACK));
     }
 }

@@ -1,12 +1,12 @@
 package io.github.geniot.jnovelist.view;
 
-import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.uiDesigner.core.GridLayoutManager;
-import io.github.geniot.jnovelist.*;
+import io.github.geniot.jnovelist.ChapterEditor;
+import io.github.geniot.jnovelist.ExtrasButton;
+import io.github.geniot.jnovelist.PlusButton;
+import io.github.geniot.jnovelist.WrapLayout;
 import io.github.geniot.jnovelist.model.Chapter;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
@@ -128,7 +128,7 @@ public class ExtrasDialog extends JDialog {
     public void setChapter(Chapter chapter) {
         if (chapterEditor == null) {
             chapterEditor = new ChapterEditor(chapter);
-            chapterEditor.setBorder(new LineBorder(Color.BLACK));
+            editorPanel.removeAll();
             editorPanel.add(chapterEditor, BorderLayout.CENTER);
         } else {
             chapterEditor.setChapter(chapter);

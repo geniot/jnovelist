@@ -52,7 +52,7 @@
           </grid>
         </children>
       </grid>
-      <grid id="ecfe4" layout-manager="BorderLayout" hgap="0" vgap="0">
+      <grid id="ecfe4" binding="statusPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints border-constraint="South"/>
         <properties/>
         <border type="empty">

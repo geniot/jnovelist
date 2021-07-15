@@ -89,4 +89,16 @@ public class JNovel implements Serializable {
         }
         return novelLines;
     }
+
+    public int size() {
+        int sum = 0;
+        for (Part part : parts) {
+            for (Chapter chapter : part.getChapters()) {
+                for (String line : chapter.getLines()) {
+                    sum += line.length();
+                }
+            }
+        }
+        return sum;
+    }
 }
