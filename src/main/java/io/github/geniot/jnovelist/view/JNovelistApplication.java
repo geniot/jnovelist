@@ -47,7 +47,6 @@ public class JNovelistApplication extends DesktopApplication {
     public String path;
     public CommitterTask committerTask;
     public ChapterEditor chapterEditor;
-    private NovelAction novelAction;
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
@@ -313,12 +312,11 @@ public class JNovelistApplication extends DesktopApplication {
             }
         });
 
-        novelAction = new NovelAction(this);
-        heroesButton.addActionListener(novelAction);
-        placesButton.addActionListener(novelAction);
-        thingsButton.addActionListener(novelAction);
-        notesButton.addActionListener(novelAction);
-        imagesButton.addActionListener(novelAction);
+        heroesButton.addActionListener(new NovelAction(this, NovelAction.Type.HEROES));
+        placesButton.addActionListener(new NovelAction(this, NovelAction.Type.PLACES));
+        thingsButton.addActionListener(new NovelAction(this, NovelAction.Type.THINGS));
+        notesButton.addActionListener(new NovelAction(this, NovelAction.Type.NOTES));
+        imagesButton.addActionListener(new NovelAction(this, NovelAction.Type.IMAGES));
 
         pack();
 

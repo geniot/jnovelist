@@ -2,11 +2,12 @@ package io.github.geniot.jnovelist.view;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.intellij.uiDesigner.core.Spacer;
-import io.github.geniot.jnovelist.DnDTabbedPane;
+import io.github.geniot.jnovelist.*;
 import io.github.geniot.jnovelist.model.Chapter;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Arrays;
@@ -17,19 +18,22 @@ public class ExtrasDialog extends JDialog {
     private JButton buttonOK;
     private JButton buttonCancel;
     private JPanel editorPanel;
-    private DnDTabbedPane dnDTabbedPane;
+    public JPanel chaptersPanel;
+    private JNovelistApplication frame;
+    private ChapterEditor chapterEditor;
 
-    public ExtrasDialog(List<Chapter> chapterList) {
+    public ExtrasDialog(List<Chapter> chapterList, JNovelistApplication f, String title) {
+        this.frame = f;
+        setTitle(title);
         setContentPane(contentPane);
         setModal(true);
+        chaptersPanel.setLayout(new WrapLayout(WrapLayout.LEFT, 5, 5));
         getRootPane().setDefaultButton(buttonOK);
 
-        dnDTabbedPane = new DnDTabbedPane(DnDTabbedPane.INDEX_TO_ALPHABET, chapterList);
-        editorPanel.add(dnDTabbedPane, BorderLayout.CENTER);
+        if (chapterList.isEmpty()) {
+            chapterList.add(new Chapter());
+        }
 
-        buttonOK.addActionListener(e -> onOK());
-
-        buttonCancel.addActionListener(e -> onCancel());
 
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -45,6 +49,30 @@ public class ExtrasDialog extends JDialog {
                 onCancel();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        int chapterCounter = 1;
+        ButtonGroup chaptersButtonGroup = new ButtonGroup();
+        for (Chapter chapter : chapterList) {
+            ExtrasButton chapterButton = new ExtrasButton(chapterCounter, chapter, chapterList, this);
+            ++chapterCounter;
+            chaptersButtonGroup.add(chapterButton);
+            chaptersPanel.add(chapterButton);
+        }
+        PlusButton chapterPlusButton = new PlusButton();
+        chapterPlusButton.addActionListener(e -> {
+            Chapter newChapter = new Chapter();
+            chapterList.add(newChapter);
+            ExtrasButton chapterButton = new ExtrasButton(chaptersPanel.getComponentCount(), newChapter, chapterList, ExtrasDialog.this);
+            chaptersButtonGroup.add(chapterButton);
+            chaptersPanel.add(chapterButton, chaptersPanel.getComponentCount() - 1);
+            chapterButton.doClick();
+        });
+        chaptersPanel.add(chapterPlusButton);
+
+        selectChapter();
+
+        pack();
+        setLocationRelativeTo(frame);
     }
 
     private void onOK() {
@@ -58,7 +86,7 @@ public class ExtrasDialog extends JDialog {
     }
 
     public static void main(String[] args) {
-        ExtrasDialog dialog = new ExtrasDialog(Arrays.asList(new Chapter[]{new Chapter()}));
+        ExtrasDialog dialog = new ExtrasDialog(Arrays.asList(new Chapter[]{new Chapter()}), null, "Test");
         dialog.pack();
         dialog.setVisible(true);
         System.exit(0);
@@ -80,28 +108,14 @@ public class ExtrasDialog extends JDialog {
      */
     private void $$$setupUI$$$() {
         contentPane = new JPanel();
-        contentPane.setLayout(new GridLayoutManager(2, 1, new Insets(10, 10, 10, 10), -1, -1));
-        final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
-        contentPane.add(panel1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
-        final Spacer spacer1 = new Spacer();
-        panel1.add(spacer1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-        final JPanel panel2 = new JPanel();
-        panel2.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1, true, false));
-        panel1.add(panel2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        buttonOK = new JButton();
-        buttonOK.setFocusPainted(false);
-        buttonOK.setFocusable(false);
-        buttonOK.setText("OK");
-        panel2.add(buttonOK, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        buttonCancel = new JButton();
-        buttonCancel.setFocusPainted(false);
-        buttonCancel.setFocusable(false);
-        buttonCancel.setText("Cancel");
-        panel2.add(buttonCancel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        contentPane.setLayout(new BorderLayout(0, 0));
         editorPanel = new JPanel();
         editorPanel.setLayout(new BorderLayout(0, 0));
-        contentPane.add(editorPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        contentPane.add(editorPanel, BorderLayout.CENTER);
+        editorPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        chaptersPanel = new JPanel();
+        chaptersPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        contentPane.add(chaptersPanel, BorderLayout.NORTH);
     }
 
     /**
@@ -111,4 +125,25 @@ public class ExtrasDialog extends JDialog {
         return contentPane;
     }
 
+    public void setChapter(Chapter chapter) {
+        if (chapterEditor == null) {
+            chapterEditor = new ChapterEditor(chapter);
+            chapterEditor.setBorder(new LineBorder(Color.BLACK));
+            editorPanel.add(chapterEditor, BorderLayout.CENTER);
+        } else {
+            chapterEditor.setChapter(chapter);
+        }
+        invalidate();
+        validate();
+        repaint();
+    }
+
+    public void selectChapter() {
+//        int selectedChapter = preferences.getInt(JNovelistApplication.Prop.SELECTED_CHAPTER.name(), 1);
+        int selectedChapter = 1;
+        if (selectedChapter > chaptersPanel.getComponentCount() - 1) {
+            selectedChapter = chaptersPanel.getComponentCount() - 1;
+        }
+        ((ExtrasButton) chaptersPanel.getComponent(selectedChapter - 1)).doClick();
+    }
 }

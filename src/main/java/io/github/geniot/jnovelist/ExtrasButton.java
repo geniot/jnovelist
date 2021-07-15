@@ -1,38 +1,37 @@
 package io.github.geniot.jnovelist;
 
 import io.github.geniot.jnovelist.model.Chapter;
-import io.github.geniot.jnovelist.model.Part;
-import io.github.geniot.jnovelist.view.JNovelistApplication;
+import io.github.geniot.jnovelist.view.ExtrasDialog;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
-public class ChapterButton extends JToggleButton {
-    protected JNovelistApplication frame;
+public class ExtrasButton extends JToggleButton {
+    protected ExtrasDialog extrasDialog;
     private Chapter chapter;
-    private Part part;
+    private List<Chapter> chapterList;
 
-    public ChapterButton(String label, JNovelistApplication f) {
+    public ExtrasButton(String label, ExtrasDialog f) {
         super(label);
-        this.frame = f;
+        this.extrasDialog = f;
         Utils.stylizeButton(this);
     }
 
-    public ChapterButton(int order, Chapter c, Part p, JNovelistApplication f) {
+    public ExtrasButton(int order, Chapter c, List<Chapter> p, ExtrasDialog f) {
         super(String.valueOf(order));
-        this.frame = f;
+        this.extrasDialog = f;
         this.chapter = c;
-        this.part = p;
+        this.chapterList = p;
         Utils.stylizeButton(this);
         //on select
         addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frame.preferences.putInt(JNovelistApplication.Prop.SELECTED_CHAPTER.name(), getChapterButtonIndex() + 1);
-                frame.setChapter(chapter);
+                extrasDialog.setChapter(chapter);
             }
         });
 
@@ -47,8 +46,8 @@ public class ChapterButton extends JToggleButton {
             }
 
             private void maybeShowPopup(MouseEvent e) {
-                if (e.isPopupTrigger() && part.getChapters().size() > 1) {
-                    ChapterContextPopupMenu popup = new ChapterContextPopupMenu(ChapterButton.this, chapter, part, frame);
+                if (e.isPopupTrigger() && p.size() > 1) {
+                    ExtrasContextPopupMenu popup = new ExtrasContextPopupMenu(ExtrasButton.this, chapter, chapterList, extrasDialog);
                     popup.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
@@ -65,3 +64,4 @@ public class ChapterButton extends JToggleButton {
     }
 
 }
+

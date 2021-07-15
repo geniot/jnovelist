@@ -34,7 +34,7 @@ public class CommitterTask implements Runnable {
                 if (hash != projectHash) {
                     projectHash = hash;
                     FileUtils.writeStringToFile(new File(frame.path), projectJSON, StandardCharsets.UTF_8.name());
-                    System.out.println("Saved in: " + (System.currentTimeMillis() - t1) + "ms");
+//                    System.out.println("Saved in: " + (System.currentTimeMillis() - t1) + "ms");
                 }
                 if (push) {
                     SyncDialog syncDialog = new SyncDialog(frame);
