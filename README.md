@@ -48,6 +48,13 @@ Linux/iOS: use the single jar file that comes with all dependencies. You only ne
 
 No license. Public domain.
 
-# Icons
+# Third-party
 
-FatCow: [https://www.fatcow.com/free-icons](https://www.fatcow.com/free-icons)
+FatCow icons: [https://www.fatcow.com/free-icons](https://www.fatcow.com/free-icons)
+
+Favicon generated at: [https://favicon.io/favicon-generator/](https://favicon.io/favicon-generator/)
+
+Favicon font: [https://github.com/geniot/jnovelist/blob/master/src/main/resources/images/favicon/about.txt](https://github.com/geniot/jnovelist/blob/master/src/main/resources/images/favicon/about.txt)
+
+Look-and-feels: [http://www.jtattoo.net/](http://www.jtattoo.net/) 
+
