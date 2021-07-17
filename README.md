@@ -47,3 +47,7 @@ Linux/iOS: use the single jar file that comes with all dependencies. You only ne
 # License
 
 No license. Public domain.
+
+# Icons
+
+FatCow: [https://www.fatcow.com/free-icons](https://www.fatcow.com/free-icons)
