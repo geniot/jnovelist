@@ -14,7 +14,7 @@ I specifically used this huge text to test the performance. At some point I even
 - open/close a project file (json)
 - to create a new project use "Open" and type the name of the file
 - export (aggregates the novel text in one window, ready for copy-and-paste)
-- Git sync (runs git add, git push in a syncronisation dialog)
+- Git sync (runs git add, git push in a synchronization dialog)
 - preferences (change Look-and-feel, background color, text color, font, font size, border margin)
 - additional information (extras that are not part of the novel text, includes: characters, places, artifacts, notes)
 - novel consists of parts and chapters (use the add button '+' and right-click to add/remove chapters and parts)
