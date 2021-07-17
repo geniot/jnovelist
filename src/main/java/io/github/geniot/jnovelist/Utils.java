@@ -9,11 +9,11 @@ import java.awt.*;
 import java.io.File;
 
 public class Utils {
+    public static final String DEFAULT_LAF = "com.jtattoo.plaf.smart.SmartLookAndFeel";
     // Parallel arrays used in the conversion process.
     public static String[] RCODE = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
     public static int[] BVAL = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
     public static String[] ALPHABET = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
-    public static final String DEFAULT_LAF = "com.jtattoo.plaf.smart.SmartLookAndFeel";
     public static String LAF_PREFIX = "com.jtattoo.plaf.";
     public static String LAF_SUFFIX = "LookAndFeel";
 

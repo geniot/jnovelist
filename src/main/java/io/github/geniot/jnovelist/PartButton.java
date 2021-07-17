@@ -21,7 +21,7 @@ public class PartButton extends ChapterButton {
         addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frame.preferences.putInt(JNovelistApplication.Prop.SELECTED_PART.name(), getPartButtonIndex() + 1);
+                JNovelPreferences.putInt(JNovelistApplication.Prop.SELECTED_PART.name(), getPartButtonIndex() + 1);
                 frame.setPart(part);
             }
         });

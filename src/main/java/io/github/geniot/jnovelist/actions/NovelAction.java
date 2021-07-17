@@ -8,10 +8,6 @@ import java.awt.event.ActionEvent;
 public class NovelAction extends AbstractNovelistAction {
     private Type type;
 
-    public enum Type {
-        HEROES, PLACES, THINGS, NOTES, IMAGES
-    }
-
     public NovelAction(JNovelistApplication f, Type t) {
         super(f);
         this.type = t;
@@ -30,5 +26,9 @@ public class NovelAction extends AbstractNovelistAction {
         } else if (type.equals(Type.IMAGES)) {
             new ExtrasDialog(frame.novel.getImages(), frame, "Images").setVisible(true);
         }
+    }
+
+    public enum Type {
+        HEROES, PLACES, THINGS, NOTES, IMAGES
     }
 }

@@ -53,16 +53,16 @@ public class SyncDialog extends JDialog implements PropertyChangeListener {
         setLocationRelativeTo(frame);
     }
 
-    private void onCancel() {
-        // add your code here if necessary
-        dispose();
-    }
-
     public static void main(String[] args) {
         SyncDialog dialog = new SyncDialog(null);
         dialog.pack();
         dialog.setVisible(true);
         System.exit(0);
+    }
+
+    private void onCancel() {
+        // add your code here if necessary
+        dispose();
     }
 
     @Override

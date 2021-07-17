@@ -31,7 +31,7 @@ public class ChapterButton extends JToggleButton {
         addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frame.preferences.putInt(JNovelistApplication.Prop.SELECTED_CHAPTER.name(), getChapterButtonIndex() + 1);
+                JNovelPreferences.putInt(JNovelistApplication.Prop.SELECTED_CHAPTER.name(), getChapterButtonIndex() + 1);
                 frame.setChapter(chapter);
             }
         });

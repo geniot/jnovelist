@@ -13,11 +13,6 @@ public class PushTask extends SwingWorker<Void, Void> {
 
     JNovelistApplication frame;
 
-    public enum Prop {
-        LOG, STATUS, FINISHED
-    }
-
-
     public PushTask(JNovelistApplication f) {
         this.frame = f;
     }
@@ -69,5 +64,9 @@ public class PushTask extends SwingWorker<Void, Void> {
     @Override
     public void done() {
         firePropertyChange(Prop.FINISHED.name(), null, null);
+    }
+
+    public enum Prop {
+        LOG, STATUS, FINISHED
     }
 }

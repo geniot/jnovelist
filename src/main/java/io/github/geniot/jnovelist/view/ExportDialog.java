@@ -72,6 +72,13 @@ public class ExportDialog extends JDialog {
         setLocationRelativeTo(frame);
     }
 
+    public static void main(String[] args) {
+        ExportDialog dialog = new ExportDialog(null);
+        dialog.pack();
+        dialog.setVisible(true);
+        System.exit(0);
+    }
+
     private void onOK() {
         // add your code here
         dispose();
@@ -80,13 +87,6 @@ public class ExportDialog extends JDialog {
     private void onCancel() {
         // add your code here if necessary
         dispose();
-    }
-
-    public static void main(String[] args) {
-        ExportDialog dialog = new ExportDialog(null);
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
     }
 
     {

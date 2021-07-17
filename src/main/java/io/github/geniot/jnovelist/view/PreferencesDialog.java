@@ -5,6 +5,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import io.github.geniot.jnovelist.ChapterEditor;
 import io.github.geniot.jnovelist.DesktopApplication;
+import io.github.geniot.jnovelist.JNovelPreferences;
 import io.github.geniot.jnovelist.Utils;
 import io.github.geniot.jnovelist.model.Chapter;
 import org.apache.commons.io.IOUtils;
@@ -18,6 +19,16 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class PreferencesDialog extends JDialog {
+    private static String LOREM_IPSUM;
+
+    static {
+        try {
+            LOREM_IPSUM = IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream("lorem_ipsum.txt"), StandardCharsets.UTF_8.name());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -31,27 +42,6 @@ public class PreferencesDialog extends JDialog {
     private JComboBox statsComboBox;
     private JNovelistApplication frame;
     private ChapterEditor chapterEditor;
-
-    private static String LOREM_IPSUM;
-
-    static {
-        try {
-            LOREM_IPSUM = IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream("lorem_ipsum.txt"), StandardCharsets.UTF_8.name());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public enum Stats {
-        NONE("none"),
-        CHARACTERS("characters"),
-        WORDS("words");
-        public final String label;
-
-        private Stats(String label) {
-            this.label = label;
-        }
-    }
 
     public PreferencesDialog(JNovelistApplication f) {
         this.frame = f;
@@ -92,7 +82,7 @@ public class PreferencesDialog extends JDialog {
             }
         });
 
-        backgroundColorButton.setText(frame.preferences.get(ChapterEditor.Prop.PROP_BG_COLOR.name(), "#FFFFFF"));
+        backgroundColorButton.setText(JNovelPreferences.get(ChapterEditor.Prop.PROP_BG_COLOR.name(), "#FFFFFF"));
 
         themeComboBox.addActionListener(new ActionListener() {
             @Override
@@ -119,7 +109,7 @@ public class PreferencesDialog extends JDialog {
             }
         });
 
-        String txtColor = frame.preferences.get(ChapterEditor.Prop.PROP_TXT_COLOR.name(), "#000000");
+        String txtColor = JNovelPreferences.get(ChapterEditor.Prop.PROP_TXT_COLOR.name(), "#000000");
         textColorButton.setText(txtColor);
         chapterEditor.getEditorPane().setCaretColor(Utils.hex2Rgb(txtColor));
 
@@ -130,7 +120,7 @@ public class PreferencesDialog extends JDialog {
                 updatePreview();
             }
         });
-        fontComboBox.setSelectedItem(frame.preferences.get(ChapterEditor.Prop.PROP_FONT_FACE.name(), "Arial"));
+        fontComboBox.setSelectedItem(JNovelPreferences.get(ChapterEditor.Prop.PROP_FONT_FACE.name(), "Arial"));
 
         fontSizeComboBox.addActionListener(new ActionListener() {
             @Override
@@ -138,7 +128,7 @@ public class PreferencesDialog extends JDialog {
                 updatePreview();
             }
         });
-        fontSizeComboBox.setSelectedItem(String.valueOf(frame.preferences.getInt(ChapterEditor.Prop.PROP_FONT_SIZE.name(), 12)));
+        fontSizeComboBox.setSelectedItem(String.valueOf(JNovelPreferences.getInt(ChapterEditor.Prop.PROP_FONT_SIZE.name(), 12)));
 
         borderMarginComboBox.addActionListener(new ActionListener() {
             @Override
@@ -146,7 +136,7 @@ public class PreferencesDialog extends JDialog {
                 updatePreview();
             }
         });
-        borderMarginComboBox.setSelectedItem(String.valueOf(frame.preferences.getInt(ChapterEditor.Prop.PROP_MARGIN.name(), 10)));
+        borderMarginComboBox.setSelectedItem(String.valueOf(JNovelPreferences.getInt(ChapterEditor.Prop.PROP_MARGIN.name(), 10)));
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -175,14 +165,21 @@ public class PreferencesDialog extends JDialog {
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        themeComboBox.setSelectedItem(frame.preferences.get(ChapterEditor.Prop.PROP_LAF.name(), "Luna"));
+        themeComboBox.setSelectedItem(JNovelPreferences.get(ChapterEditor.Prop.PROP_LAF.name(), "Luna"));
 
-        statsComboBox.setSelectedItem(frame.preferences.get(ChapterEditor.Prop.PROP_STATS.name(), Stats.CHARACTERS.label));
+        statsComboBox.setSelectedItem(JNovelPreferences.get(ChapterEditor.Prop.PROP_STATS.name(), Stats.CHARACTERS.label));
 
         pack();
         if (frame != null) {
             setLocationRelativeTo(frame);
         }
+    }
+
+    public static void main(String[] args) {
+        PreferencesDialog dialog = new PreferencesDialog(null);
+        dialog.pack();
+        dialog.setVisible(true);
+        System.exit(0);
     }
 
     private void updatePreview() {
@@ -205,18 +202,18 @@ public class PreferencesDialog extends JDialog {
     }
 
     private void onOK() {
-        frame.preferences.put(ChapterEditor.Prop.PROP_BG_COLOR.name(), backgroundColorButton.getText());
-        frame.preferences.put(ChapterEditor.Prop.PROP_TXT_COLOR.name(), textColorButton.getText());
-        frame.preferences.put(ChapterEditor.Prop.PROP_FONT_FACE.name(), fontComboBox.getSelectedItem().toString());
-        frame.preferences.put(ChapterEditor.Prop.PROP_FONT_SIZE.name(), fontSizeComboBox.getSelectedItem().toString());
-        frame.preferences.put(ChapterEditor.Prop.PROP_MARGIN.name(), borderMarginComboBox.getSelectedItem().toString());
-        frame.preferences.put(ChapterEditor.Prop.PROP_STATS.name(), statsComboBox.getSelectedItem().toString());
+        JNovelPreferences.put(ChapterEditor.Prop.PROP_BG_COLOR.name(), backgroundColorButton.getText());
+        JNovelPreferences.put(ChapterEditor.Prop.PROP_TXT_COLOR.name(), textColorButton.getText());
+        JNovelPreferences.put(ChapterEditor.Prop.PROP_FONT_FACE.name(), fontComboBox.getSelectedItem().toString());
+        JNovelPreferences.put(ChapterEditor.Prop.PROP_FONT_SIZE.name(), fontSizeComboBox.getSelectedItem().toString());
+        JNovelPreferences.put(ChapterEditor.Prop.PROP_MARGIN.name(), borderMarginComboBox.getSelectedItem().toString());
+        JNovelPreferences.put(ChapterEditor.Prop.PROP_STATS.name(), statsComboBox.getSelectedItem().toString());
 
-        String oldLaf = frame.preferences.get(ChapterEditor.Prop.PROP_LAF.name(), null);
+        String oldLaf = JNovelPreferences.get(ChapterEditor.Prop.PROP_LAF.name(), null);
         String newLaf = themeComboBox.getSelectedItem().toString();
 
         if (!newLaf.equals(oldLaf)) {
-            frame.preferences.put(ChapterEditor.Prop.PROP_LAF.name(), newLaf);
+            JNovelPreferences.put(ChapterEditor.Prop.PROP_LAF.name(), newLaf);
             Utils.setLAF(newLaf, frame);
         }
         if (frame.chapterEditor != null) {
@@ -229,13 +226,6 @@ public class PreferencesDialog extends JDialog {
     private void onCancel() {
         // add your code here if necessary
         dispose();
-    }
-
-    public static void main(String[] args) {
-        PreferencesDialog dialog = new PreferencesDialog(null);
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
     }
 
     {
@@ -383,6 +373,17 @@ public class PreferencesDialog extends JDialog {
      */
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
+    }
+
+    public enum Stats {
+        NONE("none"),
+        CHARACTERS("characters"),
+        WORDS("words");
+        public final String label;
+
+        private Stats(String label) {
+            this.label = label;
+        }
     }
 
 }

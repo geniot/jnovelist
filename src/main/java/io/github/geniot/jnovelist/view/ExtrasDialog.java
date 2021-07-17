@@ -14,11 +14,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ExtrasDialog extends JDialog {
+    public JPanel chaptersPanel;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JPanel editorPanel;
-    public JPanel chaptersPanel;
     private JNovelistApplication frame;
     private ChapterEditor chapterEditor;
 
@@ -75,6 +75,13 @@ public class ExtrasDialog extends JDialog {
         setLocationRelativeTo(frame);
     }
 
+    public static void main(String[] args) {
+        ExtrasDialog dialog = new ExtrasDialog(Arrays.asList(new Chapter[]{new Chapter()}), null, "Test");
+        dialog.pack();
+        dialog.setVisible(true);
+        System.exit(0);
+    }
+
     private void onOK() {
         // add your code here
         dispose();
@@ -83,13 +90,6 @@ public class ExtrasDialog extends JDialog {
     private void onCancel() {
         // add your code here if necessary
         dispose();
-    }
-
-    public static void main(String[] args) {
-        ExtrasDialog dialog = new ExtrasDialog(Arrays.asList(new Chapter[]{new Chapter()}), null, "Test");
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
     }
 
     {

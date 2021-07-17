@@ -13,8 +13,8 @@ import java.nio.charset.StandardCharsets;
 
 public class CommitterTask implements Runnable {
 
-    private int projectHash;
     private final JNovelistApplication frame;
+    private int projectHash;
 
     public CommitterTask(JNovelistApplication frame) {
         this.frame = frame;

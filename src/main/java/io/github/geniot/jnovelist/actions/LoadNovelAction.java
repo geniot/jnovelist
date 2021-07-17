@@ -1,6 +1,7 @@
 package io.github.geniot.jnovelist.actions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.geniot.jnovelist.JNovelPreferences;
 import io.github.geniot.jnovelist.model.JNovel;
 import io.github.geniot.jnovelist.view.JNovelistApplication;
 import org.apache.commons.io.FileUtils;
@@ -14,18 +15,13 @@ import java.nio.charset.StandardCharsets;
 
 public class LoadNovelAction extends AbstractNovelistAction implements ActionListener {
 
-    public enum Prop {
-        LAST_OPEN_DIR,
-        LAST_OPEN_FILE
-    }
-
     public LoadNovelAction(JNovelistApplication f) {
         super(f);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        File folder = new File(frame.preferences.get(Prop.LAST_OPEN_DIR.name(), System.getProperty("user.home")));
+        File folder = new File(JNovelPreferences.get(Prop.LAST_OPEN_DIR.name(), System.getProperty("user.home")));
         JFileChooser fc = null;
         if (folder.exists()) {
             fc = new JFileChooser(folder);
@@ -50,12 +46,12 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
             File selectedFile = fc.getSelectedFile();
             if (!selectedFile.getAbsolutePath().equals(frame.path)) {
                 frame.unloadButton.doClick();
-                frame.preferences.put(Prop.LAST_OPEN_DIR.name(), fc.getCurrentDirectory().toString());
+                JNovelPreferences.put(Prop.LAST_OPEN_DIR.name(), fc.getCurrentDirectory().toString());
                 loadNovel(selectedFile);
             }
 
         } else if (returnVal == JFileChooser.CANCEL_OPTION) {
-            frame.preferences.put(Prop.LAST_OPEN_DIR.name(), fc.getCurrentDirectory().toString());
+            JNovelPreferences.put(Prop.LAST_OPEN_DIR.name(), fc.getCurrentDirectory().toString());
         }
     }
 
@@ -78,7 +74,7 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
     }
 
     public void loadLast() {
-        String lastLoadedNovelFilePath = frame.preferences.get(Prop.LAST_OPEN_FILE.name(), null);
+        String lastLoadedNovelFilePath = JNovelPreferences.get(Prop.LAST_OPEN_FILE.name(), null);
         if (lastLoadedNovelFilePath != null) {
             File lastLoadedNovelFile = new File(lastLoadedNovelFilePath);
             if (lastLoadedNovelFile.exists()) {
@@ -89,5 +85,10 @@ public class LoadNovelAction extends AbstractNovelistAction implements ActionLis
         } else {
             frame.setNovel(null, null);
         }
+    }
+
+    public enum Prop {
+        LAST_OPEN_DIR,
+        LAST_OPEN_FILE
     }
 }
