@@ -31,7 +31,6 @@ public class JNovelistApplication extends DesktopApplication {
     private JButton infoButton;
     private JPanel toolbarPanel;
     private JButton exportButton;
-    private JButton dictionaryButton;
     public JLabel leftStatus;
     public JLabel centerStatus;
     public JLabel rightStatus;
@@ -39,7 +38,6 @@ public class JNovelistApplication extends DesktopApplication {
     private JButton placesButton;
     private JButton thingsButton;
     private JButton notesButton;
-    private JButton imagesButton;
     private JPanel novelbarPanel;
     private JPanel statusPanel;
 
@@ -173,18 +171,6 @@ public class JNovelistApplication extends DesktopApplication {
         infoButton.setRequestFocusEnabled(false);
         infoButton.setText("");
         toolbarPanel.add(infoButton);
-        dictionaryButton = new JButton();
-        dictionaryButton.setBorderPainted(true);
-        dictionaryButton.setEnabled(true);
-        dictionaryButton.setFocusPainted(false);
-        dictionaryButton.setFocusable(false);
-        dictionaryButton.setIcon(new ImageIcon(getClass().getResource("/images/Dictionary.png")));
-        dictionaryButton.setMaximumSize(new Dimension(40, 40));
-        dictionaryButton.setMinimumSize(new Dimension(40, 40));
-        dictionaryButton.setPreferredSize(new Dimension(40, 40));
-        dictionaryButton.setRequestFocusEnabled(false);
-        dictionaryButton.setText("");
-        toolbarPanel.add(dictionaryButton);
         novelbarPanel = new JPanel();
         novelbarPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         panel3.add(novelbarPanel, BorderLayout.EAST);
@@ -236,18 +222,6 @@ public class JNovelistApplication extends DesktopApplication {
         notesButton.setRequestFocusEnabled(false);
         notesButton.setText("");
         novelbarPanel.add(notesButton);
-        imagesButton = new JButton();
-        imagesButton.setBorderPainted(true);
-        imagesButton.setEnabled(true);
-        imagesButton.setFocusPainted(false);
-        imagesButton.setFocusable(false);
-        imagesButton.setIcon(new ImageIcon(getClass().getResource("/images/Images.png")));
-        imagesButton.setMaximumSize(new Dimension(40, 40));
-        imagesButton.setMinimumSize(new Dimension(40, 40));
-        imagesButton.setPreferredSize(new Dimension(40, 40));
-        imagesButton.setRequestFocusEnabled(false);
-        imagesButton.setText("");
-        novelbarPanel.add(imagesButton);
     }
 
     /**
@@ -306,18 +280,10 @@ public class JNovelistApplication extends DesktopApplication {
             }
         });
 
-        dictionaryButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new DictionaryDialog(JNovelistApplication.this).setVisible(true);
-            }
-        });
-
         heroesButton.addActionListener(new NovelAction(this, NovelAction.Type.HEROES));
         placesButton.addActionListener(new NovelAction(this, NovelAction.Type.PLACES));
         thingsButton.addActionListener(new NovelAction(this, NovelAction.Type.THINGS));
         notesButton.addActionListener(new NovelAction(this, NovelAction.Type.NOTES));
-        imagesButton.addActionListener(new NovelAction(this, NovelAction.Type.IMAGES));
 
         pack();
 
@@ -354,7 +320,6 @@ public class JNovelistApplication extends DesktopApplication {
             placesButton.setEnabled(false);
             thingsButton.setEnabled(false);
             notesButton.setEnabled(false);
-            imagesButton.setEnabled(false);
 
         } else {
             setTitle(path);
@@ -369,7 +334,6 @@ public class JNovelistApplication extends DesktopApplication {
             placesButton.setEnabled(true);
             thingsButton.setEnabled(true);
             notesButton.setEnabled(true);
-            imagesButton.setEnabled(true);
 
             int partCounter = 1;
             ButtonGroup partsButtonGroup = new ButtonGroup();

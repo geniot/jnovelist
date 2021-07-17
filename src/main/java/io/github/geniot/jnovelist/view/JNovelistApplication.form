@@ -177,21 +177,6 @@
                   <text value=""/>
                 </properties>
               </component>
-              <component id="f42fa" class="javax.swing.JButton" binding="dictionaryButton">
-                <constraints/>
-                <properties>
-                  <borderPainted value="true"/>
-                  <enabled value="true"/>
-                  <focusPainted value="false"/>
-                  <focusable value="false"/>
-                  <icon value="images/Dictionary.png"/>
-                  <maximumSize width="40" height="40"/>
-                  <minimumSize width="40" height="40"/>
-                  <preferredSize width="40" height="40"/>
-                  <requestFocusEnabled value="false"/>
-                  <text value=""/>
-                </properties>
-              </component>
             </children>
           </grid>
           <grid id="2c74" binding="novelbarPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
@@ -252,21 +237,6 @@
                   <focusPainted value="false"/>
                   <focusable value="false"/>
                   <icon value="images/Notes.png"/>
-                  <maximumSize width="40" height="40"/>
-                  <minimumSize width="40" height="40"/>
-                  <preferredSize width="40" height="40"/>
-                  <requestFocusEnabled value="false"/>
-                  <text value=""/>
-                </properties>
-              </component>
-              <component id="471a" class="javax.swing.JButton" binding="imagesButton">
-                <constraints/>
-                <properties>
-                  <borderPainted value="true"/>
-                  <enabled value="true"/>
-                  <focusPainted value="false"/>
-                  <focusable value="false"/>
-                  <icon value="images/Images.png"/>
                   <maximumSize width="40" height="40"/>
                   <minimumSize width="40" height="40"/>
                   <preferredSize width="40" height="40"/>

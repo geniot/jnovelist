@@ -9,12 +9,6 @@ import java.util.prefs.Preferences;
 public class JNovelistLauncher {
     public static void main(final String[] args) {
 
-        try {
-            Synonymizer.init();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
         SwingUtilities.invokeLater(() -> {
             JNovelistApplication application = new JNovelistApplication();
             Preferences preferences = Preferences.userRoot().node(JNovelistApplication.class.getName());
