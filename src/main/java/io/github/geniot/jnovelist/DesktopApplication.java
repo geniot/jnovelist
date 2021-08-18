@@ -14,10 +14,10 @@ public abstract class DesktopApplication extends JFrame {
         //Display the window.
         try {
             int width = JNovelPreferences.getInt(Prop.WIDTH.name(), 600);
-            int height = JNovelPreferences.getInt(Prop.HEIGHT.name(), 800);
+            int height = JNovelPreferences.getInt(Prop.HEIGHT.name(), 600);
             setPreferredSize(new Dimension(width, height));
         } catch (Exception ex) {
-            setPreferredSize(new Dimension(600, 800));
+            setPreferredSize(new Dimension(600, 600));
         }
 
         try {

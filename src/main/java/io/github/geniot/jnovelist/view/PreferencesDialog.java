@@ -50,7 +50,7 @@ public class PreferencesDialog extends JDialog {
         setIconImage(DesktopApplication.ICON);
         getRootPane().setDefaultButton(buttonOK);
         setTitle("Preferences");
-        setPreferredSize(new Dimension(600, 800));
+        setPreferredSize(new Dimension(600, 600));
         String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
         fontComboBox.setModel(new DefaultComboBoxModel(fonts));
 
