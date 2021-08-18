@@ -25,7 +25,8 @@ public abstract class DesktopApplication extends JFrame {
             int posY = JNovelPreferences.getInt(Prop.POS_Y.name(), 50);
             setLocation(posX, posY);
         } catch (Exception ex) {
-            setLocation(0, 0);
+            Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+            this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
         }
 
         addWindowListener(new WindowAdapter() {

@@ -72,7 +72,8 @@ public class ExtrasDialog extends JDialog {
         selectChapter();
 
         pack();
-        setLocationRelativeTo(frame);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
     }
 
     public static void main(String[] args) {

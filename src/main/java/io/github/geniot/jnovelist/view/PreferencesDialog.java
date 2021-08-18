@@ -170,9 +170,9 @@ public class PreferencesDialog extends JDialog {
         statsComboBox.setSelectedItem(JNovelPreferences.get(ChapterEditor.Prop.PROP_STATS.name(), Stats.CHARACTERS.label));
 
         pack();
-        if (frame != null) {
-            setLocationRelativeTo(frame);
-        }
+
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
     }
 
     public static void main(String[] args) {
