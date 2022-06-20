@@ -33,6 +33,7 @@ public class CommitterTask implements Runnable {
                 int hash = projectJSON.hashCode();
                 if (hash != projectHash) {
                     projectHash = hash;
+                    frame.chapterEditor.updateChapter();
                     FileUtils.writeStringToFile(new File(frame.path), projectJSON, StandardCharsets.UTF_8.name());
 //                    System.out.println("Saved in: " + (System.currentTimeMillis() - t1) + "ms");
                 }

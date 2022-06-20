@@ -67,7 +67,7 @@ public class ChapterEditor extends SHTMLPanelSingleDocImpl {
         return docStart(bgColor, txtColor, fontFace, fontSize, margin);
     }
 
-    private void updateChapter() {
+    public void updateChapter() {
         String text = Utils.html2text(getDocumentText());
         chapter.setLines(text.split("\n"));
     }
