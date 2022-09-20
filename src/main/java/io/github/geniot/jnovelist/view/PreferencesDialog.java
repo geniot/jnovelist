@@ -165,6 +165,7 @@ public class PreferencesDialog extends JDialog {
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
+        themeComboBox.setModel(new DefaultComboBoxModel(Utils.LAFS.keySet().toArray(new String[0])));
         themeComboBox.setSelectedItem(JNovelPreferences.get(ChapterEditor.Prop.PROP_LAF.name(), "Luna"));
 
         statsComboBox.setSelectedItem(JNovelPreferences.get(ChapterEditor.Prop.PROP_STATS.name(), Stats.CHARACTERS.label));
@@ -172,7 +173,7 @@ public class PreferencesDialog extends JDialog {
         pack();
 
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
     }
 
     public static void main(String[] args) {

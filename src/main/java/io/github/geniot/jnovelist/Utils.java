@@ -1,5 +1,10 @@
 package io.github.geniot.jnovelist;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.intellijthemes.FlatArcIJTheme;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -7,14 +12,44 @@ import org.jsoup.select.Elements;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Utils {
-    public static final String DEFAULT_LAF = "com.jtattoo.plaf.smart.SmartLookAndFeel";
+    public static final Map<String, String> LAFS;
+
+    static {
+        Map<String, String> aMap = new LinkedHashMap<>();
+        aMap.put("FlatLight", "com.formdev.flatlaf.FlatLightLaf");
+        aMap.put("FlatDark", "com.formdev.flatlaf.FlatDarkLaf");
+        aMap.put("FlatDarcula", "com.formdev.flatlaf.FlatDarculaLaf");
+        aMap.put("FlatIntelliJ", "com.formdev.flatlaf.FlatIntelliJLaf");
+
+        aMap.put("Arc", "com.formdev.flatlaf.intellijthemes.FlatArcIJTheme");
+
+        aMap.put("Acryl", "com.jtattoo.plaf.acryl.AcrylLookAndFeel");
+        aMap.put("Aero", "com.jtattoo.plaf.aero.AeroLookAndFeel");
+        aMap.put("Aluminium", "com.jtattoo.plaf.aluminium.AluminiumLookAndFeel");
+        aMap.put("Bernstein", "com.jtattoo.plaf.bernstein.BernsteinLookAndFeel");
+        aMap.put("Fast", "com.jtattoo.plaf.fast.FastLookAndFeel");
+        aMap.put("Graphite", "com.jtattoo.plaf.graphite.GraphiteLookAndFeel");
+        aMap.put("HiFi", "com.jtattoo.plaf.hifi.HiFiLookAndFeel");
+        aMap.put("Luna", "com.jtattoo.plaf.luna.LunaLookAndFeel");
+        aMap.put("McWin", "com.jtattoo.plaf.mcwin.McWinLookAndFeel");
+        aMap.put("Mint", "com.jtattoo.plaf.mint.MintLookAndFeel");
+        aMap.put("Noire", "com.jtattoo.plaf.noire.NoireLookAndFeel");
+        aMap.put("Smart", "com.jtattoo.plaf.smart.SmartLookAndFeel");
+        aMap.put("Texture", "com.jtattoo.plaf.texture.TextureLookAndFeel");
+        LAFS = Collections.unmodifiableMap(aMap);
+    }
+
+    public static final String DEFAULT_LAF = "Smart";
     // Parallel arrays used in the conversion process.
     public static String[] RCODE = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
     public static int[] BVAL = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
     public static String[] ALPHABET = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
-    public static String LAF_PREFIX = "com.jtattoo.plaf.";
     public static String LAF_SUFFIX = "LookAndFeel";
 
 
@@ -113,11 +148,12 @@ public class Utils {
     }
 
     public static void setLAF(String lafName, Component component) {
-        String lafClassName = LAF_PREFIX + lafName.toLowerCase() + "." + lafName + LAF_SUFFIX;
+        String lafClassName = LAFS.get(lafName);
         try {
             if (lafClassName == null) {
-                lafClassName = DEFAULT_LAF;
+                lafClassName = LAFS.get(DEFAULT_LAF);
             }
+            initFlat(lafClassName);
             UIManager.setLookAndFeel(lafClassName);
             SwingUtilities.updateComponentTreeUI(component);
         } catch (Exception e) {
@@ -125,5 +161,22 @@ public class Utils {
         }
     }
 
+    private static void initFlat(String lafClassName) {
+        if (lafClassName.equals("FlatLight")) {
+            FlatLightLaf.setup();
+        }
+        if (lafClassName.equals("FlatDark")) {
+            FlatDarkLaf.setup();
+        }
+        if (lafClassName.equals("FlatDarcula")) {
+            FlatDarculaLaf.setup();
+        }
+        if (lafClassName.equals("FlatIntelliJ")) {
+            FlatIntelliJLaf.setup();
+        }
+        if (lafClassName.equals("Arc")) {
+            FlatArcIJTheme.setup();
+        }
+    }
 
 }
